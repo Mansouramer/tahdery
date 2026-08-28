@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المعلم منصور - مدرسة داوود (لوحة تحكم مادة العلوم)</title>
+    <title>المعلم منصور عامر الرحيلي - مدرسة داوود بن عروة الثقفي الابتدائية</title>
     <!-- مكتبة SheetJS لتصدير واستيراد ملفات إكسل Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
@@ -647,8 +647,8 @@
     </div>
 
     <div class="header">
-        <h1>🏫 مدرسة داوود (طلاب)</h1>
-        <div>إعداد المعلم: منصور</div>
+        <h1>🏫 مدرسة داوود بن عروة الثقفي الابتدائية (طلاب)</h1>
+        <div>إعداد المعلم: منصور عامر الرحيلي</div>
         <p>لوحة تحكم معلم مادة العلوم للمرحلة الابتدائية (وفق المنهج السعودي)</p>
         <div class="subscription-badge">⏳ نهاية الاشتراك: 2027/07/01</div>
 
@@ -722,10 +722,10 @@
             </div>
         </div>
 
-        <!-- 📑 قسم الاختبارات (4 نماذج قبلية، 4 نماذج بعدية، 4 نماذج فترية - اختيار من متعدد بالكامل) -->
+        <!-- 📑 قسم الاختبارات (4 قبلية، 4 بعدية، 10 نماذج فترية - 10 أسئلة لكل نموذج اختيار من متعدد) -->
         <div class="section-card" id="testGeneratorSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 6px; margin-bottom: 10px;">
-                <h3 style="margin: 0; border: none; padding: 0;">📋 📑 مولد اختبارات القياس (4 قبلية | 4 بعدية | 4 فترية - اختيارات)</h3>
+                <h3 style="margin: 0; border: none; padding: 0;">📋 📑 مولد اختبارات القياس (4 قبلية | 4 بعدية | 10 فترية - 10 أسئلة اختيار من متعدد)</h3>
                 <button class="btn-print" onclick="printSection('testGeneratorSection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة الاختبار</button>
             </div>
 
@@ -733,25 +733,25 @@
                 <select id="genTestCategory" class="border p-2 rounded" onchange="updateTestTemplateDropdowns()">
                     <option value="قبلي">🧪 اختبار قبلي تشخيصي</option>
                     <option value="بعدي">🎯 اختبار بعدي تحصيلي</option>
-                    <option value="فتروي">📊 اختبار فتروي معتمد</option>
+                    <option value="فتروي">📊 اختبار فتروي معتمد (10 نماذج)</option>
                 </select>
                 <select id="genTestModelSelect" class="border p-2 rounded">
-                    <!-- يتم تعبئة النماذج الـ 4 ديناميكياً -->
+                    <!-- يتم تعبئة النماذج ديناميكياً -->
                 </select>
-                <button onclick="generateSpecificModelTest()" class="btn-info" style="width: 100%;">⚡ توليد ونشر النموذج المختار</button>
+                <button onclick="generateSpecificModelTest()" class="btn-info" style="width: 100%;">⚡ توليد ونشر النموذج المختار (10 أسئلة)</button>
             </div>
 
             <div id="testPreviewArea" class="sub-box" style="display: none; background: #ffffff; border: 2px solid var(--secondary);">
                 <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
                     <h4 id="printTestHeaderTitle" style="margin: 0; color: #000; font-size: 15px;">نموذج اختبار</h4>
-                    <p style="font-size: 11px; margin: 3px 0; color: #000;">مدرسة داوود (طلاب) | معلم المادة: منصور | الصف: <span id="printTestGrade"></span></p>
+                    <p style="font-size: 11px; margin: 3px 0; color: #000;">مدرسة داوود بن عروة الثقفي الابتدائية (طلاب) | معلم المادة: منصور عامر الرحيلي | الصف: <span id="printTestGrade"></span></p>
                     <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 6px; color: #000;">
                         <span>اسم الطالب: ....................................................</span>
-                        <span>الدرجة: ........ / ٢٠</span>
+                        <span>الدرجة: ........ / ١٠</span>
                     </div>
                 </div>
                 <div id="printTestQuestionsList" style="font-size: 12px; color: #000; line-height: 1.5;">
-                    <!-- تفاصيل أسئلة الاختيار من متعدد -->
+                    <!-- تفاصيل 10 أسئلة الاختيار من متعدد -->
                 </div>
             </div>
         </div>
@@ -765,15 +765,15 @@
 
             <!-- إعداد نموذج الإجابة النموذجي -->
             <div class="sub-box" style="margin-top: 0; background: rgba(37,99,235,0.03); border: 1px solid var(--secondary);">
-                <h5 style="color: var(--secondary);">📝 الخطوة 1: تحديد مفتاح الإجابة النموذجي (أسئلة الاختيار من متعدد)</h5>
+                <h5 style="color: var(--secondary);">📝 الخطوة 1: تحديد مفتاح الإجابة النموذجي (لـ 10 أسئلة اختيار من متعدد)</h5>
                 <div class="form-row">
                     <select id="examTargetClassForGrading" onchange="renderAutoGradingTable()">
                         <option value="">-- اختر الصف لتطبيق التصحيح --</option>
                     </select>
-                    <input type="number" id="examTotalQuestions" value="5" min="1" max="20" placeholder="عدد الأسئلة" onchange="updateAnswerKeyInputs()" style="max-width: 110px;">
+                    <input type="number" id="examTotalQuestions" value="10" min="1" max="20" placeholder="عدد الأسئلة" onchange="updateAnswerKeyInputs()" style="max-width: 110px;" readonly>
                 </div>
                 <div id="answerKeyContainer" class="form-row" style="background: #fff; padding: 8px; border-radius: 6px; border: 1px dashed var(--secondary); overflow-x: auto;">
-                    <!-- حقول مفتاح الإجابة -->
+                    <!-- حقول مفتاح الإجابة الـ 10 -->
                 </div>
             </div>
 
@@ -786,7 +786,7 @@
                         📷 تصوير ورقة إجابة الطالب بكاميرا الجوال (مسح ضوئي محاكي)
                     </button>
                 </div>
-                <p style="font-size: 10px; opacity: 0.8; margin: 3px 0;">* ملاحظة: انقر للتصوير المباشر بالكاميرا أو إدخال إجابات الطالب الحرفية في الجدول أسفل للمقارنة الفورية مع مفتاح النموذج.</p>
+                <p style="font-size: 10px; opacity: 0.8; margin: 3px 0;">* ملاحظة: انقر للتصوير المباشر بالكاميرا أو إدخال إجابات الطالب الـ 10 في الجدول أسفل للمقارنة الفورية مع مفتاح النموذج.</p>
             </div>
 
             <!-- جدول التصحيح والتحليل الآلي للنتائج -->
@@ -813,7 +813,7 @@
                             <tr>
                                 <th>اسم الطالب</th>
                                 <th>🏫 الصف</th>
-                                <th>إجابات الطالب (أ،ب،ج...)</th>
+                                <th>إجابات الطالب (10 إجابات)</th>
                                 <th>النتيجة الآلية</th>
                                 <th class="no-print">إجراءات</th>
                             </tr>
@@ -1161,8 +1161,8 @@
             document.getElementById('installAppBtn').style.display = 'none';
         });
 
-        const TEACHER_NAME = "منصور";
-        const SCHOOL_NAME = "مدرسة داوود (طلاب)";
+        const TEACHER_NAME = "منصور عامر الرحيلي";
+        const SCHOOL_NAME = "مدرسة داوود بن عروة الثقفي الابتدائية (طلاب)";
 
         let currentGrade = localStorage.getItem('mansour_current_grade_science_v5') || 'الأول الابتدائي';
         document.getElementById('globalGradeSelect').value = currentGrade;
@@ -1298,13 +1298,15 @@
             modelSelect.innerHTML = '';
 
             let labelPrefix = "النموذج";
-            if(category === 'قبلي') labelPrefix = "الاختبار القبلي التشخيصي (نموذج";
-            if(category === 'بعدي') labelPrefix = "الاختبار البعدي التحصيلي (نموذج";
-            if(category === 'فتروي') labelPrefix = "الاختبار الفتروي المعتمد (نموذج";
+            let totalModels = 4;
+            if(category === 'قبلي') { labelPrefix = "الاختبار القبلي التشخيصي (نموذج"; totalModels = 4; }
+            if(category === 'بعدي') { labelPrefix = "الاختبار البعدي التحصيلي (نموذج"; totalModels = 4; }
+            if(category === 'فتروي') { labelPrefix = "الاختبار الفتروي المعتمد (نموذج"; totalModels = 10; }
 
-            for(let i=1; i<=4; i++) {
-                modelSelect.innerHTML += `<option value="${category}_${i}">${labelPrefix} ${i} - أسئلة اختيار من متعدد)</option>`;
+            for(let i=1; i<=totalModels; i++) {
+                modelSelect.innerHTML += `<option value="${category}_${i}">${labelPrefix} ${i} - 10 أسئلة اختيار من متعدد)</option>`;
             }
+            updateAnswerKeyInputs();
         }
 
         function generateSpecificModelTest() {
@@ -1320,16 +1322,16 @@
             let titleText = "";
             if(cat === 'قبلي') titleText = `اختبار قبلي تشخيصي - النموذج (${modelNum})`;
             else if(cat === 'بعدي') titleText = `اختبار بعدي تحصيلي - النموذج (${modelNum})`;
-            else titleText = `اختبار فتروي معتمد - النموذج (${modelNum})`;
+            else titleText = `اختبار فتروي معتمد - النموذج (${modelNum}) من 10 نماذج`;
 
             document.getElementById('printTestHeaderTitle').textContent = titleText;
             document.getElementById('printTestGrade').textContent = currentGrade;
 
             const listContainer = document.getElementById('printTestQuestionsList');
-            let qHTML = `<div style="margin-bottom: 8px; font-weight: bold; background: rgba(0,0,0,0.035); padding: 6px;">مستهدف التقييم: ${currentGrade} - جميع الأسئلة اختيار من متعدد للتصحيح الآلي</div>`;
+            let qHTML = `<div style="margin-bottom: 8px; font-weight: bold; background: rgba(0,0,0,0.035); padding: 6px;">مستهدف التقييم: ${currentGrade} - 10 أسئلة اختيار من متعدد للتصحيح الآلي</div>`;
 
-            // 5 أسئلة اختيار من متعدد بالكامل لكل نموذج
-            const mcqQuestions = [
+            // 10 أسئلة اختيار من متعدد بالكامل لكل نموذج
+            const mcq10Questions = [
                 {
                     q: `السؤال 1: ما هو المفهوم العلمي الأبرز في وحدات مقرر العلوم للصف (${currentGrade}) - نموذج (${modelNum})؟`,
                     opts: ["أ) الخيار العلمي الصحيح والمعتمد للمنهج.", "ب) الخيار التشتيتي الأول غير الصحيح.", "ج) الخيار التشتيتي الثاني غير الدقيق.", "د) الخيار التشتيتي الثالث."]
@@ -1349,10 +1351,30 @@
                 {
                     q: `السؤال 5: الهدف الأساسي من التقويم والاختبارات التكوينية في مادة العلوم هو:`,
                     opts: ["أ) قياس الإتقان وتحسين الفهم واستكشاف المهارات.", "ب) حفظ الكلمات دون فهم المعنى.", "ج) إثقال مهارات الحفظ فقط.", "د) تشتيت الانتباه الدراسي."]
+                },
+                {
+                    q: `السؤال 6: ما هي النتيجة المتوقعة عند تطبيق المفاهيم العلمية بداخل المعمل أو الفصل؟`,
+                    opts: ["أ) ترسيخ الفهم واستنتاج الحقائق بدقة.", "ب) إضاعة الوقت بلا فائدة علمية.", "ج) غموض المعلومات ونسيانها.", "د) صعوبة استيعاب البيئة المحيطة."]
+                },
+                {
+                    q: `السؤال 7: التصنيف السليم للمخلوقات الحية والعناصر في مقرر العلوم يعتمد على:`,
+                    opts: ["أ) الخصائص المشتركة والفروق الدقيقة.", "ب) الأشكال العشوائية البحتة.", "ج) الاختيار دون معايير واضحة.", "د) التخمين غير المبرر."]
+                },
+                {
+                    q: `السؤال 8: أي من الأدوات التالية تعتبر الأنسب لملاحظة التفاصيل الدقيقة للكائنات أو المواد؟`,
+                    opts: ["أ) العدسة المكبرة والمجهر والأجهزة العلمية.", "ب) الورق العادي دون وسائل فحص.", "ج) الأدوات الترفيهية البعيدة عن العلم.", "د) الوسائل غير المختبرية."]
+                },
+                {
+                    q: `السؤال 9: العلاقة المتبادلة بين الكائنات الحية وعناصر بيئتها تهدف أساساً إلى:`,
+                    opts: ["أ) ضمان البقاء والتكيف واستمرار الحياة.", "ب) إحداث خلل مستمر في البيئة.", "ج) القضاء على الموارد الطبيعية.", "د) عزل الكائنات عن محيطها."]
+                },
+                {
+                    q: `السؤال 10: التقييم الختامي الشامل لدروس الوحدة يساعد المعلم والطالب على:`,
+                    opts: ["أ) قياس مستوى تحقيق نواتج التعلم بدقة.", "ب) تخطي المنهج دون اهتمام.", "ج) إلغاء المراجعة والاستذكار.", "د) إغفال المهارات العملية."]
                 }
             ];
 
-            mcqQuestions.forEach((item, idx) => {
+            mcq10Questions.forEach((item, idx) => {
                 qHTML += `
                     <div style="margin-bottom: 10px; padding: 7px; background: rgba(0,0,0,0.02); border-radius: 4px; border-right: 3px solid var(--secondary);">
                         <strong>${item.q}</strong><br>
@@ -1367,16 +1389,16 @@
             });
 
             listContainer.innerHTML = qHTML;
-            showToast(`⚡ تم توليد وعرض (${titleText}) بنجاح!`);
+            showToast(`⚡ تم توليد وعرض (${titleText}) بـ 10 أسئلة بنجاح!`);
         }
 
-        // دوال التصحيح الآلي
-        let answerKey = ['أ', 'ب', 'ج', 'أ', 'ب'];
+        // دوال التصحيح الآلي (10 أسئلة)
+        let answerKey = ['أ', 'ب', 'ج', 'أ', 'ب', 'أ', 'أ', 'أ', 'أ', 'أ'];
 
         function updateAnswerKeyInputs() {
-            const totalQ = Number(document.getElementById('examTotalQuestions').value) || 5;
+            const totalQ = 10;
             const container = document.getElementById('answerKeyContainer');
-            container.innerHTML = `<span style="font-size:11px; font-weight:bold; width:100%; margin-bottom:4px; color:var(--primary);">حدد الإجابة الصحيحة لكل سؤال (أ، ب، ج، د):</span>`;
+            container.innerHTML = `<span style="font-size:11px; font-weight:bold; width:100%; margin-bottom:4px; color:var(--primary);">حدد الإجابة الصحيحة لكل سؤال من الـ 10 أسئلة (أ، ب، ج، د):</span>`;
             
             for(let i=0; i<totalQ; i++) {
                 if(!answerKey[i]) answerKey[i] = 'أ';
@@ -1432,7 +1454,7 @@
 
             let totalScoreSum = 0;
             let passedCount = 0;
-            const totalQ = answerKey.length;
+            const totalQ = 10;
 
             classStudents.forEach(s => {
                 const globalIdx = students.indexOf(s);
@@ -1456,7 +1478,7 @@
                 tr.innerHTML = `
                     <td><strong>${s.name}</strong></td>
                     <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
-                    <td><input type="text" value="${autoGradingData[globalIdx]}" placeholder="أ,ب,ج,أ,ب" style="width:110px; text-align:center; padding:4px;" oninput="updateStudentAnswers(${globalIdx}, this.value)"></td>
+                    <td><input type="text" value="${autoGradingData[globalIdx]}" placeholder="أ,ب,ج,أ,ب,أ,ب,ج,أ,ب" style="width:160px; text-align:center; padding:4px;" oninput="updateStudentAnswers(${globalIdx}, this.value)"></td>
                     <td><strong style="color: ${isPassed ? 'var(--success)' : 'var(--danger)'};">${score} / ${totalQ} (${isPassed ? 'اجتياز' : 'إخفاق'})</strong></td>
                     <td class="no-print">
                         <button class="btn-action btn-info" onclick="autoFillRandomAnswers(${globalIdx})" style="padding:3px 6px; font-size:10px;">🎲 محاكاة</button>
@@ -1482,13 +1504,13 @@
         function autoFillRandomAnswers(globalIdx) {
             const options = ['أ', 'ب', 'ج', 'د'];
             let randomArr = [];
-            for(let i=0; i<answerKey.length; i++) {
+            for(let i=0; i<10; i++) {
                 randomArr.push(options[Math.floor(Math.random() * options.length)]);
             }
             autoGradingData[globalIdx] = randomArr.join(',');
             localStorage.setItem(getStorageKeyForAutoGrading(), JSON.stringify(autoGradingData));
             renderAutoGradingTable();
-            showToast('🎲 تم توليد إجابات افتراضية للطالب وتصحيحها آلياً!');
+            showToast('🎲 تم توليد 10 إجابات افتراضية للطالب وتصحيحها آلياً!');
         }
 
         function handleCameraScan(event) {
@@ -1505,7 +1527,7 @@
                 const randomStudent = classStudents[Math.floor(Math.random() * classStudents.length)];
                 const globalIdx = students.indexOf(randomStudent);
                 autoFillRandomAnswers(globalIdx);
-                alert(`📸 تم التقاط الصورة عبر الكاميرا بنجاح!\nتم مطابقة ورقة الطالب (${randomStudent.name}) مع نموذج الإجابة ورصد النتيجة آلياً.`);
+                alert(`📸 تم التقاط الصورة عبر الكاميرا بنجاح!\nتم مطابقة ورقة الطالب الـ 10 أسئلة (${randomStudent.name}) مع نموذج الإجابة ورصد النتيجة آلياً.`);
             }
             event.target.value = '';
         }

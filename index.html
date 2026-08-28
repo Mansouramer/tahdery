@@ -722,10 +722,10 @@
             </div>
         </div>
 
-        <!-- 📑 قسم الاختبارات (4 نماذج قبلية، 4 نماذج بعدية، 4 نماذج فترية) -->
+        <!-- 📑 قسم الاختبارات (4 نماذج قبلية، 4 نماذج بعدية، 4 نماذج فترية - اختيار من متعدد بالكامل) -->
         <div class="section-card" id="testGeneratorSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 6px; margin-bottom: 10px;">
-                <h3 style="margin: 0; border: none; padding: 0;">📋 📑 مولد اختبارات القياس (4 قبلية | 4 بعدية | 4 فترية)</h3>
+                <h3 style="margin: 0; border: none; padding: 0;">📋 📑 مولد اختبارات القياس (4 قبلية | 4 بعدية | 4 فترية - اختيارات)</h3>
                 <button class="btn-print" onclick="printSection('testGeneratorSection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة الاختبار</button>
             </div>
 
@@ -751,7 +751,7 @@
                     </div>
                 </div>
                 <div id="printTestQuestionsList" style="font-size: 12px; color: #000; line-height: 1.5;">
-                    <!-- تفاصيل أسئلة النموذج -->
+                    <!-- تفاصيل أسئلة الاختيار من متعدد -->
                 </div>
             </div>
         </div>
@@ -1292,7 +1292,6 @@
             showToast(`🔄 تم الانتقال إلى بيانات ${currentGrade}`);
         }
 
-        // تحديث القائمة المنسدلة للنماذج الـ 4 لكل تصنيف (قبلي، بعدي، فتروي)
         function updateTestTemplateDropdowns() {
             const category = document.getElementById('genTestCategory').value;
             const modelSelect = document.getElementById('genTestModelSelect');
@@ -1304,7 +1303,7 @@
             if(category === 'فتروي') labelPrefix = "الاختبار الفتروي المعتمد (نموذج";
 
             for(let i=1; i<=4; i++) {
-                modelSelect.innerHTML += `<option value="${category}_${i}">${labelPrefix} ${i} - شامل وحدات المنهج)</option>`;
+                modelSelect.innerHTML += `<option value="${category}_${i}">${labelPrefix} ${i} - أسئلة اختيار من متعدد)</option>`;
             }
         }
 
@@ -1327,34 +1326,41 @@
             document.getElementById('printTestGrade').textContent = currentGrade;
 
             const listContainer = document.getElementById('printTestQuestionsList');
-            let qHTML = `<div style="margin-bottom: 8px; font-weight: bold; background: rgba(0,0,0,0.035); padding: 6px;">مستهدف التقييم: ${currentGrade} - مقياس معتمد وفق معايير مادة العلوم</div>`;
+            let qHTML = `<div style="margin-bottom: 8px; font-weight: bold; background: rgba(0,0,0,0.035); padding: 6px;">مستهدف التقييم: ${currentGrade} - جميع الأسئلة اختيار من متعدد للتصحيح الآلي</div>`;
 
-            // توليد 4 أسئلة متنوعة متغيرة حسب رقم النموذج
-            const sampleQuestions = [
+            // 5 أسئلة اختيار من متعدد بالكامل لكل نموذج
+            const mcqQuestions = [
                 {
-                    q: `1. بناءً على المفاهيم الأساسية في مقرر العلوم للصف (${currentGrade}) - النموذج (${modelNum})، ما هو التصنيف الأدق للكائنات الحية أو المواد؟`,
-                    opts: ["أ) الخيار العلمي الأول المعتمد في المنهج.", "ب) الخيار الثاني للتشتيت.", "ج) الخيار الثالث غير الصحيح."]
+                    q: `السؤال 1: ما هو المفهوم العلمي الأبرز في وحدات مقرر العلوم للصف (${currentGrade}) - نموذج (${modelNum})؟`,
+                    opts: ["أ) الخيار العلمي الصحيح والمعتمد للمنهج.", "ب) الخيار التشتيتي الأول غير الصحيح.", "ج) الخيار التشتيتي الثاني غير الدقيق.", "د) الخيار التشتيتي الثالث."]
                 },
                 {
-                    q: `2. خلال الملاحظات والاستكشافات العلمية في المنهج، كيف تتأثر الكائنات أو المواد بالعوامل المحيطة؟`,
-                    opts: ["أ) تتكيف وتستجيب بحسب خصائصها البيئية.", "ب) تنعدم استجابتها نهائياً.", "ج) تتغير حالتها الفيزيائية عشوائياً."]
+                    q: `السؤال 2: كيف تتفاعل الكائنات الحية أو المواد في بيئتها وفقاً للتجارب الاستهلالية؟`,
+                    opts: ["أ) تتكيف وتستجيب خصائصها وفق المتغيرات.", "ب) تنعدم استجابتها بصورة تامة.", "ج) تتحول عشوائياً بدون مؤثرات.", "د) تظل ثابتة لا تتغير أبداً."]
                 },
                 {
-                    q: `3. ضع علامة (صح) أو (خطأ): (التجارب الاستهلالية تهدف إلى تعزيز الفهم والاستنتاج العلمي السليم لدى الطلاب).`,
-                    opts: ["[  ] صح          [  ] خطأ"]
+                    q: `السؤال 3: أي مما يلي يمثل خاصية أساسية تم دراستها في المنهج الحالي؟`,
+                    opts: ["أ) الملاحظة الدقيقة والاستنتاج العلمي السليم.", "ب) الإهمال والتخمين العشوائي.", "ج) تجنب إجراء التجارب العملية.", "د) إلغاء دور الملاحظة في العلوم."]
                 },
                 {
-                    q: `4. سؤال مقالي قصير: اذكر مثالاً تطبيقياً شاهَدْتَهُ في وحدات مقرر العلوم لهذا الفصل:`,
-                    opts: ["إجابة الطالب: .............................................................................................................."]
+                    q: `السؤال 4: عند قياس أو تصنيف الأجسام والمخلوقات في المقرر، نعتمد على:`,
+                    opts: ["أ) الخصائص الفيزيائية والحيوية المدروسة.", "ب) الألوان والزخارف فقط.", "ج) الأحلام والتوقعات الوهمية.", "د) البيانات غير المنظمة."]
+                },
+                {
+                    q: `السؤال 5: الهدف الأساسي من التقويم والاختبارات التكوينية في مادة العلوم هو:`,
+                    opts: ["أ) قياس الإتقان وتحسين الفهم واستكشاف المهارات.", "ب) حفظ الكلمات دون فهم المعنى.", "ج) إثقال مهارات الحفظ فقط.", "د) تشتيت الانتباه الدراسي."]
                 }
             ];
 
-            sampleQuestions.forEach((sq, idx) => {
+            mcqQuestions.forEach((item, idx) => {
                 qHTML += `
                     <div style="margin-bottom: 10px; padding: 7px; background: rgba(0,0,0,0.02); border-radius: 4px; border-right: 3px solid var(--secondary);">
-                        <strong>${sq.q}</strong><br>
-                        <div style="margin-top: 4px; padding-right: 10px;">
-                            ${sq.opts[0]}<br>${sq.opts[1] || ''}<br>${sq.opts[2] || ''}
+                        <strong>${item.q}</strong><br>
+                        <div style="margin-top: 4px; padding-right: 10px; line-height: 1.6;">
+                            ${item.opts[0]}<br>
+                            ${item.opts[1]}<br>
+                            ${item.opts[2]}<br>
+                            ${item.opts[3]}
                         </div>
                     </div>
                 `;

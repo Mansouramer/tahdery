@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المعلم منصور - مدرسة داوود (لوحة تحكم مادة العلوم)</title>
-    <!-- مكتبة SheetJS لتصدير واستيراد ملفات إكسل Excel -->
+    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -639,7 +639,7 @@
     </div>
 
     <div class="header">
-        <h1>مدرسة داوود (طلاب)</h1>
+        <h1>🏫 مدرسة داوود (طلاب)</h1>
         <div>إعداد المعلم: منصور</div>
         <p>لوحة تحكم معلم مادة العلوم للمرحلة الابتدائية (وفق المنهج السعودي)</p>
         <div class="subscription-badge">⏳ نهاية الاشتراك: 2027/07/01</div>
@@ -655,7 +655,6 @@
     </div>
 
     <div class="container">
-        <!-- اختيار الصف الدراسي -->
         <div class="section-card no-print" style="background: linear-gradient(135deg, rgba(37,99,235,0.05), rgba(30,58,138,0.1)); border: 2px solid var(--secondary);">
             <h3 style="margin-bottom: 8px;">📌 اختر الصف الدراسي للمتابعة</h3>
             <div class="form-row" style="margin-bottom: 0;">
@@ -670,7 +669,6 @@
             </div>
         </div>
 
-        <!-- الإحصائيات -->
         <div class="stats-grid no-print">
             <div class="stat-card">
                 <h3>👥 إجمالي الطلاب</h3>
@@ -706,22 +704,22 @@
             </div>
         </div>
 
-        <!-- 🆕 مولد الاختبارات القبلية والبعدية لجميع المراحل -->
         <div class="section-card" id="testGeneratorSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
-                <h3 style="margin: 0; border: none; padding: 0;">📝 مولد الاختبارات القبلية والبعدية الذكي (حسب الدرس والمرحلة)</h3>
+                <h3 style="margin: 0; border: none; padding: 0;">📋 📑 مولد الاختبارات (القبلية، البعدية، والفترية) لمجموعة دروس أو وحدة</h3>
                 <button class="btn-print" onclick="printSection('testGeneratorSection')" style="width: auto; padding: 6px 12px; font-size: 12px;">🖨️ طباعة الاختبار جاهز</button>
             </div>
 
             <div class="form-row no-print">
                 <select id="genTestType" class="border p-2 rounded">
-                    <option value="قبلي">اختبار قبلي (تشخيصي مسبق)</option>
-                    <option value="بعدي">اختبار بعدي (قياس نواتج التعلم)</option>
+                    <option value="قبلي تشخيصي شامل">اختبار قبلي شامل (مجموعة دروس / وحدة)</option>
+                    <option value="بعدي تحصيلي شامل">اختبار بعدي تحصيلي شامل (مجموعة دروس / وحدة)</option>
+                    <option value="فترة أولى / ثانية شامل">اختبار فتروي شامل للمقرر</option>
                 </select>
-                <select id="genTestLessonSelect" class="border p-2 rounded">
-                    <option value="">-- اختر الدرس لتوليد الأسئلة --</option>
+                <select id="genTestChapterSelect" class="border p-2 rounded">
+                    <option value="ALL">-- جميع دروس ووحدات المنهج الحالي --</option>
                 </select>
-                <button onclick="generateCustomTest()" class="btn-info" style="width: 100%;">⚡ توليد نموذج الأسئلة التلقائي</button>
+                <button onclick="generateGroupTest()" class="btn-info" style="width: 100%;">⚡ توليد نموذج الاختبار الشامل</button>
             </div>
 
             <div id="testPreviewArea" class="sub-box" style="display: none; background: #ffffff; border: 2px solid var(--secondary);">
@@ -730,23 +728,20 @@
                     <p style="font-size: 12px; margin: 4px 0; color: #000;">مدرسة داوود (طلاب) | معلم المادة: منصور | الصف: <span id="printTestGrade"></span></p>
                     <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 8px; color: #000;">
                         <span>اسم الطالب: ....................................................</span>
-                        <span>الدرجة: ........ / ١٠</span>
+                        <span>الدرجة: ........ / ٢٠</span>
                     </div>
                 </div>
-                <div id="printTestQuestionsList" style="font-size: 13px; color: #000;">
-                    <!-- يتم تعبئة الأسئلة تلقائياً -->
-                </div>
+                <div id="printTestQuestionsList" style="font-size: 13px; color: #000; line-height: 1.6;">
+                    </div>
             </div>
         </div>
 
-        <!-- 📸 نظام التصحيح الآلي للاختبارات وتحليل النتائج عبر كاميرا الجوال -->
         <div class="section-card" id="autoGradingSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
                 <h3 style="margin: 0; border: none; padding: 0;">📸 التصحيح الآلي للاختبارات والتحليل الإحصائي</h3>
                 <button class="btn-print" onclick="printSection('autoGradingSection')" style="width: auto; padding: 6px 12px; font-size: 12px;">🖨️ طباعة تقرير التحليل</button>
             </div>
 
-            <!-- إعداد نموذج الإجابة النموذجي -->
             <div class="sub-box" style="margin-top: 0; background: rgba(37,99,235,0.03); border: 1px solid var(--secondary);">
                 <h5 style="color: var(--secondary);">📝 الخطوة 1: تحديد مفتاح الإجابة النموذجي (أسئلة الاختيار من متعدد)</h5>
                 <div class="form-row">
@@ -756,11 +751,9 @@
                     <input type="number" id="examTotalQuestions" value="5" min="1" max="20" placeholder="عدد الأسئلة" onchange="updateAnswerKeyInputs()" style="max-width: 120px;">
                 </div>
                 <div id="answerKeyContainer" class="form-row" style="background: #fff; padding: 10px; border-radius: 6px; border: 1px dashed var(--secondary); overflow-x: auto;">
-                    <!-- يتم توليد حقول مفتاح الإجابة هنا ديناميكياً -->
-                </div>
+                    </div>
             </div>
 
-            <!-- التقاط الورقة بكاميرا الجوال أو إدخال الإجابات السريع -->
             <div class="sub-box" style="background: #ffffff;">
                 <h5>📷 الخطوة 2: ماسح كاميرا الجوال الضوئي (أو الإدخال السريع) وتصحيح الأوراق</h5>
                 <div class="form-row" style="align-items: center;">
@@ -772,7 +765,6 @@
                 <p style="font-size: 11px; opacity: 0.8; margin: 4px 0;">* ملاحظة: يمكنك النقر للتصوير المباشر بالكاميرا أو إدخال إجابات الطالب الحرفية في الجدول أسفل للمقارنة الفورية مع مفتاح النموذج.</p>
             </div>
 
-            <!-- جدول التصحيح والتحليل الآلي للنتائج -->
             <div class="sub-box" style="background: #ffffff;">
                 <h5 style="color: var(--secondary);">📊 الخطوة 3: نتائج التصحيح الآلي وتحليل أداء الطلاب</h5>
                 <div class="student-details" style="margin-bottom: 10px;">
@@ -809,7 +801,6 @@
             </div>
         </div>
 
-        <!-- تسجيل الطلاب والصفوف والجدول -->
         <div class="section-card" id="studentsTableSection">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                 <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطلاب والصفوف ومتابعتهم</h3>
@@ -871,9 +862,12 @@
                 <button class="btn-warning" onclick="document.getElementById('importFile').click()">📂 استرجاع JSON</button>
                 <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
             </div>
+
+            <button id="installAppBtn" class="no-print" style="display: none; background: #2563eb; color: white; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;">
+                💻 تثبيت الداشبورد كبرنامج مستقل على جهازك (Desktop / Mobile App)
+            </button>
         </div>
 
-        <!-- نظام تتبع إتقان الدروس لكل طالب -->
         <div class="section-card" id="lessonMasterySection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
                 <h3 style="margin: 0; border: none; padding: 0;">🎯 تتبع إتقان كل درس لكل طالب</h3>
@@ -920,7 +914,6 @@
             </div>
         </div>
 
-        <!-- رصد اختبارات الفترة الأولى والثانية -->
         <div class="section-card" id="examsSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
                 <h3 style="margin: 0; border: none; padding: 0;">📊 رصد وتحليل اختبارات الفترة (من ٢٠) 📝</h3>
@@ -965,7 +958,6 @@
             </div>
         </div>
 
-        <!-- استعلام عن طالب -->
         <div class="section-card" id="studentReportSection">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                 <h3 style="margin: 0; border: none; padding: 0;">🔍 استعلام وتتبع طالب محدد</h3>
@@ -1028,7 +1020,6 @@
             </div>
         </div>
 
-        <!-- إرسال جماعي للواجب فقط لأولياء الأمور -->
         <div class="section-card no-print">
             <h3>📢 إرسال الواجب المدرسي الجماعي لأولياء الأمور</h3>
             <div class="sub-box" style="margin-top: 0;">
@@ -1057,7 +1048,6 @@
             </div>
         </div>
 
-        <!-- قائمة وحدات ودروس مادة العلوم -->
         <div class="section-card no-print">
             <h3 id="curriculumTitle" style="font-size: 15px;">📚 دليل مقرر العلوم - المرحلة الابتدائية (المنهج السعودي المعتمد للفصلين) وتتبع التنفيذ</h3>
             
@@ -1111,7 +1101,6 @@
         </div>
     </div>
 
-    <!-- الأزرار العائمة -->
     <div class="floating-action-buttons no-print">
         <a href="https://wa.me/966581015002" target="_blank" class="float-btn float-whatsapp" title="تواصل الدعم الفني عبر واتساب">💬</a>
         <button id="scrollToTopBtn" class="float-btn float-top" onclick="scrollToTop()" title="العودة إلى أعلى الصفحة">⬆️</button>
@@ -1120,6 +1109,35 @@
     <div id="toast" class="toast">✅ تم حفظ البيانات تلقائياً!</div>
 
     <script>
+        // كود تفعيل زر التثبيت المباشر (Install Prompt)
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const installBtn = document.getElementById('installAppBtn');
+            if(installBtn) {
+                installBtn.style.display = 'block';
+            }
+        });
+
+        const installBtnElem = document.getElementById('installAppBtn');
+        if(installBtnElem) {
+            installBtnElem.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('تم قبول تثبيت التطبيق');
+                }
+                deferredPrompt = null;
+                installBtnElem.style.display = 'none';
+            });
+        }
+
+        window.addEventListener('appinstalled', (evt) => {
+            showToast('🎉 تم تثبيت التطبيق كبرنامج مستقل على جهازك!');
+        });
+
         const TEACHER_NAME = "منصور";
         const SCHOOL_NAME = "مدرسة داوود (طلاب)";
 
@@ -1251,59 +1269,62 @@
             showToast(`🔄 تم الانتقال إلى بيانات ${currentGrade}`);
         }
 
-        // دوال مولد الاختبارات القبلية والبعدية
         function renderTestGeneratorDropdowns() {
-            const genTestSelect = document.getElementById('genTestLessonSelect');
-            const currentTestVal = genTestSelect.value;
-            genTestSelect.innerHTML = '<option value="">-- اختر الدرس لتوليد الأسئلة --</option>';
-            lessons.forEach((l, idx) => {
-                genTestSelect.innerHTML += `<option value="${idx}">[${l.chapter}] ${l.title}</option>`;
+            const select = document.getElementById('genTestChapterSelect');
+            select.innerHTML = '<option value="ALL">-- كافة دروس ووحدات المقرر الدراسي --</option>';
+            
+            const chaptersSet = new Set();
+            lessons.forEach(l => chaptersSet.add(l.chapter));
+
+            chaptersSet.forEach(ch => {
+                select.innerHTML += `<option value="${ch}">📁 ${ch}</option>`;
             });
-            if(lessons[currentTestVal]) genTestSelect.value = currentTestVal;
         }
 
-        function generateCustomTest() {
+        function generateGroupTest() {
             const type = document.getElementById('genTestType').value;
-            const lessonIdx = document.getElementById('genTestLessonSelect').value;
+            const targetChapter = document.getElementById('genTestChapterSelect').value;
             const previewArea = document.getElementById('testPreviewArea');
 
-            if(lessonIdx === "") {
-                alert('الرجاء اختيار الدرس أولاً لتوليد الاختبار.');
-                return;
+            let selectedLessons = lessons;
+            let scopeTitle = "كافة دروس مقرر العلوم";
+            if(targetChapter !== 'ALL') {
+                selectedLessons = lessons.filter(l => l.chapter === targetChapter);
+                scopeTitle = targetChapter;
             }
 
-            const l = lessons[lessonIdx];
             previewArea.style.display = 'block';
-            document.getElementById('printTestHeaderTitle').textContent = `نموذج اختبار ${type} - مادة العلوم`;
-            document.getElementById('printTestGrade').textContent = currentGrade;
+            document.getElementById('printTestHeaderTitle').textContent = `نموذج اختبار (${type}) - مادة العلوم`;
+            document.getElementById('printTestGrade').textContent = currentGrade + ` (${scopeTitle})`;
 
             const listContainer = document.getElementById('printTestQuestionsList');
-            listContainer.innerHTML = `
-                <div style="margin-bottom: 10px; font-weight: bold; background: rgba(0,0,0,0.03); padding: 6px;">موضوع الاختبار / الدرس: ${l.title} (${l.chapter})</div>
-                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
-                    1. ما الفكرة الرئيسية أو المفهوم العلمي المرتبط بدرس (${l.title})؟<br>
-                    أ) الإجابة العلمية الصحيحة الأولى المتعلقة بخصائص الدرس.<br>
-                    ب) خيار تشتيتي غير صحيح.<br>
-                    ج) خيار تشتيتي آخر.
-                </div>
-                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
-                    2. بناءً على مفاهيم (${l.chapter})، أي العبارات التالية تعد صحيحة تماماً؟<br>
-                    أ) العبارة الدقيقة استنتاجياً.<br>
-                    ب) عبارة خاطئة علمياً.<br>
-                    ج) لا شيء مما سبق.
-                </div>
-                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
-                    3. ضع علامة (صح) أو (خطأ): (التجارب الاستهلالية في هذا الدرس توضح خصائص الكائنات أو المواد بدقة). [<span style="display:inline-block; width:40px; border-bottom:1px solid #000;"></span>]
-                </div>
-                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
-                    4. اذكر باختصار مثالاً واقعياً أو تطبيقاً شاهدته يتعلق بهذا الدرس:<br>
-                    <div style="border-bottom: 1px dashed #000; height: 25px; margin-top: 5px;"></div>
+            let qHTML = `<div style="margin-bottom: 10px; font-weight: bold; background: rgba(0,0,0,0.03); padding: 6px;">نطاق الاختبار: ${scopeTitle} (عدد الدروس المغطاة: ${selectedLessons.length})</div>`;
+
+            selectedLessons.forEach((l, idx) => {
+                qHTML += `
+                    <div style="margin-bottom: 12px; padding: 8px; background: rgba(0,0,0,0.02); border-radius: 4px; border-right: 3px solid var(--secondary);">
+                        <strong>السؤال ${idx + 1} (عن درس: ${l.title}):</strong><br>
+                        ما هو المفهوم العلمي أو النتيجة المستخلصة من دراسة (${l.title}) ضمن (${l.chapter})؟<br>
+                        أ) الإجابة العلمية الصحيحة المرتبطة بالوحدة والدرس.<br>
+                        ب) خيار تشتيتي غير دقيق.<br>
+                        ج) خيار تشتيتي آخر.<br>
+                        <div style="margin-top:4px; font-size:11px; opacity:0.8;">💡 فكرة رئيسية: ${l.desc}</div>
+                    </div>
+                `;
+            });
+
+            qHTML += `
+                <div style="margin-top: 15px; padding: 8px; background: rgba(0,0,0,0.03); border-radius: 4px;">
+                    <strong>السؤال الختامي المقالي / التطبيقي:</strong><br>
+                    اشرح باختصار كيف ترتبط مفاهيم هذه الوحدة بتجاربنا اليومية في الحياة؟<br>
+                    <div style="border-bottom: 1px dashed #000; height: 35px; margin-top: 8px;"></div>
                 </div>
             `;
-            showToast('⚡ تم توليد نموذج الأسئلة والاختبار بنجاح!');
+
+            listContainer.innerHTML = qHTML;
+            showToast('⚡ تم توليد نموذج الاختبار الشامل لمجموعة الدروس بنجاح!');
         }
 
-        // دوال نظام التصحيح الآلي ومفتاح الإجابة
         let answerKey = ['أ', 'ب', 'ج', 'أ', 'ب'];
 
         function updateAnswerKeyInputs() {
@@ -2385,56 +2406,3 @@
         window.onload = function() {
             renderLessons();
             render();
-            checkBackupReminder();
-        };
-
-        function backupAllData() {
-            const fullBackup = {
-                students: typeof students !== 'undefined' ? students : [],
-                lessons: typeof lessons !== 'undefined' ? lessons : [],
-                autoGradingData: typeof autoGradingData !== 'undefined' ? autoGradingData : {},
-                timestamp: new Date().toLocaleString('ar-SA')
-            };
-
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `نسخة_احتياطية_الداش_بورد_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(dlAnchor);
-            dlAnchor.click();
-            dlAnchor.remove();
-            
-            if (typeof showToast === 'function') {
-                showToast('💾 تم حفظ النسخة الاحتياطية على جهازك بنجاح!');
-            } else {
-                alert('تم حفظ النسخة الاحتياطية على جهازك بنجاح.');
-            }
-        }
-
-        function restoreDashboardData(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if(imported) {
-                        if(imported.students) localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(imported.students));
-                        if(imported.lessons) localStorage.setItem(getStorageKeyForLessons(), JSON.stringify(imported.lessons));
-                        if(imported.autoGradingData) localStorage.setItem(getStorageKeyForAutoGrading(), JSON.stringify(imported.autoGradingData));
-                        alert('📂 تم استرجاع البيانات بنجاح!');
-                        location.reload();
-                    } else {
-                        alert('ملف النسخة الاحتياطية غير صالح.');
-                    }
-                } catch(err) {
-                    alert('خطأ في قراءة ملف JSON.');
-                } finally {
-                    event.target.value = '';
-                }
-            };
-            reader.readAsText(file);
-        }
-    </script>
-</body>
-</html>

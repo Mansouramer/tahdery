@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المعلم منصور عامر الرحيلي - مدرسة داوود بن عروة الثقفي (لوحة تحكم مادة العلوم)</title>
+    <title>المعلم منصور - مدرسة داوود (لوحة تحكم مادة العلوم)</title>
     <!-- مكتبة SheetJS لتصدير واستيراد ملفات إكسل Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
@@ -639,8 +639,8 @@
     </div>
 
     <div class="header">
-        <h1>مدرسة داوود بن عروة الثقفي</h1>
-        <div>إعداد المعلم: منصور عامر الرحيلي</div>
+        <h1>مدرسة داوود (طلاب)</h1>
+        <div>إعداد المعلم: منصور</div>
         <p>لوحة تحكم معلم مادة العلوم للمرحلة الابتدائية (وفق المنهج السعودي)</p>
         <div class="subscription-badge">⏳ نهاية الاشتراك: 2027/07/01</div>
 
@@ -706,7 +706,40 @@
             </div>
         </div>
 
-        <!-- 🆕 نظام التصحيح الآلي للاختبارات وتحليل النتائج عبر كاميرا الجوال -->
+        <!-- 🆕 مولد الاختبارات القبلية والبعدية لجميع المراحل -->
+        <div class="section-card" id="testGeneratorSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
+                <h3 style="margin: 0; border: none; padding: 0;">📝 مولد الاختبارات القبلية والبعدية الذكي (حسب الدرس والمرحلة)</h3>
+                <button class="btn-print" onclick="printSection('testGeneratorSection')" style="width: auto; padding: 6px 12px; font-size: 12px;">🖨️ طباعة الاختبار جاهز</button>
+            </div>
+
+            <div class="form-row no-print">
+                <select id="genTestType" class="border p-2 rounded">
+                    <option value="قبلي">اختبار قبلي (تشخيصي مسبق)</option>
+                    <option value="بعدي">اختبار بعدي (قياس نواتج التعلم)</option>
+                </select>
+                <select id="genTestLessonSelect" class="border p-2 rounded">
+                    <option value="">-- اختر الدرس لتوليد الأسئلة --</option>
+                </select>
+                <button onclick="generateCustomTest()" class="btn-info" style="width: 100%;">⚡ توليد نموذج الأسئلة التلقائي</button>
+            </div>
+
+            <div id="testPreviewArea" class="sub-box" style="display: none; background: #ffffff; border: 2px solid var(--secondary);">
+                <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 10px;">
+                    <h4 id="printTestHeaderTitle" style="margin: 0; color: #000; font-size: 16px;">نموذج اختبار</h4>
+                    <p style="font-size: 12px; margin: 4px 0; color: #000;">مدرسة داوود (طلاب) | معلم المادة: منصور | الصف: <span id="printTestGrade"></span></p>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 8px; color: #000;">
+                        <span>اسم الطالب: ....................................................</span>
+                        <span>الدرجة: ........ / ١٠</span>
+                    </div>
+                </div>
+                <div id="printTestQuestionsList" style="font-size: 13px; color: #000;">
+                    <!-- يتم تعبئة الأسئلة تلقائياً -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 📸 نظام التصحيح الآلي للاختبارات وتحليل النتائج عبر كاميرا الجوال -->
         <div class="section-card" id="autoGradingSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
                 <h3 style="margin: 0; border: none; padding: 0;">📸 التصحيح الآلي للاختبارات والتحليل الإحصائي</h3>
@@ -1087,8 +1120,8 @@
     <div id="toast" class="toast">✅ تم حفظ البيانات تلقائياً!</div>
 
     <script>
-        const TEACHER_NAME = "منصور عامر الرحيلي";
-        const SCHOOL_NAME = "مدرسة داوود بن عروة الثقفي";
+        const TEACHER_NAME = "منصور";
+        const SCHOOL_NAME = "مدرسة داوود (طلاب)";
 
         let currentGrade = localStorage.getItem('mansour_current_grade_science_v5') || 'الأول الابتدائي';
         document.getElementById('globalGradeSelect').value = currentGrade;
@@ -1179,7 +1212,7 @@
         let students = JSON.parse(localStorage.getItem(getStorageKeyForStudents())) || [];
         let lessonStatus = JSON.parse(localStorage.getItem(getStorageKeyForStatus())) || {};
         let lessonMastery = JSON.parse(localStorage.getItem(getStorageKeyForMastery())) || {};
-        let autoGradingData = JSON.parse(localStorage.getItem(getStorageKeyForAutoGrading())) || {}; // { studentIdx: "أ,ب,أ,ج,د" }
+        let autoGradingData = JSON.parse(localStorage.getItem(getStorageKeyForAutoGrading())) || {};
 
         function checkBackupReminder() {
             const lastBackup = localStorage.getItem('mansour_last_backup_date');
@@ -1212,13 +1245,66 @@
 
             renderLessons();
             renderMasteryDropdowns();
+            renderTestGeneratorDropdowns();
             renderClassesQuery();
             render();
             showToast(`🔄 تم الانتقال إلى بيانات ${currentGrade}`);
         }
 
+        // دوال مولد الاختبارات القبلية والبعدية
+        function renderTestGeneratorDropdowns() {
+            const genTestSelect = document.getElementById('genTestLessonSelect');
+            const currentTestVal = genTestSelect.value;
+            genTestSelect.innerHTML = '<option value="">-- اختر الدرس لتوليد الأسئلة --</option>';
+            lessons.forEach((l, idx) => {
+                genTestSelect.innerHTML += `<option value="${idx}">[${l.chapter}] ${l.title}</option>`;
+            });
+            if(lessons[currentTestVal]) genTestSelect.value = currentTestVal;
+        }
+
+        function generateCustomTest() {
+            const type = document.getElementById('genTestType').value;
+            const lessonIdx = document.getElementById('genTestLessonSelect').value;
+            const previewArea = document.getElementById('testPreviewArea');
+
+            if(lessonIdx === "") {
+                alert('الرجاء اختيار الدرس أولاً لتوليد الاختبار.');
+                return;
+            }
+
+            const l = lessons[lessonIdx];
+            previewArea.style.display = 'block';
+            document.getElementById('printTestHeaderTitle').textContent = `نموذج اختبار ${type} - مادة العلوم`;
+            document.getElementById('printTestGrade').textContent = currentGrade;
+
+            const listContainer = document.getElementById('printTestQuestionsList');
+            listContainer.innerHTML = `
+                <div style="margin-bottom: 10px; font-weight: bold; background: rgba(0,0,0,0.03); padding: 6px;">موضوع الاختبار / الدرس: ${l.title} (${l.chapter})</div>
+                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
+                    1. ما الفكرة الرئيسية أو المفهوم العلمي المرتبط بدرس (${l.title})؟<br>
+                    أ) الإجابة العلمية الصحيحة الأولى المتعلقة بخصائص الدرس.<br>
+                    ب) خيار تشتيتي غير صحيح.<br>
+                    ج) خيار تشتيتي آخر.
+                </div>
+                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
+                    2. بناءً على مفاهيم (${l.chapter})، أي العبارات التالية تعد صحيحة تماماً؟<br>
+                    أ) العبارة الدقيقة استنتاجياً.<br>
+                    ب) عبارة خاطئة علمياً.<br>
+                    ج) لا شيء مما سبق.
+                </div>
+                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
+                    3. ضع علامة (صح) أو (خطأ): (التجارب الاستهلالية في هذا الدرس توضح خصائص الكائنات أو المواد بدقة). [<span style="display:inline-block; width:40px; border-bottom:1px solid #000;"></span>]
+                </div>
+                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
+                    4. اذكر باختصار مثالاً واقعياً أو تطبيقاً شاهدته يتعلق بهذا الدرس:<br>
+                    <div style="border-bottom: 1px dashed #000; height: 25px; margin-top: 5px;"></div>
+                </div>
+            `;
+            showToast('⚡ تم توليد نموذج الأسئلة والاختبار بنجاح!');
+        }
+
         // دوال نظام التصحيح الآلي ومفتاح الإجابة
-        let answerKey = ['أ', 'ب', 'ج', 'أ', 'ب']; // مفتاح افتراضي
+        let answerKey = ['أ', 'ب', 'ج', 'أ', 'ب'];
 
         function updateAnswerKeyInputs() {
             const totalQ = Number(document.getElementById('examTotalQuestions').value) || 5;
@@ -1341,7 +1427,6 @@
         function handleCameraScan(event) {
             const file = event.target.files[0];
             if(!file) return;
-            // محاكاة مسح الكاميرا الضوئي وتصحيح ورقة الطالب عشوائياً لأول طالب غير مصحح في الصف المحدد
             const selectedClass = document.getElementById('examTargetClassForGrading').value;
             if(!selectedClass) {
                 alert('الرجاء اختيار الصف أولاً قبل استخدام ماسح الكاميرا التصويري.');
@@ -1424,6 +1509,7 @@
 
             document.getElementById('totalExecutedLessons').textContent = `${executedCount} / ${lessons.length}`;
             renderMasteryDropdowns();
+            renderTestGeneratorDropdowns();
         }
 
         function renderMasteryDropdowns() {

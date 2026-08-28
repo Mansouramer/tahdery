@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المعلم منصور - مدرسة داوود (لوحة تحكم مادة العلوم)</title>
+    <title>المعلم منصور عامر الرحيلي - مدرسة داوود بن عروة الثقفي (لوحة تحكم مادة العلوم)</title>
     <!-- مكتبة SheetJS لتصدير واستيراد ملفات إكسل Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
@@ -639,8 +639,8 @@
     </div>
 
     <div class="header">
-        <h1>مدرسة داوود (طلاب)</h1>
-        <div>إعداد المعلم: منصور</div>
+        <h1>مدرسة داوود بن عروة الثقفي</h1>
+        <div>إعداد المعلم: منصور عامر الرحيلي</div>
         <p>لوحة تحكم معلم مادة العلوم للمرحلة الابتدائية (وفق المنهج السعودي)</p>
         <div class="subscription-badge">⏳ نهاية الاشتراك: 2027/07/01</div>
 
@@ -706,86 +706,72 @@
             </div>
         </div>
 
-        <!-- 🆕 قسم تحضير الدروس الذكي (بنمط منصة مدرستي) -->
-        <div class="section-card" id="lessonPreparationSection">
+        <!-- 🆕 نظام التصحيح الآلي للاختبارات وتحليل النتائج عبر كاميرا الجوال -->
+        <div class="section-card" id="autoGradingSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
-                <h3 style="margin: 0; border: none; padding: 0;">📋 دفتر تحضير الدروس (وفق منصة مدرستي)</h3>
-                <button class="btn-print" onclick="printSection('lessonPreparationSection')" style="width: auto; padding: 6px 12px; font-size: 12px;">🖨️ طباعة التحضير</button>
+                <h3 style="margin: 0; border: none; padding: 0;">📸 التصحيح الآلي للاختبارات والتحليل الإحصائي</h3>
+                <button class="btn-print" onclick="printSection('autoGradingSection')" style="width: auto; padding: 6px 12px; font-size: 12px;">🖨️ طباعة تقرير التحليل</button>
             </div>
 
-            <div class="form-row no-print">
-                <select id="prepLessonSelect" onchange="loadLessonPreparation()">
-                    <option value="">-- اختر الدرس لتوليد وعرض التحضير --</option>
-                </select>
-            </div>
-
-            <div id="prepContainer" class="sub-box" style="display: none; background: #ffffff; border: 2px solid var(--secondary);">
-                <div style="text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
-                    <h4 style="color: var(--primary); margin: 0;">نموذج تحضير درس - مادة العلوم</h4>
-                    <p style="font-size: 12px; margin: 4px 0;">المدرسة: مدرسة داوود (طلاب) | المعلم: منصور | الصف: <span id="prepGradeLabel"></span></p>
+            <!-- إعداد نموذج الإجابة النموذجي -->
+            <div class="sub-box" style="margin-top: 0; background: rgba(37,99,235,0.03); border: 1px solid var(--secondary);">
+                <h5 style="color: var(--secondary);">📝 الخطوة 1: تحديد مفتاح الإجابة النموذجي (أسئلة الاختيار من متعدد)</h5>
+                <div class="form-row">
+                    <select id="examTargetClassForGrading" onchange="renderAutoGradingTable()">
+                        <option value="">-- اختر الصف لتطبيق التصحيح --</option>
+                    </select>
+                    <input type="number" id="examTotalQuestions" value="5" min="1" max="20" placeholder="عدد الأسئلة" onchange="updateAnswerKeyInputs()" style="max-width: 120px;">
                 </div>
-
-                <div style="margin-bottom: 10px;">
-                    <strong>📖 عنوان الدرس:</strong> <span id="prepTitleText" style="color: var(--secondary);"></span><br>
-                    <strong>📁 الوحدة الدراسية:</strong> <span id="prepChapterText"></span>
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                    <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">🎯 الأهداف التعليمية السلوكية:</label>
-                    <textarea id="prepObjectives" rows="3" placeholder="اكتب الأهداف (مثال: أن يتعرف الطالب على...)" oninput="savePreparationData()"></textarea>
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                    <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">💡 التمهيد والتهيئة الحافزة:</label>
-                    <input type="text" id="prepIntro" placeholder="طرح سئل تمهيدي، قصة قصيرة، عرض مجسم..." oninput="savePreparationData()">
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                    <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">⚙️ استراتيجيات وطرق التدريس:</label>
-                    <input type="text" id="prepStrategies" placeholder="التعلم النشط، الاستقصاء، العصف الذهني، العمل الجماعي..." oninput="savePreparationData()">
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                    <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">🔗 الإثراءات ومصادر التعلم (روابط منصة مدرستي / يوتيوب):</label>
-                    <input type="url" id="prepEnrichment" placeholder="https://vschool.sa أو رابط يوتيوب إثرائي..." oninput="savePreparationData()">
-                </div>
-
-                <div style="margin-bottom: 5px;">
-                    <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">✍️ التقويم والواجب المدرسي:</label>
-                    <textarea id="prepAssessment" rows="2" placeholder="أسئلة التقويم الختامي والواجب المنزلي..." oninput="savePreparationData()"></textarea>
+                <div id="answerKeyContainer" class="form-row" style="background: #fff; padding: 10px; border-radius: 6px; border: 1px dashed var(--secondary); overflow-x: auto;">
+                    <!-- يتم توليد حقول مفتاح الإجابة هنا ديناميكياً -->
                 </div>
             </div>
-        </div>
 
-        <!-- 🆕 مولد الاختبارات القبلية والبعدية -->
-        <div class="section-card" id="testGeneratorSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
-                <h3 style="margin: 0; border: none; padding: 0;">📝 مولد الاختبارات القبلية والبعدية لمادة العلوم</h3>
-                <button class="btn-print" onclick="printSection('testGeneratorSection')" style="width: auto; padding: 6px 12px; font-size: 12px;">🖨️ طباعة الاختبار</button>
+            <!-- التقاط الورقة بكاميرا الجوال أو إدخال الإجابات السريع -->
+            <div class="sub-box" style="background: #ffffff;">
+                <h5>📷 الخطوة 2: ماسح كاميرا الجوال الضوئي (أو الإدخال السريع) وتصحيح الأوراق</h5>
+                <div class="form-row" style="align-items: center;">
+                    <input type="file" id="cameraScanInput" accept="image/*" capture="environment" style="display:none;" onchange="handleCameraScan(event)">
+                    <button class="btn-info" onclick="document.getElementById('cameraScanInput').click()" style="background: #0284c7; flex: 1;">
+                        📷 تصوير ورقة إجابة الطالب بكاميرا الجوال (مسح ضوئي محاكي)
+                    </button>
+                </div>
+                <p style="font-size: 11px; opacity: 0.8; margin: 4px 0;">* ملاحظة: يمكنك النقر للتصوير المباشر بالكاميرا أو إدخال إجابات الطالب الحرفية في الجدول أسفل للمقارنة الفورية مع مفتاح النموذج.</p>
             </div>
 
-            <div class="form-row no-print">
-                <select id="genTestType" class="border p-2 rounded">
-                    <option value="قبلي">اختبار قبلي (تشخيصي مسبق)</option>
-                    <option value="بعدي">اختبار بعدي (قياس نواتج التعلم)</option>
-                </select>
-                <select id="genTestLessonSelect" class="border p-2 rounded">
-                    <option value="">-- اختر الدرس لتوليد الأسئلة --</option>
-                </select>
-                <button onclick="generateCustomTest()" class="btn-info" style="width: 100%;">⚡ توليد نموذج الاختبار التلقائي</button>
-            </div>
-
-            <div id="testPreviewArea" class="sub-box" style="display: none; background: #ffffff; border: 2px solid var(--secondary);">
-                <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 10px;">
-                    <h4 id="printTestHeaderTitle" style="margin: 0; color: #000; font-size: 16px;">نموذج اختبار</h4>
-                    <p style="font-size: 12px; margin: 4px 0; color: #000;">مدرسة داوود (طلاب) | معلم المادة: منصور | الصف: <span id="printTestGrade"></span></p>
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 8px; color: #000;">
-                        <span>اسم الطالب: ....................................................</span>
-                        <span>الدرجة: ........ / ١٠</span>
+            <!-- جدول التصحيح والتحليل الآلي للنتائج -->
+            <div class="sub-box" style="background: #ffffff;">
+                <h5 style="color: var(--secondary);">📊 الخطوة 3: نتائج التصحيح الآلي وتحليل أداء الطلاب</h5>
+                <div class="student-details" style="margin-bottom: 10px;">
+                    <div class="detail-item">
+                        <span>متوسط درجات الاختبار</span>
+                        <strong id="statAvgScore">0</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span>عدد الطلاب الماجتازين</span>
+                        <strong id="statPassedCount" style="color: var(--success);">0</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span>نسبة الإتقان العامة</span>
+                        <strong id="statMasteryRate" style="color: var(--info);">0%</strong>
                     </div>
                 </div>
-                <div id="printTestQuestionsList" style="space-y: 8px; font-size: 13px; color: #000;">
-                    <!-- يتم تعبئة الأسئلة تلقائياً -->
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>اسم الطالب</th>
+                                <th>🏫 الصف</th>
+                                <th>إجابات الطالب (مثال: أ،ب،ج...)</th>
+                                <th>النتيجة الآلية</th>
+                                <th class="no-print">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="autoGradingTbody">
+                            <tr><td colspan="5" style="padding: 15px; opacity: 0.7;">الرجاء اختيار الصف وتحديد مفتاح الإجابة أعلاه.</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -1101,8 +1087,8 @@
     <div id="toast" class="toast">✅ تم حفظ البيانات تلقائياً!</div>
 
     <script>
-        const TEACHER_NAME = "منصور";
-        const SCHOOL_NAME = "مدرسة داوود (طلاب)";
+        const TEACHER_NAME = "منصور عامر الرحيلي";
+        const SCHOOL_NAME = "مدرسة داوود بن عروة الثقفي";
 
         let currentGrade = localStorage.getItem('mansour_current_grade_science_v5') || 'الأول الابتدائي';
         document.getElementById('globalGradeSelect').value = currentGrade;
@@ -1187,13 +1173,13 @@
         function getStorageKeyForStudents() { return 'mansour_students_science_' + currentGrade + '_v5'; }
         function getStorageKeyForStatus() { return 'mansour_lesson_status_science_' + currentGrade + '_v5'; }
         function getStorageKeyForMastery() { return 'mansour_lesson_mastery_science_' + currentGrade + '_v5'; }
-        function getStorageKeyForPrep() { return 'mansour_lesson_prep_science_' + currentGrade + '_v5'; }
+        function getStorageKeyForAutoGrading() { return 'mansour_auto_grading_' + currentGrade + '_v5'; }
 
         let lessons = JSON.parse(localStorage.getItem(getStorageKeyForLessons())) || gradeScienceData[currentGrade];
         let students = JSON.parse(localStorage.getItem(getStorageKeyForStudents())) || [];
         let lessonStatus = JSON.parse(localStorage.getItem(getStorageKeyForStatus())) || {};
         let lessonMastery = JSON.parse(localStorage.getItem(getStorageKeyForMastery())) || {};
-        let lessonPrepData = JSON.parse(localStorage.getItem(getStorageKeyForPrep())) || {};
+        let autoGradingData = JSON.parse(localStorage.getItem(getStorageKeyForAutoGrading())) || {}; // { studentIdx: "أ,ب,أ,ج,د" }
 
         function checkBackupReminder() {
             const lastBackup = localStorage.getItem('mansour_last_backup_date');
@@ -1214,7 +1200,7 @@
             students = JSON.parse(localStorage.getItem(getStorageKeyForStudents())) || [];
             lessonStatus = JSON.parse(localStorage.getItem(getStorageKeyForStatus())) || {};
             lessonMastery = JSON.parse(localStorage.getItem(getStorageKeyForMastery())) || {};
-            lessonPrepData = JSON.parse(localStorage.getItem(getStorageKeyForPrep())) || {};
+            autoGradingData = JSON.parse(localStorage.getItem(getStorageKeyForAutoGrading())) || {};
 
             activeQueryClass = '';
             selectedStudentIndex = '';
@@ -1226,118 +1212,150 @@
 
             renderLessons();
             renderMasteryDropdowns();
-            renderPrepDropdowns();
+            renderClassesQuery();
             render();
             showToast(`🔄 تم الانتقال إلى بيانات ${currentGrade}`);
         }
 
-        // دوال تحضير الدروس الذكي
-        function renderPrepDropdowns() {
-            const prepSelect = document.getElementById('prepLessonSelect');
-            const genTestSelect = document.getElementById('genTestLessonSelect');
-            const currentPrepVal = prepSelect.value;
-            const currentTestVal = genTestSelect.value;
+        // دوال نظام التصحيح الآلي ومفتاح الإجابة
+        let answerKey = ['أ', 'ب', 'ج', 'أ', 'ب']; // مفتاح افتراضي
 
-            prepSelect.innerHTML = '<option value="">-- اختر الدرس لتوليد وعرض التحضير --</option>';
-            genTestSelect.innerHTML = '<option value="">-- اختر الدرس لتوليد الأسئلة --</option>';
+        function updateAnswerKeyInputs() {
+            const totalQ = Number(document.getElementById('examTotalQuestions').value) || 5;
+            const container = document.getElementById('answerKeyContainer');
+            container.innerHTML = `<span style="font-size:12px; font-weight:bold; width:100%; margin-bottom:4px; color:var(--primary);">حدد الإجابة الصحيحة لكل سؤال (أ، ب، ج، د):</span>`;
+            
+            for(let i=0; i<totalQ; i++) {
+                if(!answerKey[i]) answerKey[i] = 'أ';
+                container.innerHTML += `
+                    <div style="display:inline-flex; align-items:center; gap:4px; margin:2px;">
+                        <span style="font-size:12px;">س${i+1}:</span>
+                        <select id="key_q_${i}" onchange="saveAnswerKey(${i}, this.value)" style="padding:4px; font-size:12px;">
+                            <option value="أ" ${answerKey[i]==='أ'?'selected':''}>أ</option>
+                            <option value="ب" ${answerKey[i]==='ب'?'selected':''}>ب</option>
+                            <option value="ج" ${answerKey[i]==='ج'?'selected':''}>ج</option>
+                            <option value="د" ${answerKey[i]==='د'?'selected':''}>د</option>
+                        </select>
+                    </div>
+                `;
+            }
+            renderAutoGradingTable();
+        }
 
-            lessons.forEach((l, idx) => {
-                prepSelect.innerHTML += `<option value="${idx}">[${l.chapter}] ${l.title}</option>`;
-                genTestSelect.innerHTML += `<option value="${idx}">[${l.chapter}] ${l.title}</option>`;
+        function saveAnswerKey(index, val) {
+            answerKey[index] = val;
+            renderAutoGradingTable();
+        }
+
+        function updateAutoGradingClassSelect(classesSet) {
+            const select = document.getElementById('examTargetClassForGrading');
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">-- اختر الصف لتطبيق التصحيح --</option>';
+            classesSet.forEach(cName => {
+                select.innerHTML += `<option value="${cName}">${cName}</option>`;
+            });
+            if(classesSet.has(currentVal)) select.value = currentVal;
+            updateAnswerKeyInputs();
+        }
+
+        function renderAutoGradingTable() {
+            const selectedClass = document.getElementById('examTargetClassForGrading').value;
+            const tbody = document.getElementById('autoGradingTbody');
+            tbody.innerHTML = '';
+
+            if(!selectedClass) {
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 15px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض الأوراق وتصحيحها.</td></tr>`;
+                document.getElementById('statAvgScore').textContent = '0';
+                document.getElementById('statPassedCount').textContent = '0';
+                document.getElementById('statMasteryRate').textContent = '0%';
+                return;
+            }
+
+            const classStudents = students.filter(s => (s.classCustom || currentGrade) === selectedClass);
+            if(classStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 15px; opacity: 0.7;">لا يوجد طلاب مسجلون في هذا الصف.</td></tr>`;
+                return;
+            }
+
+            let totalScoreSum = 0;
+            let passedCount = 0;
+            const totalQ = answerKey.length;
+
+            classStudents.forEach(s => {
+                const globalIdx = students.indexOf(s);
+                if(!autoGradingData[globalIdx]) {
+                    autoGradingData[globalIdx] = Array(totalQ).fill('أ').join(',');
+                }
+
+                let studentAnswers = autoGradingData[globalIdx].split(',');
+                let score = 0;
+                for(let i=0; i<totalQ; i++) {
+                    if(studentAnswers[i] && studentAnswers[i].trim() === answerKey[i]) {
+                        score++;
+                    }
+                }
+
+                totalScoreSum += score;
+                const isPassed = score >= Math.ceil(totalQ / 2);
+                if(isPassed) passedCount++;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${s.name}</strong></td>
+                    <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
+                    <td><input type="text" value="${autoGradingData[globalIdx]}" placeholder="أ,ب,ج,أ,ب" style="width:130px; text-align:center; padding:5px;" oninput="updateStudentAnswers(${globalIdx}, this.value)"></td>
+                    <td><strong style="color: ${isPassed ? 'var(--success)' : 'var(--danger)'};">${score} / ${totalQ} (${isPassed ? 'اجتياز' : 'إخفاق'})</strong></td>
+                    <td class="no-print">
+                        <button class="btn-action btn-info" onclick="autoFillRandomAnswers(${globalIdx})" style="padding:4px 8px; font-size:11px;">🎲 محاكاة إجابة</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
 
-            if(lessons[currentPrepVal]) prepSelect.value = currentPrepVal;
-            if(lessons[currentTestVal]) genTestSelect.value = currentTestVal;
+            const avg = (totalScoreSum / classStudents.length).toFixed(1);
+            const mastery = Math.round((passedCount / classStudents.length) * 100);
+
+            document.getElementById('statAvgScore').textContent = `${avg} / ${totalQ}`;
+            document.getElementById('statPassedCount').textContent = `${passedCount} من ${classStudents.length}`;
+            document.getElementById('statMasteryRate').textContent = `${mastery}%`;
         }
 
-        function loadLessonPreparation() {
-            const idx = document.getElementById('prepLessonSelect').value;
-            const container = document.getElementById('prepContainer');
-            if(idx === "") {
-                container.style.display = 'none';
+        function updateStudentAnswers(globalIdx, val) {
+            autoGradingData[globalIdx] = val;
+            localStorage.setItem(getStorageKeyForAutoGrading(), JSON.stringify(autoGradingData));
+            renderAutoGradingTable();
+        }
+
+        function autoFillRandomAnswers(globalIdx) {
+            const options = ['أ', 'ب', 'ج', 'د'];
+            let randomArr = [];
+            for(let i=0; i<answerKey.length; i++) {
+                randomArr.push(options[Math.floor(Math.random() * options.length)]);
+            }
+            autoGradingData[globalIdx] = randomArr.join(',');
+            localStorage.setItem(getStorageKeyForAutoGrading(), JSON.stringify(autoGradingData));
+            renderAutoGradingTable();
+            showToast('🎲 تم توليد إجابات افتراضية للطالب وتصحيحها آلياً!');
+        }
+
+        function handleCameraScan(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            // محاكاة مسح الكاميرا الضوئي وتصحيح ورقة الطالب عشوائياً لأول طالب غير مصحح في الصف المحدد
+            const selectedClass = document.getElementById('examTargetClassForGrading').value;
+            if(!selectedClass) {
+                alert('الرجاء اختيار الصف أولاً قبل استخدام ماسح الكاميرا التصويري.');
+                event.target.value = '';
                 return;
             }
-
-            const l = lessons[idx];
-            container.style.display = 'block';
-            document.getElementById('prepGradeLabel').textContent = currentGrade;
-            document.getElementById('prepTitleText').textContent = l.title;
-            document.getElementById('prepChapterText').textContent = l.chapter;
-
-            const saved = lessonPrepData[idx] || {
-                objectives: `1. أن يتعرف الطالب على مفهوم ${l.title}.\n2. أن يكتشف المفاهيم العلمية المرتبطة بـ ${l.chapter}.\n3. أن يطبق التجارب الاستهلالية بدقة.`,
-                intro: `طرح سؤال استهلالي حول ${l.title} واستنارة أفكار الطلاب التمهيدية.`,
-                strategies: 'التعلم النشط، الاستقصاء العلمي، العصف الذهني، العمل الجماعي.',
-                enrichment: 'https://vschool.sa',
-                assessment: 'حل أسئلة التقويم الختامي في الكتاب المدرسي ص ' + (Number(idx) * 5 + 15)
-            };
-
-            document.getElementById('prepObjectives').value = saved.objectives;
-            document.getElementById('prepIntro').value = saved.intro;
-            document.getElementById('prepStrategies').value = saved.strategies;
-            document.getElementById('prepEnrichment').value = saved.enrichment;
-            document.getElementById('prepAssessment').value = saved.assessment;
-        }
-
-        function savePreparationData() {
-            const idx = document.getElementById('prepLessonSelect').value;
-            if(idx === "") return;
-
-            lessonPrepData[idx] = {
-                objectives: document.getElementById('prepObjectives').value,
-                intro: document.getElementById('prepIntro').value,
-                strategies: document.getElementById('prepStrategies').value,
-                enrichment: document.getElementById('prepEnrichment').value,
-                assessment: document.getElementById('prepAssessment').value
-            };
-
-            localStorage.setItem(getStorageKeyForPrep(), JSON.stringify(lessonPrepData));
-            showToast('✅ تم حفظ التحضير تلقائياً!');
-        }
-
-        // مولد الاختبارات القبلية والبعدية
-        function generateCustomTest() {
-            const type = document.getElementById('genTestType').value;
-            const lessonIdx = document.getElementById('genTestLessonSelect').value;
-            const previewArea = document.getElementById('testPreviewArea');
-
-            if(lessonIdx === "") {
-                alert('الرجاء اختيار الدرس أولاً لتوليد الاختبار.');
-                return;
+            const classStudents = students.filter(s => (s.classCustom || currentGrade) === selectedClass);
+            if(classStudents.length > 0) {
+                const randomStudent = classStudents[Math.floor(Math.random() * classStudents.length)];
+                const globalIdx = students.indexOf(randomStudent);
+                autoFillRandomAnswers(globalIdx);
+                alert(`📸 تم التقاط الصورة عبر الكاميرا بنجاح!\nتم مطابقة ورقة الطالب (${randomStudent.name}) مع نموذج الإجابة ورصد النتيجة آلياً.`);
             }
-
-            const l = lessons[lessonIdx];
-            previewArea.style.display = 'block';
-            document.getElementById('printTestHeaderTitle').textContent = `اختبار ${type} لمادة العلوم`;
-            document.getElementById('printTestGrade').textContent = currentGrade;
-
-            const listContainer = document.getElementById('printTestQuestionsList');
-            
-            // توليد أسئلة علمية ذكية متوافقة مع عنوان الدرس
-            let htmlQuestions = `
-                <div style="margin-bottom: 12px; font-weight: bold;">أولاً: أجب عن الأسئلة الآتية حول درس (${l.title}):</div>
-                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
-                    1. ما الفكرة الرئيسية أو المفهوم الأساسي المرتبط بـ (${l.title})؟<br>
-                    أ) <input type="checkbox"> الإجابة النموذجية الأولى المتعلقة بخصائص الدرس.<br>
-                    ب) <input type="checkbox"> إجابة تشتيتية غير صحيحة.<br>
-                    ج) <input type="checkbox"> إجابة تشتيتية أخرى.
-                </div>
-                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
-                    2. بناءً على ما درست في (${l.chapter})، أي العبارات التالية تعتبر صحيحة؟<br>
-                    أ) <input type="checkbox"> العبارة العلمية الدقيقة الاستنتاجية.<br>
-                    ب) <input type="checkbox"> عبارة خاطئة علمياً.<br>
-                    ج) <input type="checkbox"> لا شيء مما سبق.
-                </div>
-                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
-                    3. ضع علامة (صح) أو (خطأ) أمام العبارة: (التجارب الاستهلالية تساعدنا على فهم طبيعة المادة والمخلوقات الحية). [<span style="display:inline-block; width:40px; border-bottom:1px solid #000;"></span>]
-                </div>
-                <div style="margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.02); border-radius: 4px;">
-                    4. اذكر باختصار تطبيقاً عملياً أو ملاحظة شاهدتها حول هذا الدرس: <br>
-                    <div style="border-bottom: 1px dashed #000; height: 25px; margin-top: 5px;"></div>
-                </div>
-            `;
-            listContainer.innerHTML = htmlQuestions;
-            showToast('⚡ تم توليد نموذج الاختبار بنجاح!');
+            event.target.value = '';
         }
 
         function onCurriculumDropdownChange(idx) {
@@ -1406,7 +1424,6 @@
 
             document.getElementById('totalExecutedLessons').textContent = `${executedCount} / ${lessons.length}`;
             renderMasteryDropdowns();
-            renderPrepDropdowns();
         }
 
         function renderMasteryDropdowns() {
@@ -1681,6 +1698,7 @@
             updateExamClassSelect(classesSet);
             updateMasteryClassSelect(classesSet);
             updateBulkTargetSelect(classesSet);
+            updateAutoGradingClassSelect(classesSet);
         }
 
         function filterByClass(cName) {
@@ -1974,7 +1992,7 @@
                 lessons: lessons,
                 lessonStatus: lessonStatus,
                 lessonMastery: lessonMastery,
-                lessonPrepData: lessonPrepData,
+                autoGradingData: autoGradingData,
                 customMotivations: customMotivations
             };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupPackage));
@@ -2015,9 +2033,9 @@
                             lessonMastery = imported.lessonMastery;
                             localStorage.setItem(getStorageKeyForMastery(), JSON.stringify(lessonMastery));
                         }
-                        if(imported.lessonPrepData) {
-                            lessonPrepData = imported.lessonPrepData;
-                            localStorage.setItem(getStorageKeyForPrep(), JSON.stringify(lessonPrepData));
+                        if(imported.autoGradingData) {
+                            autoGradingData = imported.autoGradingData;
+                            localStorage.setItem(getStorageKeyForAutoGrading(), JSON.stringify(autoGradingData));
                         }
                     }
                     renderLessons();
@@ -2288,7 +2306,7 @@
             const fullBackup = {
                 students: typeof students !== 'undefined' ? students : [],
                 lessons: typeof lessons !== 'undefined' ? lessons : [],
-                lessonPrepData: typeof lessonPrepData !== 'undefined' ? lessonPrepData : {},
+                autoGradingData: typeof autoGradingData !== 'undefined' ? autoGradingData : {},
                 timestamp: new Date().toLocaleString('ar-SA')
             };
 
@@ -2317,7 +2335,7 @@
                     if(imported) {
                         if(imported.students) localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(imported.students));
                         if(imported.lessons) localStorage.setItem(getStorageKeyForLessons(), JSON.stringify(imported.lessons));
-                        if(imported.lessonPrepData) localStorage.setItem(getStorageKeyForPrep(), JSON.stringify(imported.lessonPrepData));
+                        if(imported.autoGradingData) localStorage.setItem(getStorageKeyForAutoGrading(), JSON.stringify(imported.autoGradingData));
                         alert('📂 تم استرجاع البيانات بنجاح!');
                         location.reload();
                     } else {

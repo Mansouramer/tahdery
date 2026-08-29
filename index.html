@@ -797,10 +797,10 @@
             </div>
         </div>
 
-        <!-- 📑 قسم الاختبارات بالتظليل الآلي الدقيق (Bubble Sheet) -->
+        <!-- 📑 قسم اختبارات التظليل الدقيق (Bubble Sheet) -->
         <div class="section-card" id="testGeneratorSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 6px; margin-bottom: 10px;">
-                <h3 style="margin: 0; border: none; padding: 0;">📋 📑 مولد اختبارات التظليل الدقيق (Bubble Sheet - صفحة واحدة A4)</h3>
+                <h3 style="margin: 0; border: none; padding: 0;">📋 📑 اختبارات التظليل الدقيق (Bubble Sheet - صفحة واحدة A4)</h3>
                 <button class="btn-print no-print" onclick="printSection('testGeneratorSection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة الاختبار بالتظليل (A4)</button>
             </div>
 
@@ -811,7 +811,7 @@
                     <option value="فتروي">📊 اختبار فتروي معتمد (10 نماذج)</option>
                 </select>
                 <select id="genTestModelSelect" class="border p-2 rounded"></select>
-                <button onclick="generateSpecificModelTest()" class="btn-info" style="width: 100%;">⚡ توليد ونشر نموذج التظليل (10 أسئلة)</button>
+                <button onclick="generateSpecificModelTest()" class="btn-info" style="width: 100%;">⚡ عرض ونشر نموذج التظليل (10 أسئلة)</button>
             </div>
 
             <div id="testPreviewArea" class="sub-box" style="display: none; background: #ffffff; border: 1.5px solid #000;">
@@ -937,7 +937,6 @@
                 <div id="paginationInfo" style="font-size: 11px; font-weight: bold; width: 100%; text-align: center;">عرض 0 من 0</div>
                 <div class="pagination-btns">
                     <button id="prevPageBtn" onclick="changePage(-1)" class="btn-info">◀ السابق</button>
-
                     <span id="pageIndicator" style="font-size: 12px; font-weight: bold; padding: 0 6px;">1 / 1</span>
                     <button id="nextPageBtn" onclick="changePage(1)" class="btn-info">التالي ▶</button>
                 </div>
@@ -1254,7 +1253,7 @@
             "الثالث الابتدائي": [
                 { chapter: "الوحدة 1: الوراثة والبيئة", title: "التكاثر ودورة حياة النباتات والحيوانات", desc: "مراحل نمو المخلوقات الحية والتشابه والاختلاف بين الآباء والأبناء." },
                 { chapter: "الوحدة 1: الوراثة والبيئة", title: "التكيف والبقاء في البيئات", desc: "كيف تتكيف الحيوانات والنباتات مع ظروف البرد الشديد أو الجفاف." },
-                { chapter: "الوحدة 2: الأرض ومواردها", title: "الصخور والمعادن والتربة", desc: "أنواع التربة ومكوناتها واستخدامات الصخور والمعادن في حياتنا اليومية." },
+                { chapter: "الوحدة 2: الأرض ومواردها", title: "الصخور ومعادن والتربة", desc: "أنواع التربة ومكوناتها واستخدامات الصخور والمعادن في حياتنا اليومية." },
                 { chapter: "الوحدة 3: المخلوقات الحية تنمو وتتغير", title: "أجهزة جسم الإنسان", desc: "التعرف على الجهاز الهيكلي، العضلي، والهضمي والدورة الدموية ووظائفها الأساسية." },
                 { chapter: "الوحدة 3: المخلوقات الحية تنمو وتتغير", title: "الصحة الغذائية والرياضية", desc: "أهمية الغذاء المتوازن وممارسة الرياضة للحفاظ على صحة الأجسام وقوتها." },
                 { chapter: "الوحدة 4: الطاقة والكهرباء والمغناطيسية", title: "الدوائر الكهربائية البسيطة", desc: "كيف يضيء المصباح الكهربائي وتوصيل الدوائر الكهربائية بأمان." },
@@ -1402,7 +1401,7 @@
                 `;
             }
 
-            showToast(`⚡ تم توليد وتنسيق نموذج التظليل A4 بنجاح!`);
+            showToast(`⚡ تم تنسيق وعرض نموذج التظليل A4 بنجاح!`);
         }
 
         let answerKey = ['أ', 'ب', 'ج', 'أ', 'ب', 'أ', 'أ', 'أ', 'أ', 'أ'];

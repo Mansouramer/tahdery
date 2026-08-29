@@ -87,7 +87,7 @@
 
         label { font-weight: bold; font-size: 13px; color: var(--primary); }
 
-        select, input[type="text"] {
+        select, input[type="text"], input[type="number"] {
             width: 100%;
             padding: 10px;
             border: 2px solid #d1d5db;
@@ -290,7 +290,7 @@
         </div>
 
         <div class="section-box no-print">
-            <h3>📚 أولاً: إعدادات الاختبار والصف والمادة ونطاق الدروس</h3>
+            <h3>📚 أولاً: إعدادات الاختبار والصف والمادة وتحديد الأسابيع المراد تقييمها</h3>
             <div class="form-grid">
                 <div class="form-group">
                     <label>نوع الاختبار:</label>
@@ -324,14 +324,16 @@
                 </div>
             </div>
 
-            <!-- خانة تحديد نطاق الدروس الخاصة بالاختبار الفتري (مخفية في ورقة الطباعة) -->
+            <!-- خانة اختيار الأسابيع يدوياً لمعالجة التقدم أو التأخر بالمنهج -->
             <div id="periodicLessonsConfigBox" class="form-group" style="margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px;">
-                <label style="color: #b45309;">📌 تحديد نطاق الدروس والأسابيع المستهدفة (خاص بالمعلم لتصفية بنك الأسئلة):</label>
-                <select id="selectLessonScope">
-                    <option value=" دروس الفترة الأولى فقط (الأسبوع 1 إلى 4)">دروس الفترة الأولى فقط (الأسبوع 1 إلى 4)</option>
-                    <option value=" دروس الفترة الأولى المتقدمة (الأسبوع 1 إلى 6)">دروس الفترة الأولى المتقدمة (الأسبوع 1 إلى 6)</option>
-                    <option value=" الدروس السابقة والراجعة (مراجعة عامة للفترة)">الدروس السابقة والراجعة (مراجعة عامة للفترة)</option>
-                </select>
+                <label style="color: #b45309;">📌 تحديد الأسابيع المستهدفة للاختبار الفتري (حسب خطتك الزمنية المتقدمة أو المتأخرة):</label>
+                <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+                    <span style="font-size: 13px; font-weight: bold;">من الأسبوع:</span>
+                    <input type="number" id="inputStartWeek" value="1" min="1" max="18" style="width: 80px; text-align: center;">
+                    <span style="font-size: 13px; font-weight: bold;">إلى الأسبوع:</span>
+                    <input type="number" id="inputEndWeek" value="4" min="1" max="18" style="width: 80px; text-align: center;">
+                    <span style="font-size: 12px; color: #666;">(التحكم الكامل بمدى الدروس المغطاة)</span>
+                </div>
             </div>
         </div>
 
@@ -363,7 +365,7 @@
         <div class="section-box no-print">
             <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (رصد درجات الطلاب)</h3>
             <p style="font-size: 12px; color: #555; margin-bottom: 10px;">
-                انقر على إجابة الطالب؛ لتتحدث درجته فوراً وتُرحل لداشبورد المدرسة:
+                انقر على إجابة الطالب؛ لتتحدث درجتها فوراً وتُرحل لداشبورد المدرسة:
             </p>
             <button class="action-btn btn-success" onclick="startTouchGradingSession()">🚀 بدء جلسة التصحيح الفوري</button>
 
@@ -647,15 +649,18 @@
                 rawQuestions = [...fallbackBank["science"]];
             }
 
-            // إذا كان الاختبار فترياً، نقوم بتصفية الأسئلة بحيث تأخذ النصف الأول أو المحدد دون عرض أسماء الدروس بالورقة
+            // تصفية الأسئلة بناءً على نطاق الأسابيع المختار يدوياً
             if (examType.includes("الفتري")) {
-                let scope = document.getElementById('selectLessonScope').value;
-                if (scope.includes("الأول فقط")) {
-                    // نأخذ أول 5 أسئلة التي تخص الدروس الأولى فقط للفترة الأولى
-                    activeQuestions = rawQuestions.slice(0, 5);
-                } else {
-                    // نأخذ 7 أسئلة أو التشكيلة المعتمدة للفترة
-                    activeQuestions = rawQuestions.slice(0, 7);
+                let startWeek = parseInt(document.getElementById('inputStartWeek').value) || 1;
+                let endWeek = parseInt(document.getElementById('inputEndWeek').value) || 4;
+                
+                // حساب عدد الأسئلة المأخوذة بناءً على الفرق بين الأسبوعين أو النطاق المحدد
+                let sliceCount = Math.min(Math.max((endWeek - startWeek + 1) * 2, 4), rawQuestions.length);
+                let startIndex = (startWeek - 1) % rawQuestions.length;
+                
+                activeQuestions = [];
+                for(let i = 0; i < sliceCount; i++) {
+                    activeQuestions.push(rawQuestions[(startIndex + i) % rawQuestions.length]);
                 }
             } else {
                 activeQuestions = rawQuestions; // اختبار شامل

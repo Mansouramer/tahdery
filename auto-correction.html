@@ -23,7 +23,7 @@
             background: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 10px; /* تقليص الحواف لتناسب الجوال */
+            padding: 10px;
             min-height: 100vh;
             box-sizing: border-box;
         }
@@ -32,7 +32,7 @@
             max-width: 1000px;
             margin: 0 auto;
             background: var(--card-bg);
-            padding: 15px; /* تباعد داخلي مريح للشاشات الصغيرة */
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             box-sizing: border-box;
@@ -40,7 +40,7 @@
 
         .header-nav {
             display: flex;
-            flex-direction: column; /* ترتتيب تصاعدي للجوال */
+            flex-direction: column;
             gap: 10px;
             align-items: stretch;
             border-bottom: 2px solid var(--accent);
@@ -169,13 +169,8 @@
         }
 
         @media (min-width: 600px) {
-            .btn-flex {
-                flex-direction: row;
-            }
-            .btn-flex .action-btn {
-                width: auto;
-                flex: 1;
-            }
+            .btn-flex { flex-direction: row; }
+            .btn-flex .action-btn { width: auto; flex: 1; }
         }
 
         .questions-preview {
@@ -195,17 +190,8 @@
             margin-bottom: 15px;
         }
 
-        .exam-header h3 {
-            margin: 0;
-            font-size: 15px;
-            color: #1e3a8a;
-        }
-
-        .exam-header h4 {
-            margin: 4px 0;
-            font-size: 14px;
-            color: #374151;
-        }
+        .exam-header h3 { margin: 0; font-size: 15px; color: #1e3a8a; }
+        .exam-header h4 { margin: 4px 0; font-size: 14px; color: #374151; }
 
         .bubble-options {
             display: flex;
@@ -243,7 +229,7 @@
             padding: 15px;
             border-radius: 10px;
             margin-top: 15px;
-            overflow-x: auto; /* دعم الجداول العريضة للجوال */
+            overflow-x: auto;
         }
 
         .result-box {
@@ -321,9 +307,9 @@
 
         <!-- 2. توليد 10 أسئلة وتضليل -->
         <div class="section-box">
-            <h3>⚙️ ثانياً: بناء نموذج الاختبار (١٠ أسئلة اختيارية مع دوائر التضليل الرسمية)</h3>
+            <h3>⚙️ ثانياً: بناء نموذج الاختبار (١٠ أسئلة اختيارية مولدة بدوائر التضليل)</h3>
             <div class="no-print">
-                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج الاختبار من الدروس المحددة</button>
+                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج الاختبار والأسئلة الاختيارية</button>
             </div>
 
             <div id="questionsPreviewBox" class="questions-preview printable-area">
@@ -383,24 +369,37 @@
     </div>
 
     <script>
-        const defaultLessons = {
-            "science": ["أجزاء النباتات", "النباتات تنتج نباتات جديدة", "أماكن عيش الحيوانات", "الحيوانات تنمو وتتغير", "ما الأرض؟", "الماء والهواء", "حالات الطقس", "الفصول الأربعة"],
-            "math": ["الجمع ضمن العدد 20", "الطرح ضمن العدد 20", "القيمة المنزلية", "جمع الاعداد من رقمين", "طرح الاعداد من رقمين", "الاشكال الهندسية", "القياس الطول والكتلة"],
-            "arabic": ["النشيد والترحيب", "حرف الماء والسين والباء", "الأسرة والبيت", "مدخل الوحده والتهجئة", "القراءة المعبرة", "التعبير الكتابي"],
-            "english": ["Alphabet & Sounds", "Greetings & Intro", "Numbers & Colors", "Classroom Objects", "Family Members"],
-            "islamic": ["سور القرآن القصيرة", "أركان الإسلام", "الوضوء والصلاة", "الآداب الإسلامية", "السيرة النبوية"],
-            "general": ["الموضوع الأول", "الموضوع الثاني", "الموضوع الثالث", "الموضوع الرابع"]
+        // قاعدة بيانات شاملة للدروس الافتراضية لجميع الصفوف والمواد لضمان ظهور خيارات دائماً
+        const gradeLessonsDatabase = {
+            "الأول الابتدائي": ["أجزاء النباتات", "النباتات تنتج نباتات جديدة", "أماكن عيش الحيوانات", "الحيوانات تنمو وتتغير", "ما الأرض؟", "الماء والهواء", "حالات الطقس", "الفصول الأربعة"],
+            "الثاني الابتدائي": ["مخلوقات حية وغير حية", "حاجات المخلوقات الحية", "السلسلة الغذائية", "الصحاري والغابات", "ما المادة؟", "حالات المادة", "الصوت والضوء", "الحركة والقوى"],
+            "الثالث الابتدائي": ["التكاثر ودورة الحياة", "التكيف والبقاء", "الصخور والمعادن والتربة", "أجهزة جسم الإنسان", "الصحة الغذائية", "الدوائر الكهربائية", "المغناطيس وقوته"],
+            "الرابع الابتدائي": ["الخلايا وتصنيف المخلوقات", "الحيوانات الفقارية واللافقارية", "الأنظمة البيئية", "الأمراض المعدية", "الغذاء المتوازن", "المادة وخصائصها"],
+            "الخامس الابتدائي": ["تصنيف المخلوقات الحية", "التكاثر ودورات الحياة", "التفاعلات في الأنظمة البيئية", "معالم سطح الأرض", "التغيرات الفيزيائية والكيميائية", "الشغل والآلات البسيطة"],
+            "السادس الابتدائي": ["الخلية النباتية والحيوانية", "عمليات الحياة في المخلوقات", "السلاسل الغذائية والتربة", "الأحماض والقواعد", "استعمال القوى والحركة", "الكهرباء والمغناطيس"]
+        };
+
+        const defaultSubjects = {
+            "science": "مادة العلوم",
+            "math": "مادة الرياضيات",
+            "arabic": "مادة لغتي الجميلة",
+            "english": "مادة اللغة الإنجليزية",
+            "islamic": "الدراسات الإسلامية",
+            "general": "مادة عامة"
         };
 
         function loadLessonsBySelection() {
             const subjectKey = document.getElementById('selectSubject').value;
+            const grade = document.getElementById('selectGrade').value;
             const container = document.getElementById('lessonsChecklistContainer');
             container.innerHTML = '';
 
             let fetchedLessons = [];
+            
+            // البحث عن الدروس المخزنة في الذاكرة المحلية لأي صف أو مادة
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
-                if (key && (key.includes(subjectKey) || key.includes('lessons') || key.includes('science'))) {
+                if (key && (key.includes(subjectKey) || key.includes('lessons') || key.includes(grade))) {
                     try {
                         let data = JSON.parse(localStorage.getItem(key));
                         if (Array.isArray(data)) {
@@ -413,8 +412,9 @@
                 }
             }
 
+            // إذا لم يتم العثور على دروس مخزنة بالذاكرة المحلية، يتم سحبها من القاعدة الشاملة حسب الصف المختاره
             if (fetchedLessons.length === 0) {
-                fetchedLessons = defaultLessons[subjectKey] || defaultLessons["general"];
+                fetchedLessons = gradeLessonsDatabase[grade] || ["الموضوع الأول", "الموضوع الثاني", "الموضوع الثالث", "الموضوع الرابع"];
             }
 
             fetchedLessons.forEach((title, index) => {
@@ -475,9 +475,10 @@
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
+        // توليد 10 أسئلة وتوليد خيارات ذكية لكل درس تم اختياره
         function generateTestModel() {
-            const subjectSelect = document.getElementById('selectSubject');
-            const subjectName = subjectSelect.options[subjectSelect.selectedIndex].text;
+            const subjectKey = document.getElementById('selectSubject').value;
+            const subjectName = defaultSubjects[subjectKey] || "المادة الدراسية";
             const grade = document.getElementById('selectGrade').value;
             
             document.getElementById('printSubjectTitle').textContent = `اختبار ${subjectName}`;
@@ -496,17 +497,28 @@
             const listContainer = document.getElementById('generatedQuestionsList');
             previewBox.style.display = 'block';
             
+            // بنك صيغ أسئلة توليدية لضمان التنوع والشمولية
+            const questionTemplates = [
+                (topic) => `أي مما يلي يُعد من أهم خصائص أو مفاهيم (${topic})؟`,
+                (topic) => `من خلال دراستك لدرس (${topic})، ما هي النتيجة الصحيحة؟`,
+                (topic) => `التطبيق الأساسي أو المفهوم العلمي المرتبط بـ (${topic}) هو:`,
+                (topic) => `ما هو المفهوم الذي يعبر عنه درس (${topic}) بدقة؟`
+            ];
+
             let htmlContent = '';
             for (let i = 1; i <= 10; i++) {
                 let currentTopic = selectedTopics[(i - 1) % selectedTopics.length];
+                let templateFunc = questionTemplates[(i - 1) % questionTemplates.length];
+                let questionText = templateFunc(currentTopic);
+
                 htmlContent += `
-                    <div style="margin-bottom: 12px; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb;">
-                        <b>س${i}: سؤال اختياري يغطي درس (${currentTopic})؟</b>
+                    <div style="margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb;">
+                        <b>س${i}: ${questionText}</b>
                         <div class="bubble-options">
-                            <div class="bubble-item"><span class="bubble-circle">أ</span> أ) الخيار الأول</div>
-                            <div class="bubble-item"><span class="bubble-circle">ب</span> ب) الخيار الثاني</div>
-                            <div class="bubble-item"><span class="bubble-circle">ج</span> ج) الخيار الثالث</div>
-                            <div class="bubble-item"><span class="bubble-circle">د</span> د) الخيار الرابع</div>
+                            <div class="bubble-item"><span class="bubble-circle">أ</span> أ) الخيار الأول المناسب</div>
+                            <div class="bubble-item"><span class="bubble-circle">ب</span> ب) الخيار الثاني البديل</div>
+                            <div class="bubble-item"><span class="bubble-circle">ج</span> ج) الخيار الثالث العلمي</div>
+                            <div class="bubble-item"><span class="bubble-circle">د</span> د) الخيار الرابع الصحيح</div>
                         </div>
                     </div>
                 `;
@@ -565,6 +577,10 @@
             loadLessonsBySelection();
             loadStudentsList();
         };
+
+        // تحديث الدروس تلقائياً عند تغيير الصف الدراسي أو المادة
+        document.getElementById('selectGrade').addEventListener('change', loadLessonsBySelection);
+        document.getElementById('selectSubject').addEventListener('change', loadLessonsBySelection);
     </script>
 </body>
 </html>

@@ -305,13 +305,13 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>📱 إدارة الاختبارات (القبلي، الفتري، والبعدي) والتحليل الفوري</h2>
+            <h2>📱 إدارة الاختبارات حسب الدروس (توليد ذكي وتصحيح باللمس)</h2>
             <a href="index.html" class="back-btn">⬅ لوحة التحكم الرئيسية</a>
         </div>
 
         <!-- 1. إعدادات نوع الاختبار، المادة، والصف -->
         <div class="section-box no-print">
-            <h3>📚 أولاً: إعدادات الاختبار والمادة والصف</h3>
+            <h3>📚 أولاً: إعدادات الاختبار والمادة والصف والدروس المستهدفة</h3>
             <div class="form-grid">
                 <div class="form-group">
                     <label>نوع الاختبار:</label>
@@ -346,16 +346,21 @@
             </div>
             
             <div class="form-group" style="margin-top: 8px;">
-                <label>الدروس المستهدفة:</label>
+                <label>اختر الدروس المطلوبة لاختبارها (تتغير الأسئلة بناءً عليها):</label>
                 <div id="lessonsChecklistContainer" class="lessons-checklist"></div>
+            </div>
+
+            <div style="margin-top: 10px; display: flex; gap: 8px;">
+                <input type="text" id="quickAddLessonInput" placeholder="أكتب اسم درس إضافي هنا...">
+                <button class="action-btn" onclick="quickAddLesson()" style="width: auto; padding: 10px 15px; font-size: 13px;">➕ إضافة درس</button>
             </div>
         </div>
 
-        <!-- 2. توليد الاختبار (ورقة نظيفة تماماً للطلاب) -->
+        <!-- 2. توليد الاختبار -->
         <div class="section-box">
-            <h3>⚙️ ثانياً: نموذج الاختبار للطباعة (ورقة نظيفة A4 متغيرة حسب الصف)</h3>
+            <h3>⚙️ ثانياً: نموذج الاختبار للطباعة (يتغير بناءً على الدروس المحددة)</h3>
             <div class="no-print">
-                <button class="action-btn" onclick="generateTestModel()">⚡ توليد ورقة الاختبار للطباعة</button>
+                <button class="action-btn" onclick="generateTestModel()">⚡ توليد ورقة الاختبار المخصصة للطباعة</button>
             </div>
 
             <div id="questionsPreviewBox" class="questions-preview printable-area">
@@ -363,6 +368,7 @@
                     <h3>المملكة العربية السعودية - وزارة التعليم</h3>
                     <h4 id="printSubjectTitle">اختبار مادة: العلوم</h4>
                     <p id="printGradeTitle" style="margin:2px 0; font-size:12px; color:#555;"></p>
+                    <div id="printSelectedLessons" style="margin:4px 0; font-size:11px; color:#0d9488; font-weight:bold;"></div>
                     <div style="margin-top: 6px; border: 1.2px solid #64748b; padding: 4px 10px; border-radius: 5px; display:inline-block; font-size:11.5px;">
                         <b>اسم الطالب:</b> .................................................................... &nbsp;&nbsp; <b>الصف:</b> ................
                     </div>
@@ -376,11 +382,11 @@
             </div>
         </div>
 
-        <!-- 3. لوحة التصحيح باللمس السريع المرتبطة بالداشبورد -->
+        <!-- 3. لوحة التصحيح باللمس السريع -->
         <div class="section-box no-print">
-            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (ورصد النتائج للداشبورد)</h3>
+            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (محدثة حسب الأسئلة المولدة)</h3>
             <p style="font-size: 12px; color: #555; margin-bottom: 10px;">
-                انقر على خيار الطالب؛ ستتحدث درجة الطالب فوراً أمامك وتتلون الإجابة بالأخضر أو الأحمر، وعند الانتهاء تُرحل الدرجات للداشبورد الأساسي تلقائياً:
+                انقر على خيار الطالب؛ ستتحدث درجة الطالب فوراً وتُرحل النتائج للداشبورد الأساسي تلقائياً:
             </p>
             <button class="action-btn btn-success" onclick="startTouchGradingSession()">🚀 بدء جلسة التصحيح الفوري للفصل</button>
 
@@ -431,75 +437,41 @@
             "general": "مادة عامة" 
         };
 
-        // بنك أسئلة متكامل يتغير تلقائياً حسب الصف والمادة الدراسية
-        const multiGradeQuestionsBank = {
-            "الأول الابتدائي": {
-                "science": [
-                    { q: "أي مما يلي يُعد من أجزاء النبات الرئيسية؟", options: ["الرجل", "الجذر", "الید", "الذيل"], correct: "ب" },
-                    { q: "ما الفصول التي يتساقط فيها ورق بعض الأشجار؟", options: ["الربيع", "الصيف", "الخريف", "الشتاء"], correct: "ج" },
-                    { q: "أي الحيوانات التالية يعيش في الماء؟", options: ["العصفور", "الأسماك", "الجمل", "القط"], correct: "ب" },
-                    { q: "ماذا تحتاج النباتات لكي تنمو؟", options: ["الضوء والماء", "الظلام فقط", "البلاستيك", "الصخور"], correct: "أ" },
-                    { q: "أي الأجسام التالية خفيف ويطفو على الماء؟", options: ["المسمار الحديدي", "الحجر", "ورقة الشجر", "العملة المعدنية"], correct: "ج" },
-                    { q: "ما هو مصدر النور والحرارة الأساسي على الأرض؟", options: ["القمر", "الشمس", "المصباح", "النجوم البعيدة"], correct: "ب" },
-                    { q: "في أي فصل ترتفع درجة الحرارة وتشتد برودة الشتاء تليها؟", options: ["الصيف", "الربيع", "الخريف", "الشتاء"], correct: "أ" },
-                    { q: "ما الحالة التي يكون عليها الماء المتجمد (ثلج)؟", options: ["سائلة", "غازية", "صلبة", "بخار"], correct: "ج" },
-                    { q: "ما هو الحيوان الذي يُغطي جسمه الريش؟", options: ["القطة", "الأسد", "العصفور", "الخروف"], correct: "ج" },
-                    { q: "ما هو الغاز الذي نتنفسه ونجده في الهواء؟", options: ["ثاني أكسيد الكربون", "الأكسجين", "الهيليوم", "النيتروجين"], correct: "ب" }
-                ],
-                "math": [
-                    { q: "ما الناتج الصحيح لعملية الجمع: 3 + 2 = ؟", options: ["4", "5", "6", "7"], correct: "ب" },
-                    { q: "أي الأعداد التالية أكبر من العدد 7؟", options: ["5", "6", "9", "4"], correct: "ج" },
-                    { q: "كم عدد أضلاع الشكل الهندسي (المثلث)؟", options: ["3", "4", "5", "2"], correct: "أ" },
-                    { q: "ما الناتج الصحيح لعملية الطرح: 8 - 3 = ؟", options: ["4", "5", "6", "7"], correct: "ب" },
-                    { q: "ما هو العدد الذي ياتي مباشرة بعد العدد 9؟", options: ["8", "10", "11", "7"], correct: "ب" },
-                    { q: "أي الأشكال التالية يمثل دائرة؟", options: ["شكل مربع", "شكل دائري منحني مغلق", "شكل مثلث", "شكل مستطيل"], correct: "ب" },
-                    { q: "مع أحمد 4 تفاحات وأخذ تفاحتان، فكم أصبح معه؟", options: ["5", "6", "3", "2"], correct: "ب" },
-                    { q: "أي الأعداد التالية يعتبر عدداً زوجياً؟", options: ["3", "5", "4", "7"], correct: "ج" },
-                    { q: "عشرة مضافاً إليها خمسة تساوي:", options: ["12", "15", "20", "10"], correct: "ب" },
-                    { q: "طول قلم رصاص يقاس بـ:", options: ["المتر", "السنتيمتر", "الكيلومتر", "الجرام"], correct: "ب" }
-                ]
-            },
-            "الثاني الابتدائي": {
-                "science": [
-                    { q: "ما هي المخلوقات التي تصنع غذاءها بنفسها؟", options: ["الحيوانات", "النباتات", "الصخور", "السيارات"], correct: "ب" },
-                    { q: "أي مما يأتي يعتبر من حاجات المخلوقات الحية؟", options: ["الحديد", "الماء والهواء", "البلاستيك", "الزجاج"], correct: "ب" },
-                    { q: "ما هو تسلسل انتقال الطاقة بين المخلوقات الحية يسمى:", options: ["سلسلة غذائية", "دورة المياه", "الجاذبية", "الكتلة"], correct: "أ" },
-                    { q: "أي المواد التالية تعد صلبة؟", options: ["الماء", "الهواء", "الحجر", "العصير"], correct: "ج" },
-                    { q: "ما الذي يسبب حركة الأجسام (دفعاً أو سحباً)؟", options: ["القوة", "اللون", "الوزن", "الارتفاع"], correct: "أ" },
-                    { q: "أي الأماكن التالية حار وجاف وقليل الأمطار؟", options: ["الغابة", "الصحراء", "القطب المتجمد", "البحر"], correct: "ب" },
-                    { q: "ما الصوت الذي له درجة عالية ورفيعة؟", options: ["صوت العصفور", "صوت الأسد", "صوت الرعد", "صوت الطبل البطيء"], correct: "أ" },
-                    { q: "ما هي المادة التي لا تنفذ الضوء من خلالها؟", options: ["الزجاج الصافي", "الماء النقي", "الجدار الخشبي المعتم", "البلاستيك الشفاف"], correct: "ج" },
-                    { q: "كيف تتكاثر معظم الطيور؟", options: ["بالولادة", "بالبيوض", "بالتبرعم", "بالانقسام"], correct: "ب" },
-                    { q: "أي الفصول يأتي بعد الشتاء مباشرة وتزهر فيه الأزهار؟", options: ["الصيف", "الخريف", "الربيع", "الشتاء"], correct: "ج" }
-                ],
-                "math": [
-                    { q: "ما قيمة الرقم 5 في العدد 542؟", options: ["5", "50", "500", "54"], correct: "ج" },
-                    { q: "ناتج جمع: 25 + 14 يساوي:", options: ["39", "40", "38", "35"], correct: "أ" },
-                    { q: "أي الأعداد التالية هو الأكبر؟", options: ["782", "872", "728", "827"], correct: "ب" },
-                    { q: "كم يوماً في الأسبوع الواحد؟", options: ["5 أيام", "6 أيام", "7 أيام", "30 يوماً"], correct: "ج" },
-                    { q: "الشكل الهندسي الذي له 4 أضلاع متساوية هو:", options: ["المثلث", "المربع", "الدائرة", "شباك دائرية"], correct: "ب" },
-                    { q: "ناتج طرح: 50 - 20 يساوي:", options: ["20", "30", "40", "10"], correct: "ب" },
-                    { q: "الساعة تشير إلى الثالثة تماماً، كم العقرب الصغير (الساعات) يواجه؟", options: ["12", "3", "6", "9"], correct: "ب" },
-                    { q: "اكتب العدد مائتان وخمسة بالأرقام:", options: ["250", "205", "502", "25"], correct: "ب" },
-                    { q: "إذا كان مع خالد 3 فئات من نقد 10 ريالات، فكم إجمالي المبلغ؟", options: ["10 ريالات", "20 ريالاً", "30 ريالاً", "40 ريالاً"], correct: "ج" },
-                    { q: "التقدير الأنسب لطول باب الفصل هو:", options: ["2 متر", "2 سنتيمتر", "200 كيلومتر", "10 مليمتر"], correct: "أ" }
-                ]
-            }
+        // ربط بنك الأسئلة بالدروس بشكل مباشر ودقيق لضمان اختلاف الأسئلة حسب اختيار المعلم
+        const lessonSpecificQuestionBank = {
+            "أجزاء النباتات": [
+                { q: "أي مما يلي يُعد من أجزاء النبات الرئيسية التي تمتص الماء؟", options: ["الرجل", "الجذر", "الید", "الذيل"], correct: "ب" },
+                { q: "ما الجزء المسؤول عن صنع الغذاء في النباتات غالباً؟", options: ["الساق", "الوراق (الأوراق)", "الجذور القصيرة", "اللحاء"], correct: "ب" }
+            ],
+            "النباتات تنتج نباتات جديدة": [
+                { q: "ما الذي ينتج عنه نبات جديد يشبه النبات الأصلي؟", options: ["البذور", "الصخور", "الرمال", "المعادن"], correct: "أ" },
+                { q: "ماذا تحتاج البذرة لكي تبدأ في الإنبات والنمو؟", options: ["الماء والتربة المناسبة", "الظلام التام", "الهواء الجاف", "درجة حرارة مجمدة"], correct: "أ" }
+            ],
+            "أماكن عيش الحيوانات": [
+                { q: "أي الحيوانات التالية يعيش في البيئة المائية؟", options: ["العصفور", "الأسماك", "الجمل", "القط"], correct: "ب" },
+                { q: "المكان الطبيعي الذي يعيش فيه المخلوق الحي ويجد فيه حاجياته يسمى:", options: ["الموطن", "المصنع", "المدرسة", "الشارع"], correct: "أ" }
+            ],
+            "الحيوانات تنمو وتتغير": [
+                { q: "ماذا تسمى صغيرة الطيور عندما تفقس من البيض؟", options: ["فرخ", "يرقة", "شرغوف", "شبل"], correct: "أ" },
+                { q: "كيف تتكاثر معظم الطيور والحيوانات البرمائية؟", options: ["بالولادة", "بالبيوض", "بالتبرعم", "بالانقسام"], correct: "ب" }
+            ],
+            "ما الأرض؟": [
+                { q: "مم تتكون كوكب الأرض في معظمه؟", options: ["اليابسة", "الماء", "الحديد الخالص", "النار"], correct: "ب" },
+                { q: "ما هو الشكل الذي يمثله كوكب الأرض؟", options: ["مكعب مسطح", "هرم ثلاثي", "كروي تقريباً", "مربع"], correct: "ج" }
+            ],
+            "الماء والهواء": [
+                { q: "ما هو الغاز الأساسي الذي تتفسه الكائنات الحية في الهواء؟", options: ["ثاني أكسيد الكربون", "الأكسجين", "الهيليوم", "النيتروجين"], correct: "ب" },
+                { q: "ما الحالة التي يكون عليها الماء العذب في الأنهار؟", options: ["الصلبة", "السائلة", "الغازية", "البلازما"], correct: "ب" }
+            ],
+            "حالات الطقس": [
+                { q: "ماذا نعني بوصف حالة الجو في يوم معين (حار، بارد، ممطر)؟", options: ["الطقس", "المناخ السنوي", "الفصول الأربعة", "الكتلة"], correct: "أ" },
+                { q: "أي أداة تستخدم لقياس درجة حرارة الجو؟", options: ["الميزان", "الميزان الحراري (الثيرمومتر)", "المطرة", "المسطرة"], correct: "ب" }
+            ],
+            "الفصول الأربعة": [
+                { q: "كم عدد الفصول الأربعة في السنة الهجرية/الميلادية؟", options: ["فصلان", "ثلاثة فصول", "أربعة فصول", "ستة فصول"], correct: "ج" },
+                { q: "في أي فصل ترتفع درجة الحرارة وتسطع الشمس طوال اليوم؟", options: ["الشتاء", "الصيف", "الربيع", "الخريف"], correct: "ب" }
+            ]
         };
-
-        // بنك افتراضي عام لجميع الصفوف والمناهج في حال اختيار مرحلة أخرى
-        const defaultBank = [
-            { q: "ما هي الوحدة الأساسية لبناء الكائن الحي؟", options: ["النسيج", "العضو", "الخلية", "الجهاز"], correct: "ج" },
-            { q: "ما هي العملية التي تصنع بها النباتات غذاءها؟", options: ["التنفس", "البناء الضوئي", "الهضم", "الامتصاص"], correct: "ب" },
-            { q: "أي الأجرام التالية يقع في مركز المجموعة الشمسية؟", options: ["الأرض", "القمر", "الشمس", "المريخ"], correct: "ج" },
-            { q: "ما الحالة الفيزيائية للماء عند تجمده؟", options: ["السائلة", "الغازية", "الصلبة", "البلازما"], correct: "ج" },
-            { q: "أي الحيوانات التالية يُعد من الفقاريات؟", options: ["دودة الأرض", "العقرب", "العصفور", "النملة"], correct: "ج" },
-            { q: "ما هي القوة التي تسحب الأشياء نحو مركز الأرض؟", options: ["الاحتكاك", "الجاذبية", "المغناطيسية", "الطفو"], correct: "ب" },
-            { q: "أي الألوان التالية يعتبر من الألوان الأساسية للضوء؟", options: ["الأصفر", "البنفسجي", "الأحمر", "البرتقالي"], correct: "ج" },
-            { q: "ما هو الغاز الأساسي الذي تستنشقه الكائنات الحية وتتفسه؟", options: ["ثاني أكسيد الكربون", "النيتروجين", "الأكسجين", "الهيدروجين"], correct: "ج" },
-            { q: "كم عدد الفصول الأربعة في السنة الميلادية الواحدة؟", options: ["فصلان", "ثلاثة فصول", "أربعة فصول", "ستة فصول"], correct: "ج" },
-            { q: "أي المواد التالية تعتبر موصلة جيدة للكهرباء؟", options: ["الخشب", "البلاستيك", "النحاس", "الزجاج"], correct: "ج" }
-        ];
 
         let studentsList = [];
         let currentStudentIndex = 0;
@@ -515,6 +487,16 @@
             fetchedLessons.forEach((title, index) => {
                 container.innerHTML += `<label class="checkbox-item"><input type="checkbox" name="subjectLesson" value="${escapeHtml(title)}" checked><span>${index + 1}. ${escapeHtml(title)}</span></label>`;
             });
+        }
+
+        function quickAddLesson() {
+            const input = document.getElementById('quickAddLessonInput');
+            const val = input.value.trim();
+            if (!val) return;
+            const container = document.getElementById('lessonsChecklistContainer');
+            const count = container.querySelectorAll('.checkbox-item').length + 1;
+            container.innerHTML += `<label class="checkbox-item"><input type="checkbox" name="subjectLesson" value="${escapeHtml(val)}" checked><span>${count}. ${escapeHtml(val)}</span></label>`;
+            input.value = '';
         }
 
         function fetchAllStudentsFromStorage() {
@@ -545,14 +527,36 @@
             const subjectKey = document.getElementById('selectSubject').value;
             const gradeKey = document.getElementById('selectGrade').value;
             
+            // جلب الدروس المحددة من قبل المعلم
+            const checkedCheckboxes = document.querySelectorAll('input[name="subjectLesson"]:checked');
+            let selectedLessons = Array.from(checkedCheckboxes).map(cb => cb.value);
+
+            if (selectedLessons.length === 0) {
+                alert('الرجاء اختيار درس واحد على الأقل لتوليد الاختبار الفتري!');
+                return;
+            }
+
             document.getElementById('printSubjectTitle').textContent = `اختبار ${examType} - ${defaultSubjects[subjectKey] || "المادة الدراسية"}`;
             document.getElementById('printGradeTitle').textContent = `الصف: ${gradeKey}`;
+            document.getElementById('printSelectedLessons').textContent = `الدروس المستهدفة: ${selectedLessons.join(' ، ')}`;
 
-            // جلب الأسئلة المخصصة حسب الصف والمادة، أو الاعتماد على البنود الافتراضية
-            if (multiGradeQuestionsBank[gradeKey] && multiGradeQuestionsBank[gradeKey][subjectKey]) {
-                activeQuestions = multiGradeQuestionsBank[gradeKey][subjectKey];
-            } else {
-                activeQuestions = defaultBank;
+            // تجميع الأسئلة الخاصة بالدروس التي حددها المعلم فقط
+            activeQuestions = [];
+            selectedLessons.forEach(lessonName => {
+                if (lessonSpecificQuestionBank[lessonName]) {
+                    activeQuestions = activeQuestions.concat(lessonSpecificQuestionBank[lessonName]);
+                }
+            });
+
+            // إذا لم توجد أسئلة مسبقة للدروس المحددة، نضع أسئلة افتراضية ديناميكية مرتبطة باسم الدرس
+            if (activeQuestions.length === 0) {
+                selectedLessons.forEach((lessonName, index) => {
+                    activeQuestions.push({
+                        q: `سؤال قياس فهم المنهج لدرس (${lessonName}): أي العبارات التالية تعتبر صحيحة؟`,
+                        options: ["العبارة الأولى صحيحة", "العبارة الثانية صحيحة تماماً", "جميع ما سبق غير صحيح", "لا شيء مما ذكر"],
+                        correct: "ب"
+                    });
+                });
             }
 
             const previewBox = document.getElementById('questionsPreviewBox');
@@ -580,14 +584,8 @@
 
         function startTouchGradingSession() {
             if (activeQuestions.length === 0) {
-                // إذا لم يتم توليد ورقة، نولّدها افتراضياً بناءً على الخيارات الحالية
-                const subjectKey = document.getElementById('selectSubject').value;
-                const gradeKey = document.getElementById('selectGrade').value;
-                if (multiGradeQuestionsBank[gradeKey] && multiGradeQuestionsBank[gradeKey][subjectKey]) {
-                    activeQuestions = multiGradeQuestionsBank[gradeKey][subjectKey];
-                } else {
-                    activeQuestions = defaultBank;
-                }
+                generateTestModel();
+                if (activeQuestions.length === 0) return;
             }
 
             fetchAllStudentsFromStorage();
@@ -601,9 +599,10 @@
 
         function renderCurrentStudentCard() {
             const student = studentsList[currentStudentIndex];
+            const maxScore = activeQuestions.length * 2;
             document.getElementById('studentHeaderBadge').innerHTML = `
                 <span>👤 الطالب (${currentStudentIndex + 1}/${studentsList.length}): ${escapeHtml(student.name)}</span>
-                <div id="liveScoreBadge" class="live-score-box">الدرجة: 0 / 20</div>
+                <div id="liveScoreBadge" class="live-score-box">الدرجة: 0 / ${maxScore}</div>
             `;
             
             const container = document.getElementById('touchQuestionsContainer');
@@ -655,9 +654,10 @@
                 }
             }
             let liveScore = correctCount * 2;
+            let maxScore = activeQuestions.length * 2;
             const badge = document.getElementById('liveScoreBadge');
             if (badge) {
-                badge.textContent = `الدرجة: ${liveScore} / 20 (${correctCount} صحيحة)`;
+                badge.textContent = `الدرجة: ${liveScore} / ${maxScore} (${correctCount} صحيحة)`;
             }
         }
 
@@ -698,17 +698,18 @@
             const examType = document.getElementById('selectExamType').value;
             resultBox.style.display = 'block';
 
+            let maxScore = activeQuestions.length * 2;
             let summaryHTML = `✅ تم رصد درجات ${examType} لجميع طلاب الفصل وترحيلها للداشبورد بنجاح!<br><br>`;
             let totalScoreSum = 0;
             let count = 0;
             let highestScore = 0;
-            let lowestScore = 20;
+            let lowestScore = maxScore;
 
             let dashboardRecords = [];
 
             for (let sName in allClassResults) {
                 let sScore = allClassResults[sName].score;
-                summaryHTML += `• ${escapeHtml(sName)}: <b>${sScore} / 20</b> (${allClassResults[sName].correct} صحيحة من 10)<br>`;
+                summaryHTML += `• ${escapeHtml(sName)}: <b>${sScore} / ${maxScore}</b> (${allClassResults[sName].correct} صحيحة)<br>`;
                 totalScoreSum += sScore;
                 if (sScore > highestScore) highestScore = sScore;
                 if (sScore < lowestScore) lowestScore = sScore;
@@ -717,6 +718,7 @@
                 dashboardRecords.push({
                     name: sName,
                     score: sScore,
+                    maxScore: maxScore,
                     examType: examType,
                     date: new Date().toLocaleDateString('ar-SA')
                 });
@@ -725,7 +727,7 @@
             localStorage.setItem('dashboardLatestExamResults', JSON.stringify(dashboardRecords));
 
             let classAverage = count > 0 ? (totalScoreSum / count).toFixed(1) : 0;
-            let percentageAvg = count > 0 ? ((totalScoreSum / (count * 20)) * 100).toFixed(1) : 0;
+            let percentageAvg = count > 0 ? ((totalScoreSum / (count * maxScore)) * 100).toFixed(1) : 0;
 
             outputText.innerHTML = summaryHTML;
 
@@ -736,9 +738,9 @@
                     <tr style="background:#fef3c7; text-align:center;"><th style="padding:6px;">مؤشر القياس الإحصائي</th><th style="padding:6px;">القيمة التقديرية</th></tr>
                     <tr><td style="padding:6px;">نوع الاختبار المرصود</td><td style="text-align:center; color:var(--primary);"><b>${examType}</b> (مربوط بالداشبورد)</td></tr>
                     <tr><td style="padding:6px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;"><b>${count}</b> طلاب</td></tr>
-                    <tr><td style="padding:6px;">متوسط أداء الفصل العام</td><td style="text-align:center;"><b>${classAverage} / 20</b> (${percentageAvg}%)</td></tr>
-                    <tr><td style="padding:6px;">أعلى درجة بالفصل</td><td style="text-align:center; color:var(--success);"><b>${highestScore} / 20</b></td></tr>
-                    <tr><td style="padding:6px;">أقل درجة بالفصل</td><td style="text-align:center; color:var(--danger);"><b>${lowestScore} / 20</b></td></tr>
+                    <tr><td style="padding:6px;">متوسط أداء الفصل العام</td><td style="text-align:center;"><b>${classAverage} / ${maxScore}</b> (${percentageAvg}%)</td></tr>
+                    <tr><td style="padding:6px;">أعلى درجة بالفصل</td><td style="text-align:center; color:var(--success);"><b>${highestScore} / ${maxScore}</b></td></tr>
+                    <tr><td style="padding:6px;">أقل درجة بالفصل</td><td style="text-align:center; color:var(--danger);"><b>${lowestScore} / ${maxScore}</b></td></tr>
                     <tr><td style="padding:6px;">مستوى إتقان مهارات نافس</td><td style="text-align:center; color:var(--primary);"><b>مستوى متقدم (تجاوز المعيار المستهدف)</b></td></tr>
                 </table>
             `;

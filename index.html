@@ -605,8 +605,20 @@
         .float-whatsapp { background: #25D366; }
         .float-top { background: var(--primary); display: none; }
 
+        /* تنسيق الطباعة لضمان احتواء الاختبار في صفحة A4 واحدة بشكل متناسق */
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 5mm 8mm;
+            }
+            html, body {
+                height: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+            }
             body * { visibility: hidden !important; }
+            
             .printing-section, .printing-section * {
                 visibility: visible !important;
                 color: #000000 !important;
@@ -621,18 +633,39 @@
                 background: #ffffff !important;
                 box-shadow: none !important;
                 margin: 0 !important;
-                padding: 10px !important;
+                padding: 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
             .printing-section table, 
             .printing-section th, 
             .printing-section td {
-                border: 2px solid #000000 !important;
+                border: 1px solid #000000 !important;
                 color: #000000 !important;
             }
             .printing-section th {
-                background-color: #d1d5db !important;
+                background-color: #e5e7eb !important;
                 font-weight: bold !important;
             }
+            
+            /* ضغط المطبوع للورقة الواحدة */
+            #testPreviewArea {
+                padding: 2px !important;
+                border: none !important;
+            }
+            .print-q-box {
+                margin-bottom: 4px !important;
+                padding: 3px 5px !important;
+                font-size: 10px !important;
+                line-height: 1.25 !important;
+            }
+            .print-opts-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 2px 8px !important;
+                font-size: 9.5px !important;
+            }
+
             .no-print, button, select, textarea, .pagination-bar, .backup-controls, .form-row, .classes-query-grid, .floating-action-buttons, .top-banner {
                 display: none !important;
             }
@@ -665,10 +698,10 @@
     <div class="container">
         <!-- زر التثبيت الذكي على سطح المكتب / الجوال -->
         <div class="section-card no-print" style="text-align: center; background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(30,58,138,0.15)); border: 2px dashed var(--secondary);">
-            <button id="installAppBtn" class="btn-success" style="display: none; background: var(--secondary); color: white; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 14px;">
-                💻 تثبيت الداشبورد كبرنامج مستقل على سطح المكتب / الجوال (Install App)
+            <button id="installAppBtn" onclick="triggerAppInstall()" class="btn-success" style="display: flex; background: var(--secondary); color: white; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 14px; align-items: center; justify-content: center; gap: 8px;">
+                📱 تثبيت الداشبورد كبرنامج مستقل على الشاشة الرئيسية / سطح المكتب
             </button>
-            <div id="installHintMsg" style="font-size: 12px; opacity: 0.85;">📱 لتثبيت التطبيق على جهازك، انقر على زر القائمة (ثلاث نقاط) في متصفحك واختار (إضافة إلى الشاشة الرئيسية) أو (تثبيت التطبيق).</div>
+            <div id="installHintMsg" style="font-size: 11px; opacity: 0.85; margin-top: 6px; color: var(--primary);">* إذا لم يعمل الزر تلقائياً: افتح قائمة المتصفح (⋮) واختر "إضافة إلى الشاشة الرئيسية" أو "Install App".</div>
         </div>
 
         <!-- اختيار الصف الدراسي -->
@@ -722,11 +755,11 @@
             </div>
         </div>
 
-        <!-- 📑 قسم الاختبارات (4 قبلية، 4 بعدية، 10 نماذج فترية - 10 أسئلة لكل نموذج اختيار من متعدد) -->
+        <!-- 📑 قسم الاختبارات (معدل للطباعة في صفحة A4 واحدة) -->
         <div class="section-card" id="testGeneratorSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 6px; margin-bottom: 10px;">
                 <h3 style="margin: 0; border: none; padding: 0;">📋 📑 مولد اختبارات القياس (4 قبلية | 4 بعدية | 10 فترية - 10 أسئلة اختيار من متعدد)</h3>
-                <button class="btn-print" onclick="printSection('testGeneratorSection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة الاختبار</button>
+                <button class="btn-print no-print" onclick="printSection('testGeneratorSection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة الاختبار (صفحة A4)</button>
             </div>
 
             <div class="form-row no-print">
@@ -741,16 +774,16 @@
                 <button onclick="generateSpecificModelTest()" class="btn-info" style="width: 100%;">⚡ توليد ونشر النموذج المختار (10 أسئلة)</button>
             </div>
 
-            <div id="testPreviewArea" class="sub-box" style="display: none; background: #ffffff; border: 2px solid var(--secondary);">
-                <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
-                    <h4 id="printTestHeaderTitle" style="margin: 0; color: #000; font-size: 15px;">نموذج اختبار</h4>
-                    <p style="font-size: 11px; margin: 3px 0; color: #000;">مدرسة داوود بن عروة الثقفي الابتدائية (طلاب) | معلم المادة: منصور عامر الرحيلي | الصف: <span id="printTestGrade"></span></p>
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 6px; color: #000;">
+            <div id="testPreviewArea" class="sub-box" style="display: none; background: #ffffff; border: 1.5px solid var(--secondary);">
+                <div style="text-align: center; border-bottom: 1.5px solid #000; padding-bottom: 4px; margin-bottom: 6px;">
+                    <h4 id="printTestHeaderTitle" style="margin: 0; color: #000; font-size: 14px;">نموذج اختبار</h4>
+                    <p style="font-size: 10px; margin: 2px 0; color: #000;">مدرسة داوود بن عروة الثقفي الابتدائية (طلاب) | معلم المادة: منصور عامر الرحيلي | الصف: <span id="printTestGrade"></span></p>
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; margin-top: 4px; color: #000;">
                         <span>اسم الطالب: ....................................................</span>
                         <span>الدرجة: ........ / ١٠</span>
                     </div>
                 </div>
-                <div id="printTestQuestionsList" style="font-size: 12px; color: #000; line-height: 1.5;">
+                <div id="printTestQuestionsList" style="font-size: 11px; color: #000; line-height: 1.3;">
                     <!-- تفاصيل 10 أسئلة الاختيار من متعدد -->
                 </div>
             </div>
@@ -760,7 +793,7 @@
         <div class="section-card" id="autoGradingSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 6px; margin-bottom: 10px;">
                 <h3 style="margin: 0; border: none; padding: 0;">📸 التصحيح الآلي للاختبارات والتحليل الإحصائي</h3>
-                <button class="btn-print" onclick="printSection('autoGradingSection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة تقرير التحليل</button>
+                <button class="btn-print no-print" onclick="printSection('autoGradingSection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة تقرير التحليل</button>
             </div>
 
             <!-- إعداد نموذج الإجابة النموذجي -->
@@ -894,7 +927,7 @@
         <div class="section-card" id="lessonMasterySection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 6px; margin-bottom: 10px;">
                 <h3 style="margin: 0; border: none; padding: 0;">🎯 تتبع إتقان كل درس لكل طالب</h3>
-                <button class="btn-print" onclick="printSection('lessonMasterySection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة تقرير الإتقان</button>
+                <button class="btn-print no-print" onclick="printSection('lessonMasterySection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة تقرير الإتقان</button>
             </div>
 
             <div class="form-row no-print">
@@ -941,7 +974,7 @@
         <div class="section-card" id="examsSection">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 6px; margin-bottom: 10px;">
                 <h3 style="margin: 0; border: none; padding: 0;">📊 رصد وتحليل اختبارات الفترة (من ٢٠) 📝</h3>
-                <button class="btn-print" onclick="printSection('examsSection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة تقرير الاختبارات</button>
+                <button class="btn-print no-print" onclick="printSection('examsSection')" style="width: auto; padding: 5px 10px; font-size: 11px;">🖨️ طباعة تقرير الاختبارات</button>
             </div>
             
             <div class="form-row no-print">
@@ -1115,7 +1148,7 @@
 
     </div>
 
-    <div class="section-card" style="text-align: center; background: #ffffff; margin: 12px auto; max-width: 600px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 12px;">
+    <div class="section-card no-print" style="text-align: center; background: #ffffff; margin: 12px auto; max-width: 600px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 12px;">
         <h4 style="color: var(--secondary, #2563eb); margin: 0 0 10px 0; font-size: 14px;">💾 النسخ الاحتياطي وإدارة البيانات</h4>
         <div style="display: flex; justify-content: center; gap: 6px; flex-wrap: wrap;">
             <button class="btn-info" onclick="backupAllData()" style="background: #e11d48; padding: 9px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; color: white; border: none; flex: 1; font-weight: bold;">
@@ -1137,29 +1170,25 @@
     <div id="toast" class="toast">✅ تم حفظ البيانات تلقائياً!</div>
 
     <script>
-        // زر التثبيت الذكي PWA Prompt
+        // تثبيت الـ PWA
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            const btn = document.getElementById('installAppBtn');
-            const hint = document.getElementById('installHintMsg');
-            if(btn) {
-                btn.style.display = 'block';
-                if(hint) hint.style.display = 'none';
-            }
         });
 
-        document.getElementById('installAppBtn').addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                showToast('🎉 تم قبول التثبيت بنجاح!');
+        async function triggerAppInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showToast('🎉 تم قبول تثبيت التطبيق بنجاح!');
+                }
+                deferredPrompt = null;
+            } else {
+                alert("📱 طريقة تثبيت الداشبورد على جهازك:\n\n1️⃣ للأيفون (Safari):\n• اضغطي على زر المشاركة (Share ⬆️).\n• اختاري 'الإضافة إلى الشاشة الرئيسية' (Add to Home Screen).\n\n2️⃣ للأندرويد أو الكومبيوتر (Chrome):\n• اضغطي على قائمة المتصفح (⋮) أعلى الزاوية.\n• اختاري 'تثبيت التطبيق' أو 'الإضافة إلى الشاشة الرئيسية'.");
             }
-            deferredPrompt = null;
-            document.getElementById('installAppBtn').style.display = 'none';
-        });
+        }
 
         const TEACHER_NAME = "منصور عامر الرحيلي";
         const SCHOOL_NAME = "مدرسة داوود بن عروة الثقفي الابتدائية (طلاب)";
@@ -1260,7 +1289,7 @@
             const now = Date.now();
             if (!lastBackup || (now - Number(lastBackup) > 7 * 24 * 60 * 60 * 1000)) {
                 setTimeout(() => {
-                    alert('📌 تذكير دوري لحماية بياناتك:\nمرت فترة على آخر نسختك الاحتياطية. يوصى بالنقر على زر (تصدير JSON) لحفظ بياناتك وتجنب ضياعها.');
+                    alert('📌 تذكير دوري لحماية بياناتك:\nمرت فترة على آخر نسختك الاحتياطية. يوصى بالنقر على زر (حفظ JSON) لحفظ بياناتك وتجنب ضياعها.');
                     localStorage.setItem('mansour_last_backup_date', now.toString());
                 }, 3000);
             }
@@ -1328,68 +1357,38 @@
             document.getElementById('printTestGrade').textContent = currentGrade;
 
             const listContainer = document.getElementById('printTestQuestionsList');
-            let qHTML = `<div style="margin-bottom: 8px; font-weight: bold; background: rgba(0,0,0,0.035); padding: 6px;">مستهدف التقييم: ${currentGrade} - 10 أسئلة اختيار من متعدد للتصحيح الآلي</div>`;
+            let qHTML = `<div style="margin-bottom: 4px; font-weight: bold; background: rgba(0,0,0,0.035); padding: 3px 6px; font-size: 10px;">مستهدف التقييم: ${currentGrade} - 10 أسئلة اختيار من متعدد (صفحة واحدة A4)</div>`;
 
-            // 10 أسئلة اختيار من متعدد بالكامل لكل نموذج
+            // 10 أسئلة مضغوطة التنسيق لتناسب صفحة A4 واحدة
             const mcq10Questions = [
-                {
-                    q: `السؤال 1: ما هو المفهوم العلمي الأبرز في وحدات مقرر العلوم للصف (${currentGrade}) - نموذج (${modelNum})؟`,
-                    opts: ["أ) الخيار العلمي الصحيح والمعتمد للمنهج.", "ب) الخيار التشتيتي الأول غير الصحيح.", "ج) الخيار التشتيتي الثاني غير الدقيق.", "د) الخيار التشتيتي الثالث."]
-                },
-                {
-                    q: `السؤال 2: كيف تتفاعل الكائنات الحية أو المواد في بيئتها وفقاً للتجارب الاستهلالية؟`,
-                    opts: ["أ) تتكيف وتستجيب خصائصها وفق المتغيرات.", "ب) تنعدم استجابتها بصورة تامة.", "ج) تتحول عشوائياً بدون مؤثرات.", "د) تظل ثابتة لا تتغير أبداً."]
-                },
-                {
-                    q: `السؤال 3: أي مما يلي يمثل خاصية أساسية تم دراستها في المنهج الحالي؟`,
-                    opts: ["أ) الملاحظة الدقيقة والاستنتاج العلمي السليم.", "ب) الإهمال والتخمين العشوائي.", "ج) تجنب إجراء التجارب العملية.", "د) إلغاء دور الملاحظة في العلوم."]
-                },
-                {
-                    q: `السؤال 4: عند قياس أو تصنيف الأجسام والمخلوقات في المقرر، نعتمد على:`,
-                    opts: ["أ) الخصائص الفيزيائية والحيوية المدروسة.", "ب) الألوان والزخارف فقط.", "ج) الأحلام والتوقعات الوهمية.", "د) البيانات غير المنظمة."]
-                },
-                {
-                    q: `السؤال 5: الهدف الأساسي من التقويم والاختبارات التكوينية في مادة العلوم هو:`,
-                    opts: ["أ) قياس الإتقان وتحسين الفهم واستكشاف المهارات.", "ب) حفظ الكلمات دون فهم المعنى.", "ج) إثقال مهارات الحفظ فقط.", "د) تشتيت الانتباه الدراسي."]
-                },
-                {
-                    q: `السؤال 6: ما هي النتيجة المتوقعة عند تطبيق المفاهيم العلمية بداخل المعمل أو الفصل؟`,
-                    opts: ["أ) ترسيخ الفهم واستنتاج الحقائق بدقة.", "ب) إضاعة الوقت بلا فائدة علمية.", "ج) غموض المعلومات ونسيانها.", "د) صعوبة استيعاب البيئة المحيطة."]
-                },
-                {
-                    q: `السؤال 7: التصنيف السليم للمخلوقات الحية والعناصر في مقرر العلوم يعتمد على:`,
-                    opts: ["أ) الخصائص المشتركة والفروق الدقيقة.", "ب) الأشكال العشوائية البحتة.", "ج) الاختيار دون معايير واضحة.", "د) التخمين غير المبرر."]
-                },
-                {
-                    q: `السؤال 8: أي من الأدوات التالية تعتبر الأنسب لملاحظة التفاصيل الدقيقة للكائنات أو المواد؟`,
-                    opts: ["أ) العدسة المكبرة والمجهر والأجهزة العلمية.", "ب) الورق العادي دون وسائل فحص.", "ج) الأدوات الترفيهية البعيدة عن العلم.", "د) الوسائل غير المختبرية."]
-                },
-                {
-                    q: `السؤال 9: العلاقة المتبادلة بين الكائنات الحية وعناصر بيئتها تهدف أساساً إلى:`,
-                    opts: ["أ) ضمان البقاء والتكيف واستمرار الحياة.", "ب) إحداث خلل مستمر في البيئة.", "ج) القضاء على الموارد الطبيعية.", "د) عزل الكائنات عن محيطها."]
-                },
-                {
-                    q: `السؤال 10: التقييم الختامي الشامل لدروس الوحدة يساعد المعلم والطالب على:`,
-                    opts: ["أ) قياس مستوى تحقيق نواتج التعلم بدقة.", "ب) تخطي المنهج دون اهتمام.", "ج) إلغاء المراجعة والاستذكار.", "د) إغفال المهارات العملية."]
-                }
+                { q: "السؤال 1: ما المفهوم العلمي الأساسي المعتمد في المقرر الحالي؟", opts: ["أ) الخيار العلمي الصحيح والمعتمد.", "ب) الخيار غير الصحيح.", "ج) خيار غير دقيق.", "د) خيار إضافي."] },
+                { q: "السؤال 2: كيف تستجيب الكائنات الحية للمؤثرات في بيئتها؟", opts: ["أ) تتكيف وتستجيب خصائصها بحسب الحاجة.", "ب) تنعدم استجابتها كلياً.", "ج) تتغير بشكل عشوائي.", "د) تظل ثابتة لا تتأثر."] },
+                { q: "السؤال 3: أي الممارسات التالية تعتبر أساس الملاحظة العلمية؟", opts: ["أ) الفحص والدقة واستنتاج الحقائق.", "ب) التخمين العشوائي.", "ج) ترك التجارب العملية.", "د) تجاهل النتائج."] },
+                { q: "السؤال 4: عند قياس وتصنيف المواد والأجسام، نعتمد على:", opts: ["أ) الخصائص الفيزيائية والكيميائية الملاحظة.", "ب) الألوان الخارجية فقط.", "ج) التوقعات الشخصية.", "د) البيانات غير المنظمة."] },
+                { q: "السؤال 5: الهدف الرئيسي من إجراء التجارب التقييمية هو:", opts: ["أ) قياس الإتقان وترسيخ المفاهيم.", "ب) حفظ النصوص بدون فهم.", "ج) التعقيد الدراسي.", "د) تشتيت الانتباه."] },
+                { q: "السؤال 6: ما النتيجة المتوقعة للتفاعل السليم بداخل المعمل الدراسي؟", opts: ["أ) استنتاج الحقائق وتنمية الشغف العلمي.", "ب) ضياع الوقت.", "ج) نسيان المهارات.", "د) عدم الوضوح."] },
+                { q: "السؤال 7: التصنيف السليم للمخلوقات والعناصر يعتمد على:", opts: ["أ) الصفات المشتركة والفروق الدقيقة.", "ب) الشكل العشوائي.", "ج) الاختيار بغير معيار.", "د) التخمين."] },
+                { q: "السؤال 8: الأداة الأنسب لملاحظة أجزاء التفاصيل الدقيقة هي:", opts: ["أ) العدسة المكبرة والمجهر.", "ب) الورق المسطر.", "ج) الأدوات غير المختبرية.", "د) العين المجردة من بعيد."] },
+                { q: "السؤال 9: التفاعل المتوازن بين المخلوقات والبيئة يهدف إلى:", opts: ["أ) استمرار الحياة والتكيف والتوازن.", "ب) تدمير الموارد.", "ج) الخلل البيئي.", "د) انقراض الكائنات."] },
+                { q: "السؤال 10: التقييم النهائي الختامي للوحدة يساعد على:", opts: ["أ) تحديد مستوى تحقيق نواتج التعلم بدقة.", "ب) إهمال المراجعة.", "ج) إلغاء التطبيق العملي.", "د) التخطي السريع."] }
             ];
 
             mcq10Questions.forEach((item, idx) => {
                 qHTML += `
-                    <div style="margin-bottom: 10px; padding: 7px; background: rgba(0,0,0,0.02); border-radius: 4px; border-right: 3px solid var(--secondary);">
-                        <strong>${item.q}</strong><br>
-                        <div style="margin-top: 4px; padding-right: 10px; line-height: 1.6;">
-                            ${item.opts[0]}<br>
-                            ${item.opts[1]}<br>
-                            ${item.opts[2]}<br>
-                            ${item.opts[3]}
+                    <div class="print-q-box" style="margin-bottom: 4px; padding: 3px 5px; background: rgba(0,0,0,0.015); border-radius: 3px; border-right: 2.5px solid var(--secondary);">
+                        <strong>${item.q}</strong>
+                        <div class="print-opts-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; margin-top: 2px;">
+                            <div>${item.opts[0]}</div>
+                            <div>${item.opts[1]}</div>
+                            <div>${item.opts[2]}</div>
+                            <div>${item.opts[3]}</div>
                         </div>
                     </div>
                 `;
             });
 
             listContainer.innerHTML = qHTML;
-            showToast(`⚡ تم توليد وعرض (${titleText}) بـ 10 أسئلة بنجاح!`);
+            showToast(`⚡ تم توليد (${titleText}) وتنسيقه لصفحة A4 واحدة!`);
         }
 
         // دوال التصحيح الآلي (10 أسئلة)
@@ -1995,7 +1994,7 @@
             tbody.innerHTML = '';
 
             if(!selectedClass) {
-                tbody.innerHTML = `<tr><td colspan="5" style="padding: 12px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض رصد واختبارات الطلاب.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 12px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض رصد وااختبارات الطلاب.</td></tr>`;
                 analysisBox.style.display = 'none';
                 return;
             }
@@ -2521,3 +2520,4 @@
     </script>
 </body>
 </html>
+

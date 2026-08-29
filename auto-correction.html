@@ -233,17 +233,28 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>🤖 نظام التصحيح الآلي وتوليد الاختبارات (مرتبط بمواضيع الداشبورد)</h2>
+            <h2>🤖 نظام التصحيح الآلي وتوليد الاختبارات الشامل</h2>
             <a href="index.html" class="back-btn">⬅ العودة للوحة التحكم</a>
         </div>
 
-        <!-- 1. ربط المادة والدروس المخزنة في الداشبورد -->
+        <!-- 1. اختيار المادة والصف وسحب الدروس -->
         <div class="section-box no-print">
-            <h3>📚 أولاً: اختيار الصف وسحب مواضيع الدروس من الداشبورد</h3>
+            <h3>📚 أولاً: اختيار المادة والصف الدراسي وسحب الدروس</h3>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>اختر الصف الدراسي المراد سحب دروسه:</label>
-                    <select id="selectGradeScope" onchange="loadLessonsFromDashboard()">
+                    <label>اختر المادة الدراسية:</label>
+                    <select id="selectSubject" onchange="loadLessonsBySelection()">
+                        <option value="science">مادة العلوم</option>
+                        <option value="math">مادة الرياضيات</option>
+                        <option value="arabic">مادة لغتي الجميلة</option>
+                        <option value="english">مادة اللغة الإنجليزية</option>
+                        <option value="islamic">الدراسات الإسلامية</option>
+                        <option value="general">مادة عامة / أخرى</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>اختر الصف الدراسي:</label>
+                    <select id="selectGrade" onchange="loadLessonsBySelection()">
                         <option value="الأول الابتدائي">الصف الأول الابتدائي</option>
                         <option value="الثاني الابتدائي">الصف الثاني الابتدائي</option>
                         <option value="الثالث الابتدائي">الصف الثالث الابتدائي</option>
@@ -252,15 +263,17 @@
                         <option value="السادس الابتدائي">الصف السادس الابتدائي</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>اسم المادة (للعرض في الترويسة):</label>
-                    <input type="text" id="subjectNameInput" value="مادة العلوم" placeholder="أدخل اسم المادة">
-                </div>
             </div>
             
             <div class="form-group" style="margin-top: 10px;">
-                <label>الدروس المسحوبة من لوحة التحكم (حدد ما تريد تضمينه في الاختبار):</label>
-                <div id="dashboardLessonsChecklist" class="lessons-checklist"></div>
+                <label>الدروس المتاحة (حدد الدروس المراد إدخالها في الاختبار):</label>
+                <div id="lessonsChecklistContainer" class="lessons-checklist"></div>
+            </div>
+
+            <!-- زر إضافة درس يدوي سريع في حال لم يظهر الدرس -->
+            <div style="margin-top: 12px; display: flex; gap: 10px;">
+                <input type="text" id="quickAddLessonInput" placeholder="أكتب اسم درس إضافي هنا..." style="flex:1;">
+                <button class="action-btn" onclick="quickAddLesson()" style="padding: 8px 15px; font-size: 13px;">➕ إضافة درس</button>
             </div>
         </div>
 
@@ -268,7 +281,7 @@
         <div class="section-box">
             <h3>⚙️ ثانياً: بناء نموذج الاختبار (١٠ أسئلة اختيارية مع دوائر التضليل الرسمية)</h3>
             <div class="no-print">
-                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج الاختبار من دروس الداشبورد</button>
+                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج الاختبار من الدروس المحددة</button>
             </div>
 
             <div id="questionsPreviewBox" class="questions-preview printable-area">
@@ -328,48 +341,69 @@
     </div>
 
     <script>
-        function loadLessonsFromDashboard() {
-            const container = document.getElementById('dashboardLessonsChecklist');
+        // قاعدة بيانات أساسية للدروس الافتراضية في حال عدم وجودها مخزنة
+        const defaultLessons = {
+            "science": ["أجزاء النباتات", "النباتات تنتج نباتات جديدة", "أماكن عيش الحيوانات", "الحيوانات تنمو وتتغير", "ما الأرض؟", "الماء والهواء", "حالات الطقس", "الفصول الأربعة"],
+            "math": ["الجمع ضمن العدد 20", "الطرح ضمن العدد 20", "القيمة المنزلية", "جمع الاعداد من رقمين", "طرح الاعداد من رقمين", "الاشكال الهندسية", "القياس الطول والكتلة"],
+            "arabic": ["النشيد والترحيب", "حرف الماء والسين والباء", "الأسرة والبيت", "مدخل الوحده والتهجئة", "القراءة المعبرة", "التعبير الكتابي"],
+            "english": ["Alphabet & Sounds", "Greetings & Intro", "Numbers & Colors", "Classroom Objects", "Family Members"],
+            "islamic": ["سور القرآن القصيرة", "أركان الإسلام", "الوضوء والصلاة", "الآداب الإسلامية", "السيرة النبوية"],
+            "general": ["الموضوع الأول", "الموضوع الثاني", "الموضوع الثالث", "الموضوع الرابع"]
+        };
+
+        function loadLessonsBySelection() {
+            const subjectKey = document.getElementById('selectSubject').value;
+            const grade = document.getElementById('selectGrade').value;
+            const container = document.getElementById('lessonsChecklistContainer');
             container.innerHTML = '';
 
-            let storedLessons = [];
-            
+            // محاولة جلب الدروس من الذاكرة المحلية المرتبطة بالصف أو المادة
+            let fetchedLessons = [];
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
-                if (key && (key.includes('custom_lessons') || key.includes('lessons') || key.includes('science'))) {
+                if (key && (key.includes(subjectKey) || key.includes('lessons') || key.includes(grade))) {
                     try {
-                        let rawData = localStorage.getItem(key);
-                        let data = JSON.parse(rawData);
-                        if (Array.isArray(data) && data.length > 0) {
-                            storedLessons = storedLessons.concat(data);
+                        let data = JSON.parse(localStorage.getItem(key));
+                        if (Array.isArray(data)) {
+                            data.forEach(item => {
+                                let t = (typeof item === 'object' && item !== null) ? (item.title || item.chapter || '') : String(item);
+                                if (t && !fetchedLessons.includes(t)) fetchedLessons.push(t);
+                            });
                         }
                     } catch(e) {}
                 }
             }
 
-            let uniqueLessons = [];
-            let titlesSet = new Set();
-            storedLessons.forEach(l => {
-                let t = (typeof l === 'object' && l !== null) ? (l.title || l.chapter || '') : String(l);
-                if (t && !titlesSet.has(t)) {
-                    titlesSet.add(t);
-                    uniqueLessons.push(t);
-                }
-            });
-
-            if (uniqueLessons.length === 0) {
-                container.innerHTML = `<span style="color:var(--danger); font-size:13px;">لا توجد دروس مخزنة في لوحة التحكم حالياً، يرجى إضافة بعض الدروس في الداشبورد أولاً.</span>`;
-                return;
+            // إذا لم يتم العثور على دروس مخزنة، يتم الاعتماد على القائمة الافتراضية للمادة المختارة
+            if (fetchedLessons.length === 0) {
+                fetchedLessons = defaultLessons[subjectKey] || defaultLessons["general"];
             }
 
-            uniqueLessons.forEach((title, index) => {
+            fetchedLessons.forEach((title, index) => {
                 container.innerHTML += `
                     <label class="checkbox-item">
-                        <input type="checkbox" name="dashboardLesson" value="${escapeHtml(title)}" checked>
+                        <input type="checkbox" name="subjectLesson" value="${escapeHtml(title)}" checked>
                         <span>${index + 1}. ${escapeHtml(title)}</span>
                     </label>
                 `;
             });
+        }
+
+        function quickAddLesson() {
+            const input = document.getElementById('quickAddLessonInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            const container = document.getElementById('lessonsChecklistContainer');
+            const count = container.querySelectorAll('.checkbox-item').length + 1;
+            
+            container.innerHTML += `
+                <label class="checkbox-item">
+                    <input type="checkbox" name="subjectLesson" value="${escapeHtml(val)}" checked>
+                    <span>${count}. ${escapeHtml(val)}</span>
+                </label>
+            `;
+            input.value = '';
         }
 
         function loadStudentsList() {
@@ -382,9 +416,7 @@
                 if (key && key.includes('students')) {
                     try {
                         let data = JSON.parse(localStorage.getItem(key));
-                        if (Array.isArray(data)) {
-                            allStudents = allStudents.concat(data);
-                        }
+                        if (Array.isArray(data)) allStudents = allStudents.concat(data);
                     } catch(e) {}
                 }
             }
@@ -406,13 +438,14 @@
         }
 
         function generateTestModel() {
-            const subject = document.getElementById('subjectNameInput').value.trim() || 'المادة الدراسية';
-            const grade = document.getElementById('selectGradeScope').value;
+            const subjectSelect = document.getElementById('selectSubject');
+            const subjectName = subjectSelect.options[subjectSelect.selectedIndex].text;
+            const grade = document.getElementById('selectGrade').value;
             
-            document.getElementById('printSubjectTitle').textContent = `اختبار مادة: ${subject}`;
+            document.getElementById('printSubjectTitle').textContent = `اختبار ${subjectName}`;
             document.getElementById('printGradeTitle').textContent = `المرحلة / الصف: ${grade}`;
 
-            const checkboxes = document.querySelectorAll('input[name="dashboardLesson"]:checked');
+            const checkboxes = document.querySelectorAll('input[name="subjectLesson"]:checked');
             let selectedTopics = [];
             checkboxes.forEach(cb => selectedTopics.push(cb.value));
 
@@ -425,6 +458,7 @@
             const listContainer = document.getElementById('generatedQuestionsList');
             previewBox.style.display = 'block';
             
+            // توليد 10 أسئلة دقيقة موزعة على الدروس المختارة
             let htmlContent = '';
             for (let i = 1; i <= 10; i++) {
                 let currentTopic = selectedTopics[(i - 1) % selectedTopics.length];
@@ -484,7 +518,7 @@
                     <tr><td style="padding:8px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;">مطابق لبيانات الداشبورد</td></tr>
                     <tr><td style="padding:8px;">متوسط أداء الطلاب عبر تضليل ورقة الأسئلة</td><td style="text-align:center;">95% (أداء ممتاز)</td></tr>
                     <tr><td style="padding:8px;">نسبة دقة القراءة الآلية لدوائر التضليل</td><td style="text-align:center;">100% (خطأ صفر%)</td></tr>
-                    <tr><td style="padding:8px;">المهارات المقاسة</td><td style="text-align:center;">الفهم والاستيعاب المعرفي للدروس المحددة</td></tr>
+                    <tr><td style="padding:8px;">المهارات المقاسة</td><td style="text-align:center;">الفهم والاستيعاب المعرفي للمادة المحددة</td></tr>
                 </table>
                 <p style="margin-top:15px; font-weight:bold; color:#b45309;">💡 التوصية التربوية: اعتماد نموذج التضليل الآلي في جميع الاختبارات القادمة لضمان سرعة الرصد ودقة النتائج.</p>
             `;
@@ -492,7 +526,7 @@
         }
 
         window.onload = function() {
-            loadLessonsFromDashboard();
+            loadLessonsBySelection();
             loadStudentsList();
         };
     </script>

@@ -290,14 +290,15 @@
         </div>
 
         <div class="section-box no-print">
-            <h3>📚 أولاً: إعدادات الاختبار والصف والمادة</h3>
+            <h3>📚 أولاً: إعدادات الاختبار والصف والمادة ونطاق الدروس</h3>
             <div class="form-grid">
                 <div class="form-group">
                     <label>نوع الاختبار:</label>
-                    <select id="selectExamType">
-                        <option value="الفتري">الاختبار الفتري (مرتبط بالداشبورد)</option>
-                        <option value="القبلي">الاختبار القبلي (تشخيصي)</option>
-                        <option value="البعدي">الاختبار البعدي (نهائي)</option>
+                    <select id="selectExamType" onchange="togglePeriodicLessonsBox()">
+                        <option value="الاختبار الفتري الأول">الاختبار الفتري الأول</option>
+                        <option value="الاختبار الفتري الثاني">الاختبار الفتري الثاني</option>
+                        <option value="الاختبار القبلي التشخيصي">الاختبار القبلي (تشخيصي)</option>
+                        <option value="الاختبار البعدي النهائي">الاختبار البعدي (نهائي)</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -322,10 +323,20 @@
                     </select>
                 </div>
             </div>
+
+            <!-- خانة تحديد نطاق الدروس الخاصة بالاختبار الفتري (مخفية في ورقة الطباعة) -->
+            <div id="periodicLessonsConfigBox" class="form-group" style="margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px;">
+                <label style="color: #b45309;">📌 تحديد نطاق الدروس والأسابيع المستهدفة (خاص بالمعلم لتصفية بنك الأسئلة):</label>
+                <select id="selectLessonScope">
+                    <option value=" دروس الفترة الأولى فقط (الأسبوع 1 إلى 4)">دروس الفترة الأولى فقط (الأسبوع 1 إلى 4)</option>
+                    <option value=" دروس الفترة الأولى المتقدمة (الأسبوع 1 إلى 6)">دروس الفترة الأولى المتقدمة (الأسبوع 1 إلى 6)</option>
+                    <option value=" الدروس السابقة والراجعة (مراجعة عامة للفترة)">الدروس السابقة والراجعة (مراجعة عامة للفترة)</option>
+                </select>
+            </div>
         </div>
 
         <div class="section-box">
-            <h3>⚙️ ثانياً: توليد ورقة الاختبار المخصصة (حسب الصف والمادة بدقة)</h3>
+            <h3>⚙️ ثانياً: توليد ورقة الاختبار المعتمدة (بدون ذكر أسماء الدروس في الورقة)</h3>
             <div class="no-print">
                 <button class="action-btn" onclick="generateTestModel()">⚡ توليد ورقة الاختبار المعتمدة</button>
             </div>
@@ -390,7 +401,6 @@
             "islamic": "الدراسات الإسلامية" 
         };
 
-        // بنك أسئلة دقيق ومخصص لكل صف دراسي على حده
         const accurateGradeQuestionBank = {
             "الأول الابتدائي": {
                 "science": [
@@ -486,11 +496,11 @@
                 "math": [
                     { q: "ما القيمة المنزلية للرقم 7 في العدد 745,120؟", options: ["سبعون ألفاً", "سبعمائة ألف", "سبعة آلاف", "سبعون مليوناً"], correct: "ب" },
                     { q: "ناتج ضرب: 400 × 5 يساوي:", options: ["200", "2000", "20,000", "20"], correct: "ب" },
-                    { q: "أي الكسور التالية مكسر غير فعلي (بسْطه أكبر من مقامه)؟", options: ["3/4", "7/4", "1/2", "2/5"], correct: "ب" },
+                    { q: "أي الكسور التالية يمثل كسراً غير فعلي (بسْطه أكبر من مقامه)؟", options: ["3/4", "7/4", "1/2", "2/5"], correct: "ب" },
                     { q: "مساحة مستطيل طوله 6 سم وعرضه 4 سم تساوي:", options: ["20 سم مربّع", "24 سم مربّع", "10 سم مربّع", "12 سم مربّع"], correct: "ب" },
                     { q: "قرب العدد 4,821 لأقرب ألف:", options: ["4,000", "5,000", "4,800", "4,900"], correct: "ب" },
                     { q: "ناتج جمع الكسرين: 2/8 + 3/8 يساوي:", options: ["5/8", "5/16", "6/8", "1/8"], correct: "أ" },
-                    { q: "كم مصفاة أو لتراً في 3000 مللتر؟", options: ["3 لترات", "30 لتراً", "300 لتر", "3 لترات ونصف"], correct: "أ" },
+                    { q: "كم لتراً في 3000 مللتر؟", options: ["3 لترات", "30 لتراً", "300 لتر", "3 لترات ونصف"], correct: "أ" },
                     { q: "أي الأعداد التالية يقبل القسمة على 2 و 5 معاً؟", options: ["24", "35", "40", "43"], correct: "ج" },
                     { q: "قياس الزاوية القائمة بالدرجات يساوي:", options: ["90 درجة", "180 درجة", "45 درجة", "360 درجة"], correct: "أ" },
                     { q: "المضلع الذي له 6 أضلاع يسمى:", options: ["مخمس", "مسدس", "مسبع", "مثلث"], correct: "ب" }
@@ -517,7 +527,7 @@
                     { q: "ما المضاعف المشترك الأصغر (م.م.أ) للعددين 3 و 4؟", options: ["7", "12", "24", "6"], correct: "ب" },
                     { q: "أوجد القاسم المشترك الأكبر (ق.م.أ) للعددين 12 و 18:", options: ["3", "6", "2", "4"], correct: "ب" },
                     { q: "ناتج طرح: 15.8 - 6.3 يساوي:", options: ["9.5", "9.2", "10.5", "8.5"], correct: "أ" },
-                    { q: "إذا كانت نسبة الطلاب المفضلين لكرة القدم 70%، فما هي كسرها الاعتيادي في أبسط صورة؟", options: ["7/10", "3/4", "1/2", "2/5"], correct: "أ" },
+                    { q: "إذا كانت نسبة الطلاب المفضلين لكرة القدم 70%، فما هو كسرها الاعتيادي في أبسط صورة؟", options: ["7/10", "3/4", "1/2", "2/5"], correct: "أ" },
                     { q: "ما قياس الزاوية المستقيمة بالدرجات؟", options: ["90 درجة", "180 درجة", "270 درجة", "360 درجة"], correct: "ب" },
                     { q: "المضلع الذي مجموع قياسات زواياه الداخلية 360 درجة وله 4 أضلاع يسمى:", options: ["مثلث", "رباعي الأضلاع", "خماسي", "سداسي"], correct: "ب" }
                 ]
@@ -550,7 +560,6 @@
             }
         };
 
-        // بنك احتياطي عام دقيق لكل مادة
         const fallbackBank = {
             "science": [
                 { q: "ما هي الوحدة الأساسية لبناء وتنظيم الكائن الحي؟", options: ["النسيج الحيوي", "العضو الداخلي", "الخلية", "الجهاز العصبي"], correct: "ج" },
@@ -584,6 +593,16 @@
         let allClassResults = {};
         let activeQuestions = [];
         let currentModelName = "نموذج (أ)";
+
+        function togglePeriodicLessonsBox() {
+            const examType = document.getElementById('selectExamType').value;
+            const configBox = document.getElementById('periodicLessonsConfigBox');
+            if (examType.includes("الفتري")) {
+                configBox.style.display = 'block';
+            } else {
+                configBox.style.display = 'none';
+            }
+        }
 
         function fetchAllStudentsFromStorage() {
             studentsList = [];
@@ -619,13 +638,27 @@
             document.getElementById('printTestInfo').textContent = `الصف: ${gradeKey} | المادة: ${subjectNames[subjectKey] || "المادة الدراسية"} | نوع الاختبار: ${examType}`;
             document.getElementById('printModelBadge').textContent = `رقم النموذج: ${currentModelName}`;
 
-            // جلب الأسئلة المطابقة تماماً للصف والمادة المحددة بدون أي تداخل
+            let rawQuestions = [];
             if (accurateGradeQuestionBank[gradeKey] && accurateGradeQuestionBank[gradeKey][subjectKey]) {
-                activeQuestions = [...accurateGradeQuestionBank[gradeKey][subjectKey]];
+                rawQuestions = [...accurateGradeQuestionBank[gradeKey][subjectKey]];
             } else if (fallbackBank[subjectKey]) {
-                activeQuestions = [...fallbackBank[subjectKey]];
+                rawQuestions = [...fallbackBank[subjectKey]];
             } else {
-                activeQuestions = [...fallbackBank["science"]];
+                rawQuestions = [...fallbackBank["science"]];
+            }
+
+            // إذا كان الاختبار فترياً، نقوم بتصفية الأسئلة بحيث تأخذ النصف الأول أو المحدد دون عرض أسماء الدروس بالورقة
+            if (examType.includes("الفتري")) {
+                let scope = document.getElementById('selectLessonScope').value;
+                if (scope.includes("الأول فقط")) {
+                    // نأخذ أول 5 أسئلة التي تخص الدروس الأولى فقط للفترة الأولى
+                    activeQuestions = rawQuestions.slice(0, 5);
+                } else {
+                    // نأخذ 7 أسئلة أو التشكيلة المعتمدة للفترة
+                    activeQuestions = rawQuestions.slice(0, 7);
+                }
+            } else {
+                activeQuestions = rawQuestions; // اختبار شامل
             }
 
             const previewBox = document.getElementById('questionsPreviewBox');

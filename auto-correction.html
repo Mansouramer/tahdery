@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المملكة العربية السعودية - وزارة التعليم | نظام التصحيح الآلي والاختبارات</title>
     <style>
@@ -206,7 +207,7 @@
         .result-box {
             display: none;
             background: #ecfdf5;
-            border: 1px solid var(--success);
+            border: 1px solid #10b981;
             padding: 20px;
             border-radius: 10px;
             margin-top: 20px;
@@ -259,9 +260,7 @@
             
             <div class="form-group" style="margin-top: 10px;">
                 <label>الدروس المسحوبة من لوحة التحكم (حدد ما تريد تضمينه في الاختبار):</label>
-                <div id="dashboardLessonsChecklist" class="lessons-checklist">
-                    <!-- يتم تعبئتها تلقائياً من الـ LocalStorage -->
-                </div>
+                <div id="dashboardLessonsChecklist" class="lessons-checklist"></div>
             </div>
         </div>
 
@@ -329,33 +328,29 @@
     </div>
 
     <script>
-        // البحث الشامل في الذاكرة المحلية لجلب الدروس بغض النظر عن اختلاف مفاتيح التخزين
         function loadLessonsFromDashboard() {
-            const grade = document.getElementById('selectGradeScope').value;
             const container = document.getElementById('dashboardLessonsChecklist');
             container.innerHTML = '';
 
             let storedLessons = [];
             
-            // المرور على جميع مفاتيح الذاكرة المحلية للبحث عن دروس تخص الصف المختار أو مفاتيح الدروس
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
                 if (key && (key.includes('custom_lessons') || key.includes('lessons') || key.includes('science'))) {
                     try {
-                        let data = JSON.parse(localStorage.getItem(key));
+                        let rawData = localStorage.getItem(key);
+                        let data = JSON.parse(rawData);
                         if (Array.isArray(data) && data.length > 0) {
-                            // التحقق إذا كانت البيانات تخص الصف أو تحتوي على دروس
                             storedLessons = storedLessons.concat(data);
                         }
                     } catch(e) {}
                 }
             }
 
-            // إزالة التكرار إن وجد
             let uniqueLessons = [];
             let titlesSet = new Set();
             storedLessons.forEach(l => {
-                let t = l.title || l;
+                let t = (typeof l === 'object' && l !== null) ? (l.title || l.chapter || '') : String(l);
                 if (t && !titlesSet.has(t)) {
                     titlesSet.add(t);
                     uniqueLessons.push(t);
@@ -370,8 +365,8 @@
             uniqueLessons.forEach((title, index) => {
                 container.innerHTML += `
                     <label class="checkbox-item">
-                        <input type="checkbox" name="dashboardLesson" value="${title}" checked>
-                        <span>${index + 1}. ${title}</span>
+                        <input type="checkbox" name="dashboardLesson" value="${escapeHtml(title)}" checked>
+                        <span>${index + 1}. ${escapeHtml(title)}</span>
                     </label>
                 `;
             });
@@ -400,8 +395,14 @@
             }
 
             allStudents.forEach((s) => {
-                studentSelect.innerHTML += `<option value="${s.name}">${s.name} (${s.classCustom || 'الصف الأساسي'})</option>`;
+                let sName = s.name || '';
+                let sClass = s.classCustom || 'الصف الأساسي';
+                studentSelect.innerHTML += `<option value="${escapeHtml(sName)}">${escapeHtml(sName)} (${escapeHtml(sClass)})</option>`;
             });
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
         function generateTestModel() {
@@ -424,7 +425,6 @@
             const listContainer = document.getElementById('generatedQuestionsList');
             previewBox.style.display = 'block';
             
-            // توليد 10 أسئلة موزعة على الدروس المسحوبة
             let htmlContent = '';
             for (let i = 1; i <= 10; i++) {
                 let currentTopic = selectedTopics[(i - 1) % selectedTopics.length];

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المملكة العربية السعودية - وزارة التعليم | نظام الاختبارات والتحليل الفوري</title>
+    <title>المملكة العربية السعودية - وزارة التعليم | نظام النماذج المتعددة والتحليل الفوري</title>
     <style>
         :root {
             --primary: #1e3a8a;
@@ -99,26 +99,6 @@
             box-sizing: border-box;
         }
         select:focus, input:focus { border-color: var(--secondary); }
-
-        .lessons-checklist {
-            max-height: 120px;
-            overflow-y: auto;
-            border: 1px solid #d1d5db;
-            padding: 6px;
-            border-radius: 8px;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12.5px;
-            cursor: pointer;
-        }
 
         .action-btn {
             background: var(--secondary);
@@ -305,13 +285,13 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>📱 إدارة الاختبارات حسب الدروس (توليد ذكي وتصحيح باللمس)</h2>
+            <h2>📱 إدارة النماذج المتعددة (توليد وتصحيح باللمس)</h2>
             <a href="index.html" class="back-btn">⬅ لوحة التحكم الرئيسية</a>
         </div>
 
         <!-- 1. إعدادات نوع الاختبار، المادة، والصف -->
         <div class="section-box no-print">
-            <h3>📚 أولاً: إعدادات الاختبار والمادة والصف والدروس المستهدفة</h3>
+            <h3>📚 أولاً: إعدادات الاختبار والمادة والصف</h3>
             <div class="form-grid">
                 <div class="form-group">
                     <label>نوع الاختبار:</label>
@@ -323,7 +303,7 @@
                 </div>
                 <div class="form-group">
                     <label>المادة الدراسية:</label>
-                    <select id="selectSubject" onchange="loadLessonsBySelection()">
+                    <select id="selectSubject">
                         <option value="science">مادة العلوم</option>
                         <option value="math">مادة الرياضيات</option>
                         <option value="arabic">مادة لغتي الجميلة</option>
@@ -334,7 +314,7 @@
                 </div>
                 <div class="form-group">
                     <label>الصف الدراسي:</label>
-                    <select id="selectGrade" onchange="loadLessonsBySelection()">
+                    <select id="selectGrade">
                         <option value="الأول الابتدائي">الصف الأول الابتدائي</option>
                         <option value="الثاني الابتدائي">الصف الثاني الابتدائي</option>
                         <option value="الثالث الابتدائي">الصف الثالث الابتدائي</option>
@@ -344,23 +324,13 @@
                     </select>
                 </div>
             </div>
-            
-            <div class="form-group" style="margin-top: 8px;">
-                <label>اختر الدروس المطلوبة لاختبارها (تتغير الأسئلة بناءً عليها):</label>
-                <div id="lessonsChecklistContainer" class="lessons-checklist"></div>
-            </div>
-
-            <div style="margin-top: 10px; display: flex; gap: 8px;">
-                <input type="text" id="quickAddLessonInput" placeholder="أكتب اسم درس إضافي هنا...">
-                <button class="action-btn" onclick="quickAddLesson()" style="width: auto; padding: 10px 15px; font-size: 13px;">➕ إضافة درس</button>
-            </div>
         </div>
 
-        <!-- 2. توليد الاختبار -->
+        <!-- 2. توليد النماذج -->
         <div class="section-box">
-            <h3>⚙️ ثانياً: نموذج الاختبار للطباعة (يتغير بناءً على الدروس المحددة)</h3>
+            <h3>⚙️ ثانياً: توليد نماذج الاختبار (يتغير النموذج مع كل ضغطة)</h3>
             <div class="no-print">
-                <button class="action-btn" onclick="generateTestModel()">⚡ توليد ورقة الاختبار المخصصة للطباعة</button>
+                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج اختبار جديد للطباعة (تغيير عشوائي)</button>
             </div>
 
             <div id="questionsPreviewBox" class="questions-preview printable-area">
@@ -368,7 +338,7 @@
                     <h3>المملكة العربية السعودية - وزارة التعليم</h3>
                     <h4 id="printSubjectTitle">اختبار مادة: العلوم</h4>
                     <p id="printGradeTitle" style="margin:2px 0; font-size:12px; color:#555;"></p>
-                    <div id="printSelectedLessons" style="margin:4px 0; font-size:11px; color:#0d9488; font-weight:bold;"></div>
+                    <div id="printModelBadge" style="margin:4px 0; font-size:12px; color:#0d9488; font-weight:bold;"></div>
                     <div style="margin-top: 6px; border: 1.2px solid #64748b; padding: 4px 10px; border-radius: 5px; display:inline-block; font-size:11.5px;">
                         <b>اسم الطالب:</b> .................................................................... &nbsp;&nbsp; <b>الصف:</b> ................
                     </div>
@@ -377,14 +347,14 @@
                 <div id="generatedQuestionsList"></div>
 
                 <div class="no-print" style="margin-top: 15px;">
-                    <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة الاختبار بملء صفحة A4</button>
+                    <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة النموذج بملء صفحة A4</button>
                 </div>
             </div>
         </div>
 
         <!-- 3. لوحة التصحيح باللمس السريع -->
         <div class="section-box no-print">
-            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (محدثة حسب الأسئلة المولدة)</h3>
+            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (مطابقة للنموذج المولد)</h3>
             <p style="font-size: 12px; color: #555; margin-bottom: 10px;">
                 انقر على خيار الطالب؛ ستتحدث درجة الطالب فوراً وتُرحل النتائج للداشبورد الأساسي تلقائياً:
             </p>
@@ -419,15 +389,6 @@
     </div>
 
     <script>
-        const gradeLessonsDatabase = {
-            "الأول الابتدائي": ["أجزاء النباتات", "النباتات تنتج نباتات جديدة", "أماكن عيش الحيوانات", "الحيوانات تنمو وتتغير", "ما الأرض؟", "الماء والهواء", "حالات الطقس", "الفصول الأربعة"],
-            "الثاني الابتدائي": ["مخلوقات حية وغير حية", "حاجات المخلوقات الحية", "السلسلة الغذائية", "الصحاري والغابات", "ما المادة؟", "حالات المادة", "الصوت والضوء", "الحركة والقوى"],
-            "الثالث الابتدائي": ["التكاثر ودورة الحياة", "التكيف والبقاء", "الصخور والمعادن والتربة", "أجهزة جسم الإنسان", "الصحة الغذائية", "الدوائر الكهربائية", "المغناطيس وقوته"],
-            "الرابع الابتدائي": ["الخلايا وتصنيف المخلوقات", "الحيوانات الفقارية واللافقارية", "الأنظمة البيئية", "الأمراض المعدية", "الغذاء المتوازن", "المادة وخصائصها"],
-            "الخامس الابتدائي": ["تصنيف المخلوقات الحية", "التكاثر ودورات الحياة", "التفاعلات في الأنظمة البيئية", "معالم سطح الأرض", "التغيرات الفيزيائية والكيميائية", "الشغل والآلات البسيطة"],
-            "السادس الابتدائي": ["الخلية النباتية والحيوانية", "عمليات الحياة في المخلوقات", "السلاسل الغذائية والتربة", "الأحماض والقواعد", "استعمال القوى والحركة", "الكهرباء والمغناطيس"]
-        };
-
         const defaultSubjects = { 
             "science": "مادة العلوم", 
             "math": "مادة الرياضيات", 
@@ -437,67 +398,26 @@
             "general": "مادة عامة" 
         };
 
-        // ربط بنك الأسئلة بالدروس بشكل مباشر ودقيق لضمان اختلاف الأسئلة حسب اختيار المعلم
-        const lessonSpecificQuestionBank = {
-            "أجزاء النباتات": [
-                { q: "أي مما يلي يُعد من أجزاء النبات الرئيسية التي تمتص الماء؟", options: ["الرجل", "الجذر", "الید", "الذيل"], correct: "ب" },
-                { q: "ما الجزء المسؤول عن صنع الغذاء في النباتات غالباً؟", options: ["الساق", "الوراق (الأوراق)", "الجذور القصيرة", "اللحاء"], correct: "ب" }
-            ],
-            "النباتات تنتج نباتات جديدة": [
-                { q: "ما الذي ينتج عنه نبات جديد يشبه النبات الأصلي؟", options: ["البذور", "الصخور", "الرمال", "المعادن"], correct: "أ" },
-                { q: "ماذا تحتاج البذرة لكي تبدأ في الإنبات والنمو؟", options: ["الماء والتربة المناسبة", "الظلام التام", "الهواء الجاف", "درجة حرارة مجمدة"], correct: "أ" }
-            ],
-            "أماكن عيش الحيوانات": [
-                { q: "أي الحيوانات التالية يعيش في البيئة المائية؟", options: ["العصفور", "الأسماك", "الجمل", "القط"], correct: "ب" },
-                { q: "المكان الطبيعي الذي يعيش فيه المخلوق الحي ويجد فيه حاجياته يسمى:", options: ["الموطن", "المصنع", "المدرسة", "الشارع"], correct: "أ" }
-            ],
-            "الحيوانات تنمو وتتغير": [
-                { q: "ماذا تسمى صغيرة الطيور عندما تفقس من البيض؟", options: ["فرخ", "يرقة", "شرغوف", "شبل"], correct: "أ" },
-                { q: "كيف تتكاثر معظم الطيور والحيوانات البرمائية؟", options: ["بالولادة", "بالبيوض", "بالتبرعم", "بالانقسام"], correct: "ب" }
-            ],
-            "ما الأرض؟": [
-                { q: "مم تتكون كوكب الأرض في معظمه؟", options: ["اليابسة", "الماء", "الحديد الخالص", "النار"], correct: "ب" },
-                { q: "ما هو الشكل الذي يمثله كوكب الأرض؟", options: ["مكعب مسطح", "هرم ثلاثي", "كروي تقريباً", "مربع"], correct: "ج" }
-            ],
-            "الماء والهواء": [
-                { q: "ما هو الغاز الأساسي الذي تتفسه الكائنات الحية في الهواء؟", options: ["ثاني أكسيد الكربون", "الأكسجين", "الهيليوم", "النيتروجين"], correct: "ب" },
-                { q: "ما الحالة التي يكون عليها الماء العذب في الأنهار؟", options: ["الصلبة", "السائلة", "الغازية", "البلازما"], correct: "ب" }
-            ],
-            "حالات الطقس": [
-                { q: "ماذا نعني بوصف حالة الجو في يوم معين (حار، بارد، ممطر)؟", options: ["الطقس", "المناخ السنوي", "الفصول الأربعة", "الكتلة"], correct: "أ" },
-                { q: "أي أداة تستخدم لقياس درجة حرارة الجو؟", options: ["الميزان", "الميزان الحراري (الثيرمومتر)", "المطرة", "المسطرة"], correct: "ب" }
-            ],
-            "الفصول الأربعة": [
-                { q: "كم عدد الفصول الأربعة في السنة الهجرية/الميلادية؟", options: ["فصلان", "ثلاثة فصول", "أربعة فصول", "ستة فصول"], correct: "ج" },
-                { q: "في أي فصل ترتفع درجة الحرارة وتسطع الشمس طوال اليوم؟", options: ["الشتاء", "الصيف", "الربيع", "الخريف"], correct: "ب" }
-            ]
-        };
+        // بنك أسئلة رئيسي ضخم يتغير ويتبدل عشوائياً لتشكيل نماذج مختلفة
+        const comprehensiveMasterBank = [
+            { q: "ما هي الوحدة الأساسية لبناء وتنظيم الكائن الحي؟", options: ["النسيج الحيوي", "العضو الداخلي", "الخلية", "الجهاز العصبي"], correct: "ج" },
+            { q: "ما العملية الحيوية التي تصنع بها النباتات الخضراء غذاءها؟", options: ["التنفس الخلوي", "البناء الضوئي", "الهضم والامتصاص", "النتح"], correct: "ب" },
+            { q: "أي الأجرام السماوية التالية يقع في مركز المجموعة الشمسية؟", options: ["كوكب الأرض", "القمر التابع", "الشمس", "كوكب المريخ"], correct: "ج" },
+            { q: "ما الحالة الفيزيائية للماء عندما يتحول إلى ثلج صلب؟", options: ["الحالة السائلة", "الحالة الغازية", "الحالة الصلبة", "حالة البلازما"], correct: "ج" },
+            { q: "أي الكائنات الحية التالية يُعد من الفقاريات؟", options: ["دودة الأرض", "العقرب البحري", "العصفور", "النمل الأبيض"], correct: "ج" },
+            { q: "ما القوة الطبيعية التي تسحب الأجسام دائماً نحو مركز الأرض؟", options: ["قوة الاحتكاك", "قوة الجاذبية", "القوة المغناطيسية", "قوة الطفو"], correct: "ب" },
+            { q: "أي الألوان الضوئية التالية يعتبر من الألوان الأساسية للضوء؟", options: ["الأصفر", "البنفسجي الداكن", "الأحمر", "البرتقالي"], correct: "ج" },
+            { q: "ما الغاز الأساسي الذي تستنشقه الكائنات الحية وتستعمله للطاقة؟", options: ["ثاني أكسيد الكربون", "غاز النيتروجين", "غاز الأكسجين", "غاز الهيدروجين"], correct: "ج" },
+            { q: "كم عدد الفصول الأربعة المناخية في السنة الميلادية الواحدة؟", options: ["فصلان فقط", "ثلاثة فصول", "أربعة فصول", "ستة فصول"], correct: "ج" },
+            { q: "أي المواد التالية تعتبر موصلة جيدة للتيار الكهربائي؟", options: ["الخشب الجاف", "البلاستيك المرن", "الأسلاك النحاسية", "الزجاج الشفاف"], correct: "ج" }
+        ];
 
         let studentsList = [];
         let currentStudentIndex = 0;
         let studentAnswers = {}; 
         let allClassResults = {};
         let activeQuestions = [];
-
-        function loadLessonsBySelection() {
-            const grade = document.getElementById('selectGrade').value;
-            const container = document.getElementById('lessonsChecklistContainer');
-            container.innerHTML = '';
-            let fetchedLessons = gradeLessonsDatabase[grade] || ["الدرس الأول", "الدرس الثاني", "الدرس الثالث", "الدرس الرابع"];
-            fetchedLessons.forEach((title, index) => {
-                container.innerHTML += `<label class="checkbox-item"><input type="checkbox" name="subjectLesson" value="${escapeHtml(title)}" checked><span>${index + 1}. ${escapeHtml(title)}</span></label>`;
-            });
-        }
-
-        function quickAddLesson() {
-            const input = document.getElementById('quickAddLessonInput');
-            const val = input.value.trim();
-            if (!val) return;
-            const container = document.getElementById('lessonsChecklistContainer');
-            const count = container.querySelectorAll('.checkbox-item').length + 1;
-            container.innerHTML += `<label class="checkbox-item"><input type="checkbox" name="subjectLesson" value="${escapeHtml(val)}" checked><span>${count}. ${escapeHtml(val)}</span></label>`;
-            input.value = '';
-        }
+        let currentModelName = "نموذج (أ)";
 
         function fetchAllStudentsFromStorage() {
             studentsList = [];
@@ -526,38 +446,18 @@
             const examType = document.getElementById('selectExamType').value;
             const subjectKey = document.getElementById('selectSubject').value;
             const gradeKey = document.getElementById('selectGrade').value;
-            
-            // جلب الدروس المحددة من قبل المعلم
-            const checkedCheckboxes = document.querySelectorAll('input[name="subjectLesson"]:checked');
-            let selectedLessons = Array.from(checkedCheckboxes).map(cb => cb.value);
 
-            if (selectedLessons.length === 0) {
-                alert('الرجاء اختيار درس واحد على الأقل لتوليد الاختبار الفتري!');
-                return;
-            }
+            // اختيار نموذج عشوائي لتغيير ترتيب الأسئلة أو تنوعها عند كل ضغطة
+            const modelsArray = ["نموذج (أ)", "نموذج (ب)", "نموذج (ج)", "نموذج (د)"];
+            currentModelName = modelsArray[Math.floor(Math.random() * modelsArray.length)];
 
             document.getElementById('printSubjectTitle').textContent = `اختبار ${examType} - ${defaultSubjects[subjectKey] || "المادة الدراسية"}`;
             document.getElementById('printGradeTitle').textContent = `الصف: ${gradeKey}`;
-            document.getElementById('printSelectedLessons').textContent = `الدروس المستهدفة: ${selectedLessons.join(' ، ')}`;
+            document.getElementById('printModelBadge').textContent = `رقم النموذج: ${currentModelName}`;
 
-            // تجميع الأسئلة الخاصة بالدروس التي حددها المعلم فقط
-            activeQuestions = [];
-            selectedLessons.forEach(lessonName => {
-                if (lessonSpecificQuestionBank[lessonName]) {
-                    activeQuestions = activeQuestions.concat(lessonSpecificQuestionBank[lessonName]);
-                }
-            });
-
-            // إذا لم توجد أسئلة مسبقة للدروس المحددة، نضع أسئلة افتراضية ديناميكية مرتبطة باسم الدرس
-            if (activeQuestions.length === 0) {
-                selectedLessons.forEach((lessonName, index) => {
-                    activeQuestions.push({
-                        q: `سؤال قياس فهم المنهج لدرس (${lessonName}): أي العبارات التالية تعتبر صحيحة؟`,
-                        options: ["العبارة الأولى صحيحة", "العبارة الثانية صحيحة تماماً", "جميع ما سبق غير صحيح", "لا شيء مما ذكر"],
-                        correct: "ب"
-                    });
-                });
-            }
+            // خلط وتغيير الأسئلة عشوائياً من البنَك الرئيسي لضمان اختلاف الاختبار في كل مرة
+            let shuffled = [...comprehensiveMasterBank].sort(() => 0.5 - Math.random());
+            activeQuestions = shuffled.slice(0, 10); // نأخذ 10 أسئلة متغيرة
 
             const previewBox = document.getElementById('questionsPreviewBox');
             const listContainer = document.getElementById('generatedQuestionsList');
@@ -585,7 +485,6 @@
         function startTouchGradingSession() {
             if (activeQuestions.length === 0) {
                 generateTestModel();
-                if (activeQuestions.length === 0) return;
             }
 
             fetchAllStudentsFromStorage();
@@ -601,7 +500,7 @@
             const student = studentsList[currentStudentIndex];
             const maxScore = activeQuestions.length * 2;
             document.getElementById('studentHeaderBadge').innerHTML = `
-                <span>👤 الطالب (${currentStudentIndex + 1}/${studentsList.length}): ${escapeHtml(student.name)}</span>
+                <span>👤 الطالب (${currentStudentIndex + 1}/${studentsList.length}): ${escapeHtml(student.name)} [${currentModelName}]</span>
                 <div id="liveScoreBadge" class="live-score-box">الدرجة: 0 / ${maxScore}</div>
             `;
             
@@ -699,7 +598,7 @@
             resultBox.style.display = 'block';
 
             let maxScore = activeQuestions.length * 2;
-            let summaryHTML = `✅ تم رصد درجات ${examType} لجميع طلاب الفصل وترحيلها للداشبورد بنجاح!<br><br>`;
+            let summaryHTML = `✅ تم رصد درجات ${examType} (${currentModelName}) لجميع طلاب الفصل وترحيلها للداشبورد بنجاح!<br><br>`;
             let totalScoreSum = 0;
             let count = 0;
             let highestScore = 0;
@@ -719,7 +618,7 @@
                     name: sName,
                     score: sScore,
                     maxScore: maxScore,
-                    examType: examType,
+                    examType: `${examType} - ${currentModelName}`,
                     date: new Date().toLocaleDateString('ar-SA')
                 });
             }
@@ -736,7 +635,7 @@
             document.getElementById('analysisContentText').innerHTML = `
                 <table style="width:100%; border-collapse:collapse; margin-top:5px;" border="1">
                     <tr style="background:#fef3c7; text-align:center;"><th style="padding:6px;">مؤشر القياس الإحصائي</th><th style="padding:6px;">القيمة التقديرية</th></tr>
-                    <tr><td style="padding:6px;">نوع الاختبار المرصود</td><td style="text-align:center; color:var(--primary);"><b>${examType}</b> (مربوط بالداشبورد)</td></tr>
+                    <tr><td style="padding:6px;">نوع الاختبار والنموذج</td><td style="text-align:center; color:var(--primary);"><b>${examType} - ${currentModelName}</b></td></tr>
                     <tr><td style="padding:6px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;"><b>${count}</b> طلاب</td></tr>
                     <tr><td style="padding:6px;">متوسط أداء الفصل العام</td><td style="text-align:center;"><b>${classAverage} / ${maxScore}</b> (${percentageAvg}%)</td></tr>
                     <tr><td style="padding:6px;">أعلى درجة بالفصل</td><td style="text-align:center; color:var(--success);"><b>${highestScore} / ${maxScore}</b></td></tr>
@@ -746,12 +645,6 @@
             `;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
-
-        window.onload = function() { 
-            loadLessonsBySelection(); 
-        };
-        document.getElementById('selectGrade').addEventListener('change', loadLessonsBySelection);
-        document.getElementById('selectSubject').addEventListener('change', loadLessonsBySelection);
     </script>
 </body>
 </html>

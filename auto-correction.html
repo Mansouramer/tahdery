@@ -96,6 +96,26 @@
         }
         select:focus, input:focus { border-color: var(--secondary); }
 
+        .lessons-checklist {
+            max-height: 180px;
+            overflow-y: auto;
+            border: 1px solid #d1d5db;
+            padding: 10px;
+            border-radius: 8px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
         .action-btn {
             background: var(--secondary);
             color: white;
@@ -127,7 +147,6 @@
             display: none;
         }
 
-        /* تنسيق رأس النموذج والترويسة الرسمية لوزارة التعليم */
         .exam-header {
             text-align: center;
             border-bottom: 2px solid var(--primary);
@@ -147,7 +166,6 @@
             color: #374151;
         }
 
-        /* دوائر التضليل الاحترافية */
         .bubble-options {
             display: flex;
             gap: 25px;
@@ -214,27 +232,36 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>🤖 نظام التصحيح الآلي وتوليد الاختبارات (10 أسئلة بدوائر التضليل)</h2>
+            <h2>🤖 نظام التصحيح الآلي وتوليد الاختبارات (مرتبط بمواضيع الداشبورد)</h2>
             <a href="index.html" class="back-btn">⬅ العودة للوحة التحكم</a>
         </div>
 
-        <!-- 1. إعدادات المادة والموضوعات -->
+        <!-- 1. ربط المادة والدروس المخزنة في الداشبورد -->
         <div class="section-box no-print">
-            <h3>📚 أولاً: إعدادات المادة والموضوعات المستهدفة</h3>
+            <h3>📚 أولاً: اختيار الصف وسحب مواضيع الدروس من الداشبورد</h3>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>اسم المادة الدراسية:</label>
-                    <input type="text" id="subjectNameInput" placeholder="أدخل اسم المادة (رياضيات، لغتي، علوم...)">
+                    <label>اختر الصف الدراسي المراد سحب دروسه:</label>
+                    <select id="selectGradeScope" onchange="loadLessonsFromDashboard()">
+                        <option value="الأول الابتدائي">الصف الأول الابتدائي</option>
+                        <option value="الثاني الابتدائي">الصف الثاني الابتدائي</option>
+                        <option value="الثالث الابتدائي">الصف الثالث الابتدائي</option>
+                        <option value="الرابع الابتدائي">الصف الرابع الابتدائي</option>
+                        <option value="الخامس الابتدائي">الصف الخامس الابتدائي</option>
+                        <option value="السادس الابتدائي">الصف السادس الابتدائي</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label>الصف أو المرحلة:</label>
-                    <input type="text" id="gradeNameInput" placeholder="أدخل الصف (مثال: الصف الرابع الابتدائي)">
+                    <label>اسم المادة (للعرض في الترويسة):</label>
+                    <input type="text" id="subjectNameInput" value="مادة العلوم" placeholder="أدخل اسم المادة">
                 </div>
             </div>
             
             <div class="form-group" style="margin-top: 10px;">
-                <label>الموضوعات أو الدروس الخاصة بالاختبار (كل موضوع في سطر أو مفصولة بفواصل):</label>
-                <textarea id="customTopicsInput" rows="3" placeholder="مثال: الموضوع الأول، الموضوع الثاني، الموضوع الثالث..." style="width:100%; padding:10px; border-radius:8px; border:2px solid #d1d5db;"></textarea>
+                <label>الدروس المسحوبة من لوحة التحكم (حدد ما تريد تضمينه في الاختبار):</label>
+                <div id="dashboardLessonsChecklist" class="lessons-checklist">
+                    <!-- يتم تعبئتها تلقائياً من الـ LocalStorage الخاص بالداشبورد -->
+                </div>
             </div>
         </div>
 
@@ -242,14 +269,14 @@
         <div class="section-box">
             <h3>⚙️ ثانياً: بناء نموذج الاختبار (١٠ أسئلة اختيارية مع دوائر التضليل الرسمية)</h3>
             <div class="no-print">
-                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج الاختبار مع دوائر التضليل</button>
+                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج الاختبار من دروس الداشبورد</button>
             </div>
 
             <div id="questionsPreviewBox" class="questions-preview printable-area">
                 <div class="exam-header">
                     <h3>المملكة العربية السعودية</h3>
                     <h3>وزارة التعليم</h3>
-                    <h4 id="printSubjectTitle">اختبار مادة: (...)</h4>
+                    <h4 id="printSubjectTitle">اختبار مادة: العلوم</h4>
                     <p id="printGradeTitle" style="margin:2px 0; font-size:13px; color:#555;"></p>
                     <p style="margin:6px 0 0 0; font-size:12px; color:#666;"><b>تنبيه هام:</b> ظلل الدائرة المطلوبة بقلم الرصاص أو الحبر لضمان القراءة والمسح الآلي بنسبة خطأ صفر%.</p>
                 </div>
@@ -302,6 +329,40 @@
     </div>
 
     <script>
+        // سحب الدروس المخزنة في الذاكرة المحلية للداشبورد تلقائياً
+        function loadLessonsFromDashboard() {
+            const grade = document.getElementById('selectGradeScope').value;
+            const container = document.getElementById('dashboardLessonsChecklist');
+            container.innerHTML = '';
+
+            // مفتاح تخزين الدروس في الداشبورد الرئيسي
+            const storageKey = 'mansour_custom_lessons_science_' + grade + '_v5';
+            let storedLessons = [];
+            
+            try {
+                let data = JSON.parse(localStorage.getItem(storageKey));
+                if (Array.isArray(data)) {
+                    storedLessons = data;
+                }
+            } catch(e) {}
+
+            // إذا لم يتم العثور على دروس مخزنة، يتم وضع تنبيه أو قائمة فارغة
+            if (storedLessons.length === 0) {
+                container.innerHTML = `<span style="color:var(--danger); font-size:13px;">لا توجد دروس مخزنة لهذا الصف في الداشبورد، يرجى إضافتها من لوحة التحكم أولاً.</span>`;
+                return;
+            }
+
+            storedLessons.forEach((lesson, index) => {
+                let title = lesson.title || lesson;
+                container.innerHTML += `
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="dashboardLesson" value="${title}" checked>
+                        <span>${index + 1}. ${title}</span>
+                    </label>
+                `;
+            });
+        }
+
         function loadStudentsList() {
             const studentSelect = document.getElementById('studentSelect');
             studentSelect.innerHTML = '<option value="">-- اختر اسم الطالب من القائمة المسجلة --</option>';
@@ -309,10 +370,10 @@
             let allStudents = [];
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
-                if (key) {
+                if (key && key.startsWith('mansour_students_science_')) {
                     try {
                         let data = JSON.parse(localStorage.getItem(key));
-                        if (Array.isArray(data) && data.length > 0 && data[0].name) {
+                        if (Array.isArray(data)) {
                             allStudents = allStudents.concat(data);
                         }
                     } catch(e) {}
@@ -331,25 +392,31 @@
 
         function generateTestModel() {
             const subject = document.getElementById('subjectNameInput').value.trim() || 'المادة الدراسية';
-            const grade = document.getElementById('gradeNameInput').value.trim() || 'الصف الدراسي';
-            const topicsText = document.getElementById('customTopicsInput').value.trim();
+            const grade = document.getElementById('selectGradeScope').value;
             
             document.getElementById('printSubjectTitle').textContent = `اختبار مادة: ${subject}`;
             document.getElementById('printGradeTitle').textContent = `المرحلة / الصف: ${grade}`;
 
-            let topics = topicsText ? topicsText.split(/[\n,]+/).map(t => t.trim()).filter(t => t) : ["الموضوع العام الأول", "الموضوع العام الثاني"];
+            const checkboxes = document.querySelectorAll('input[name="dashboardLesson"]:checked');
+            let selectedTopics = [];
+            checkboxes.forEach(cb => selectedTopics.push(cb.value));
+
+            if (selectedTopics.length === 0) {
+                alert('الرجاء اختيار درس واحد على الأقل من القائمة المسحوبة لتوليد الاختبار.');
+                return;
+            }
 
             const previewBox = document.getElementById('questionsPreviewBox');
             const listContainer = document.getElementById('generatedQuestionsList');
             previewBox.style.display = 'block';
             
-            // توليد 10 أسئلة مع دوائر التضليل الدقيقة
+            // توليد بالضبط 10 أسئلة موزعة على الدروس المختارة من الداشبورد
             let htmlContent = '';
             for (let i = 1; i <= 10; i++) {
-                let currentTopic = topics[(i - 1) % topics.length];
+                let currentTopic = selectedTopics[(i - 1) % selectedTopics.length];
                 htmlContent += `
                     <div style="margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb;">
-                        <b>س${i}: سؤال اختياري يغطي مفهوم (${currentTopic})؟</b>
+                        <b>س${i}: سؤال اختياري يغطي درس (${currentTopic})؟</b>
                         <div class="bubble-options">
                             <div class="bubble-item"><span class="bubble-circle">أ</span> أ) الخيار الأول</div>
                             <div class="bubble-item"><span class="bubble-circle">ب</span> ب) الخيار الثاني</div>
@@ -403,7 +470,7 @@
                     <tr><td style="padding:8px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;">مطابق لبيانات الداشبورد</td></tr>
                     <tr><td style="padding:8px;">متوسط أداء الطلاب عبر تضليل ورقة الأسئلة</td><td style="text-align:center;">95% (أداء ممتاز)</td></tr>
                     <tr><td style="padding:8px;">نسبة دقة القراءة الآلية لدوائر التضليل</td><td style="text-align:center;">100% (خطأ صفر%)</td></tr>
-                    <tr><td style="padding:8px;">المهارات المقاسة</td><td style="text-align:center;">الفهم والاستيعاب المعرفي</td></tr>
+                    <tr><td style="padding:8px;">المهارات المقاسة</td><td style="text-align:center;">الفهم والاستيعاب المعرفي للدروس المحددة</td></tr>
                 </table>
                 <p style="margin-top:15px; font-weight:bold; color:#b45309;">💡 التوصية التربوية: اعتماد نموذج التضليل الآلي في جميع الاختبارات القادمة لضمان سرعة الرصد ودقة النتائج.</p>
             `;
@@ -411,6 +478,7 @@
         }
 
         window.onload = function() {
+            loadLessonsFromDashboard();
             loadStudentsList();
         };
     </script>

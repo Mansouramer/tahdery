@@ -601,6 +601,19 @@
     </div>
 
     <div class="container">
+        <!-- زر الانتقال للتصحيح الآلي المضاف حديثاً بدون تغيير بقية الأكواد -->
+        <div class="section-card no-print" style="background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(5,150,105,0.12)); border: 2px solid var(--success);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h3 style="color: var(--success); margin: 0 0 5px 0;">🤖 نظام التصحيح الآلي الذكي والاختبارات</h3>
+                    <p style="margin: 0; font-size: 13px; opacity: 0.85;">يحتوي على 10 نماذج (قبلية/بعدية) و10 نماذج (الفترة 1 و 2) بنسبة خطأ صفر% للاختيارات عبر تصوير نموذج الإجابة.</p>
+                </div>
+                <a href="auto-correction.html" target="_blank" class="whatsapp-btn" style="background: var(--success); text-decoration: none; padding: 12px 25px; font-size: 15px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
+                    🎯 الانتقال لصفحة التصحيح الآلي
+                </a>
+            </div>
+        </div>
+
         <!-- اختيار الصف الدراسي -->
         <div class="section-card no-print" style="background: linear-gradient(135deg, rgba(37,99,235,0.05), rgba(30,58,138,0.1)); border: 2px solid var(--secondary);">
             <h3 style="margin-bottom: 10px;">📌 اختر الصف الدراسي للمتابعة</h3>
@@ -613,19 +626,6 @@
                     <option value="الخامس الابتدائي">الصف الخامس الابتدائي</option>
                     <option value="السادس الابتدائي">الصف السادس الابتدائي</option>
                 </select>
-            </div>
-        </div>
-
-        <!-- إيقونة التصحيح الآلي والاختبارات (مستقلة وجديدة) -->
-        <div class="section-card no-print" style="background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(5,150,105,0.12)); border: 2px solid var(--success);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                <div>
-                    <h3 style="color: var(--success); margin: 0 0 5px 0;">🤖 نظام التصحيح الآلي الذكي والاختبارات</h3>
-                    <p style="margin: 0; font-size: 13px; opacity: 0.85;">يحتوي على 10 نماذج (قبلية/بعدية) و10 نماذج (الفترة 1 و 2) بنسبة خطأ صفر% للاختيارات عبر تصوير نموذج الإجابة.</p>
-                </div>
-                <a href="auto-correction.html" target="_blank" class="whatsapp-btn" style="background: var(--success); text-decoration: none; padding: 12px 25px; font-size: 15px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
-                    🎯 الانتقال لصفحة التصحيح الآلي (GitHub)
-                </a>
             </div>
         </div>
 
@@ -953,20 +953,18 @@
         </div>
 
     </div>
-
-    <div class="section-card" style="text-align: center; background: #ffffff; margin: 20px auto; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); padding: 20px;">
-        <h4 style="color: var(--secondary, #2563eb); margin: 0 0 15px 0; font-size: 16px;">💾 النسخ الاحتياطي وإدارة البيانات</h4>
-        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-            <button class="btn-info" onclick="backupAllData()" style="background: #e11d48; padding: 10px 20px; font-size: 14px; border-radius: 6px; cursor: pointer; color: white; border: none; width: auto; font-weight: bold;">
-                💾 حفظ نسخة كاملة
-            </button>
-            <input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="restoreDashboardData(event)">
-            <button class="btn-warning" onclick="document.getElementById('importBackupFile').click()" style="background: #f59e0b; padding: 10px 20px; font-size: 14px; border-radius: 6px; cursor: pointer; color: white; border: none; width: auto; font-weight: bold;">
-                📂 استرجاع النسخة
-            </button>
-        </div>
+<div class="section-card" style="text-align: center; background: #ffffff; margin: 20px auto; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); padding: 20px;">
+    <h4 style="color: var(--secondary, #2563eb); margin: 0 0 15px 0; font-size: 16px;">💾 النسخ الاحتياطي وإدارة البيانات</h4>
+    <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <button class="btn-info" onclick="backupAllData()" style="background: #e11d48; padding: 10px 20px; font-size: 14px; border-radius: 6px; cursor: pointer; color: white; border: none; width: auto; font-weight: bold;">
+            💾 حفظ نسخة كاملة
+        </button>
+        <input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="restoreDashboardData(event)">
+        <button class="btn-warning" onclick="document.getElementById('importBackupFile').click()" style="background: #f59e0b; padding: 10px 20px; font-size: 14px; border-radius: 6px; cursor: pointer; color: white; border: none; width: auto; font-weight: bold;">
+            📂 استرجاع النسخة
+        </button>
     </div>
-
+</div>
     <!-- الأزرار العائمة -->
     <div class="floating-action-buttons no-print">
         <a href="https://wa.me/966581015002" target="_blank" class="float-btn float-whatsapp" title="تواصل الدعم الفني عبر واتساب">💬</a>
@@ -1066,7 +1064,7 @@
         let lessons = JSON.parse(localStorage.getItem(getStorageKeyForLessons())) || gradeScienceData[currentGrade];
         let students = JSON.parse(localStorage.getItem(getStorageKeyForStudents())) || [];
         let lessonStatus = JSON.parse(localStorage.getItem(getStorageKeyForStatus())) || {};
-        let lessonMastery = JSON.parse(localStorage.getItem(getStorageKeyForMastery())) || {};
+        let lessonMastery = JSON.parse(localStorage.getItem(getStorageKeyForMastery())) || {}; // { studentIndex: { lessonIndex: true/false } }
 
         function checkBackupReminder() {
             const lastBackup = localStorage.getItem('mansour_last_backup_date');
@@ -1390,6 +1388,7 @@
                 students.splice(index, 1);
                 localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                 delete lessonMastery[index];
+                // إعادة ترتيب الـ mastery indices
                 let newMastery = {};
                 Object.keys(lessonMastery).forEach(k => {
                     let oldIdx = Number(k);
@@ -1491,6 +1490,7 @@
             });
         }
 
+        // دوال نظام إتقان الدروس لكل طالب
         function renderMasteryTable() {
             const lessonIdx = document.getElementById('masteryLessonSelect').value;
             const selectedClass = document.getElementById('masteryClassSelect').value;
@@ -1658,6 +1658,7 @@
             showToast('📊 تم تصدير ملف الإكسل بنجاح!');
         }
 
+        // ميزة التصدير لربط سحابي بسيط (Google Sheets عبر CSV) لحماية البيانات
         function exportToGoogleSheetsCSV() {
             if(students.length === 0) { alert('لا توجد بيانات طلاب لتصديرها!'); return; }
             let csvContent = "\uFEFFاسم الطالب,الصف,رقم الجوال,الغياب,المشاركة,الواجبات,التجارب,اختبار 1,اختبار 2\n";
@@ -1672,7 +1673,7 @@
             document.body.appendChild(a);
             a.click();
             a.remove();
-            showToast('☁️ تم تصدير ملف متوافق مع Google Sheets بنجاح!');
+            showToast('☁️ تم تصدير ملف متوافق مع Google Sheets بنجاح! يمكنك استيراده مباشرة لملفات جوجل.');
         }
 
         function importExcel(event) {
@@ -1835,6 +1836,7 @@
             document.getElementById('sdHomework').textContent = s.homework || 0;
             document.getElementById('sdAbsence').textContent = s.absence || 0;
             
+            // حساب عدد الدروس المتقنة لهذا الطالب
             let studentMasteredCount = 0;
             lessons.forEach((l, lIdx) => {
                 if (lessonMastery[index] && lessonMastery[index][lIdx]) studentMasteredCount++;
@@ -2038,53 +2040,51 @@
             renderLessons();
             render();
             checkBackupReminder();
-        };
+        };// دالة حفظ النسخة الاحتياطية الكاملة
+function backupAllData() {
+    const fullBackup = {
+        students: typeof students !== 'undefined' ? students : [],
+        lessons: typeof lessons !== 'undefined' ? lessons : [],
+        timestamp: new Date().toLocaleString('ar-SA')
+    };
 
-        function backupAllData() {
-            const fullBackup = {
-                students: typeof students !== 'undefined' ? students : [],
-                lessons: typeof lessons !== 'undefined' ? lessons : [],
-                timestamp: new Date().toLocaleString('ar-SA')
-            };
-
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `نسخة_احتياطية_الداش_بورد_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(dlAnchor);
-            dlAnchor.click();
-            dlAnchor.remove();
-            
-            if (typeof showToast === 'function') {
-                showToast('💾 تم حفظ النسخة الاحتياطية على جهازك بنجاح!');
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `نسخة_احتياطية_الداش_بورد_${new Date().toISOString().slice(0,10)}.json`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+    
+    if (typeof showToast === 'function') {
+        showToast('💾 تم حفظ النسخة الاحتياطية على جهازك بنجاح!');
+    } else {
+        alert('تم حفظ النسخة الاحتياطية على جهازك بنجاح.');
+    }
+}// دالة استرجاع النسخة الاحتياطية
+function restoreDashboardData(event) {
+    const file = event.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const imported = JSON.parse(e.target.result);
+            if(imported) {
+                if(imported.students) localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(imported.students));
+                if(imported.lessons) localStorage.setItem(getStorageKeyForLessons(), JSON.stringify(imported.lessons));
+                alert('📂 تم استرجاع البيانات بنجاح!');
+                location.reload();
             } else {
-                alert('تم حفظ النسخة الاحتياطية على جهازك بنجاح.');
+                alert('ملف النسخة الاحتياطية غير صالح.');
             }
+        } catch(err) {
+            alert('خطأ في قراءة ملف JSON.');
+        } finally {
+            event.target.value = '';
         }
-
-        function restoreDashboardData(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if(imported) {
-                        if(imported.students) localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(imported.students));
-                        if(imported.lessons) localStorage.setItem(getStorageKeyForLessons(), JSON.stringify(imported.lessons));
-                        alert('📂 تم استرجاع البيانات بنجاح!');
-                        location.reload();
-                    } else {
-                        alert('ملف النسخة الاحتياطية غير صالح.');
-                    }
-                } catch(err) {
-                    alert('خطأ في قراءة ملف JSON.');
-                } finally {
-                    event.target.value = '';
-                }
-            };
-            reader.readAsText(file);
-        }
+    };
+    reader.readAsText(file);
+}
     </script>
 </body>
 </html>

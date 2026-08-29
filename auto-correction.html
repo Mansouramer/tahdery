@@ -260,7 +260,7 @@
             <div class="form-group" style="margin-top: 10px;">
                 <label>الدروس المسحوبة من لوحة التحكم (حدد ما تريد تضمينه في الاختبار):</label>
                 <div id="dashboardLessonsChecklist" class="lessons-checklist">
-                    <!-- يتم تعبئتها تلقائياً من الـ LocalStorage الخاص بالداشبورد -->
+                    <!-- يتم تعبئتها تلقائياً من الـ LocalStorage -->
                 </div>
             </div>
         </div>
@@ -329,31 +329,45 @@
     </div>
 
     <script>
-        // سحب الدروس المخزنة في الذاكرة المحلية للداشبورد تلقائياً
+        // البحث الشامل في الذاكرة المحلية لجلب الدروس بغض النظر عن اختلاف مفاتيح التخزين
         function loadLessonsFromDashboard() {
             const grade = document.getElementById('selectGradeScope').value;
             const container = document.getElementById('dashboardLessonsChecklist');
             container.innerHTML = '';
 
-            // مفتاح تخزين الدروس في الداشبورد الرئيسي
-            const storageKey = 'mansour_custom_lessons_science_' + grade + '_v5';
             let storedLessons = [];
             
-            try {
-                let data = JSON.parse(localStorage.getItem(storageKey));
-                if (Array.isArray(data)) {
-                    storedLessons = data;
+            // المرور على جميع مفاتيح الذاكرة المحلية للبحث عن دروس تخص الصف المختار أو مفاتيح الدروس
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key && (key.includes('custom_lessons') || key.includes('lessons') || key.includes('science'))) {
+                    try {
+                        let data = JSON.parse(localStorage.getItem(key));
+                        if (Array.isArray(data) && data.length > 0) {
+                            // التحقق إذا كانت البيانات تخص الصف أو تحتوي على دروس
+                            storedLessons = storedLessons.concat(data);
+                        }
+                    } catch(e) {}
                 }
-            } catch(e) {}
+            }
 
-            // إذا لم يتم العثور على دروس مخزنة، يتم وضع تنبيه أو قائمة فارغة
-            if (storedLessons.length === 0) {
-                container.innerHTML = `<span style="color:var(--danger); font-size:13px;">لا توجد دروس مخزنة لهذا الصف في الداشبورد، يرجى إضافتها من لوحة التحكم أولاً.</span>`;
+            // إزالة التكرار إن وجد
+            let uniqueLessons = [];
+            let titlesSet = new Set();
+            storedLessons.forEach(l => {
+                let t = l.title || l;
+                if (t && !titlesSet.has(t)) {
+                    titlesSet.add(t);
+                    uniqueLessons.push(t);
+                }
+            });
+
+            if (uniqueLessons.length === 0) {
+                container.innerHTML = `<span style="color:var(--danger); font-size:13px;">لا توجد دروس مخزنة في لوحة التحكم حالياً، يرجى إضافة بعض الدروس في الداشبورد أولاً.</span>`;
                 return;
             }
 
-            storedLessons.forEach((lesson, index) => {
-                let title = lesson.title || lesson;
+            uniqueLessons.forEach((title, index) => {
                 container.innerHTML += `
                     <label class="checkbox-item">
                         <input type="checkbox" name="dashboardLesson" value="${title}" checked>
@@ -370,7 +384,7 @@
             let allStudents = [];
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
-                if (key && key.startsWith('mansour_students_science_')) {
+                if (key && key.includes('students')) {
                     try {
                         let data = JSON.parse(localStorage.getItem(key));
                         if (Array.isArray(data)) {
@@ -402,7 +416,7 @@
             checkboxes.forEach(cb => selectedTopics.push(cb.value));
 
             if (selectedTopics.length === 0) {
-                alert('الرجاء اختيار درس واحد على الأقل من القائمة المسحوبة لتوليد الاختبار.');
+                alert('الرجاء اختيار درس واحد على الأقل من القائمة لتوليد الاختبار.');
                 return;
             }
 
@@ -410,7 +424,7 @@
             const listContainer = document.getElementById('generatedQuestionsList');
             previewBox.style.display = 'block';
             
-            // توليد بالضبط 10 أسئلة موزعة على الدروس المختارة من الداشبورد
+            // توليد 10 أسئلة موزعة على الدروس المسحوبة
             let htmlContent = '';
             for (let i = 1; i <= 10; i++) {
                 let currentTopic = selectedTopics[(i - 1) % selectedTopics.length];

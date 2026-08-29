@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المملكة العربية السعودية - وزارة التعليم | نظام التصحيح السريع والتحليل الفوري</title>
+    <title>المملكة العربية السعودية - وزارة التعليم | نظام الاختبارات والتحليل الفوري</title>
     <style>
         :root {
             --primary: #1e3a8a;
@@ -78,7 +78,7 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 12px;
             margin-bottom: 10px;
         }
@@ -137,7 +137,6 @@
         .btn-print { background: var(--print-btn); }
         .btn-success { background: var(--success); }
 
-        /* لوحة التصحيح باللمس الفوري */
         .touch-grading-card {
             background: #fff;
             border: 2px solid var(--secondary);
@@ -306,14 +305,22 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>📱 التصحيح السريع باللمس والتحليل الفوري</h2>
-            <a href="index.html" class="back-btn">⬅ لوحة التحكم</a>
+            <h2>📱 إدارة الاختبارات (القبلي، الفتري، والبعدي) والتحليل الفوري</h2>
+            <a href="index.html" class="back-btn">⬅ لوحة التحكم الرئيسية</a>
         </div>
 
-        <!-- 1. إعدادات المادة والصف -->
+        <!-- 1. إعدادات نوع الاختبار، المادة، والصف -->
         <div class="section-box no-print">
-            <h3>📚 أولاً: اختيار المادة والصف</h3>
+            <h3>📚 أولاً: إعدادات الاختبار والمادة والصف</h3>
             <div class="form-grid">
+                <div class="form-group">
+                    <label>نوع الاختبار:</label>
+                    <select id="selectExamType">
+                        <option value="الفتري">الاختبار الفتري (مرتبط بالداشبورد)</option>
+                        <option value="القبلي">الاختبار القبلي (تشخيصي)</option>
+                        <option value="البعدي">الاختبار البعدي (نهائي)</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>المادة الدراسية:</label>
                     <select id="selectSubject">
@@ -348,7 +355,7 @@
         <div class="section-box">
             <h3>⚙️ ثانياً: نموذج الاختبار للطباعة (ورقة نظيفة A4)</h3>
             <div class="no-print">
-                <button class="action-btn" onclick="generateTestModel()">⚡ توليد الاختبار للطباعة</button>
+                <button class="action-btn" onclick="generateTestModel()">⚡ توليد ورقة الاختبار للطباعة</button>
             </div>
 
             <div id="questionsPreviewBox" class="questions-preview printable-area">
@@ -369,11 +376,11 @@
             </div>
         </div>
 
-        <!-- 3. لوحة التصحيح باللمس السريع مع ظهور الدرجة والتحليل الفوري -->
+        <!-- 3. لوحة التصحيح باللمس السريع المرتبطة بالداشبورد -->
         <div class="section-box no-print">
-            <h3>👤 ثالثاً: لوحة التصحيح الفوري باللمس (مع ظهور الدرجة مباشرة)</h3>
+            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (ورصد النتائج للداشبورد)</h3>
             <p style="font-size: 12px; color: #555; margin-bottom: 10px;">
-                انقر على خيار الطالب؛ ستتحدث درجة الطالب فوراً أمامك وتتلون الإجابة بالأخضر (صحيح) أو الأحمر (خطأ):
+                انقر على خيار الطالب؛ ستتحدث درجة الطالب فوراً أمامك وتتلون الإجابة بالأخضر أو الأحمر، وعند الانتهاء تُرحل الدرجات للداشبورد الأساسي تلقائياً:
             </p>
             <button class="action-btn btn-success" onclick="startTouchGradingSession()">🚀 بدء جلسة التصحيح الفوري للفصل</button>
 
@@ -391,7 +398,7 @@
 
         <!-- 4. النتيجة النهائية -->
         <div id="resultContainer" class="result-box no-print">
-            <h3 style="margin-top:0; color: var(--primary); font-size: 16px;">📊 سجل درجات الفصل المعتمدة</h3>
+            <h3 style="margin-top:0; color: var(--primary); font-size: 16px;">📊 سجل درجات الفصل المعتمدة (مربوط بالداشبورد)</h3>
             <p id="correctionOutputText" style="font-size: 14px; font-weight: bold; margin: 8px 0;"></p>
         </div>
 
@@ -469,8 +476,9 @@
         function escapeHtml(text) { return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
         function generateTestModel() {
+            const examType = document.getElementById('selectExamType').value;
             const subjectKey = document.getElementById('selectSubject').value;
-            document.getElementById('printSubjectTitle').textContent = `اختبار ${defaultSubjects[subjectKey] || "المادة الدراسية"}`;
+            document.getElementById('printSubjectTitle').textContent = `اختبار ${examType} - ${defaultSubjects[subjectKey] || "المادة الدراسية"}`;
             document.getElementById('printGradeTitle').textContent = `الصف: ${document.getElementById('selectGrade').value}`;
 
             const previewBox = document.getElementById('questionsPreviewBox');
@@ -545,7 +553,6 @@
                 btn.classList.add('correct-choice');
             } else {
                 btn.classList.add('wrong-choice');
-                // إظهار الإجابة الصحيحة باللون الأخضر لمساعدة المعلم
                 let correctBtn = document.getElementById(`q_${qNum}_${correctAns}`);
                 if(correctBtn) correctBtn.classList.add('correct-choice');
             }
@@ -602,13 +609,16 @@
             document.getElementById('touchGradingCard').style.display = 'none';
             const resultBox = document.getElementById('resultContainer');
             const outputText = document.getElementById('correctionOutputText');
+            const examType = document.getElementById('selectExamType').value;
             resultBox.style.display = 'block';
 
-            let summaryHTML = `✅ تم رصد درجات جميع طلاب الفصل بنجاح تام وسرعة فائقة!<br><br>`;
+            let summaryHTML = `✅ تم رصد درجات ${examType} لجميع طلاب الفصل وترحيلها للداشبورد بنجاح!<br><br>`;
             let totalScoreSum = 0;
             let count = 0;
             let highestScore = 0;
             let lowestScore = 20;
+
+            let dashboardRecords = [];
 
             for (let sName in allClassResults) {
                 let sScore = allClassResults[sName].score;
@@ -617,25 +627,34 @@
                 if (sScore > highestScore) highestScore = sScore;
                 if (sScore < lowestScore) lowestScore = sScore;
                 count++;
+
+                dashboardRecords.push({
+                    name: sName,
+                    score: sScore,
+                    examType: examType,
+                    date: new Date().toLocaleDateString('ar-SA')
+                });
             }
+
+            // ربط النتائج تلقائياً بالداشبورد الأساسي عبر التخزين المحلي
+            localStorage.setItem('dashboardLatestExamResults', JSON.stringify(dashboardRecords));
 
             let classAverage = count > 0 ? (totalScoreSum / count).toFixed(1) : 0;
             let percentageAvg = count > 0 ? ((totalScoreSum / (count * 20)) * 100).toFixed(1) : 0;
 
             outputText.innerHTML = summaryHTML;
 
-            // إعداد تحليل الاختبار الشامل ومهارات نافس
             const analysisBox = document.getElementById('analysisContainer');
             analysisBox.style.display = 'block';
             document.getElementById('analysisContentText').innerHTML = `
                 <table style="width:100%; border-collapse:collapse; margin-top:5px;" border="1">
                     <tr style="background:#fef3c7; text-align:center;"><th style="padding:6px;">مؤشر القياس الإحصائي</th><th style="padding:6px;">القيمة التقديرية</th></tr>
+                    <tr><td style="padding:6px;">نوع الاختبار المرصود</td><td style="text-align:center; color:var(--primary);"><b>${examType}</b> (مربوط بالداشبورد)</td></tr>
                     <tr><td style="padding:6px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;"><b>${count}</b> طلاب</td></tr>
                     <tr><td style="padding:6px;">متوسط أداء الفصل العام</td><td style="text-align:center;"><b>${classAverage} / 20</b> (${percentageAvg}%)</td></tr>
                     <tr><td style="padding:6px;">أعلى درجة بالفصل</td><td style="text-align:center; color:var(--success);"><b>${highestScore} / 20</b></td></tr>
                     <tr><td style="padding:6px;">أقل درجة بالفصل</td><td style="text-align:center; color:var(--danger);"><b>${lowestScore} / 20</b></td></tr>
                     <tr><td style="padding:6px;">مستوى إتقان مهارات نافس</td><td style="text-align:center; color:var(--primary);"><b>مستوى متقدم (تجاوز المعيار المستهدف)</b></td></tr>
-                    <tr><td style="padding:6px;">التوصية العلاجية والتعزيزية</td><td style="text-align:center;">إثراء الطلاب المتفوقين ودعم الطلاب ذوي الأداء المنخفض في المهارات الأساسية.</td></tr>
                 </table>
             `;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });

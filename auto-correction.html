@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المملكة العربية السعودية - وزارة التعليم | نظام النماذج المتعددة والتحليل الفوري</title>
+    <title>المملكة العربية السعودية - وزارة التعليم | نظام الاختبارات والتحليل (بنون)</title>
     <style>
         :root {
             --primary: #1e3a8a;
@@ -285,13 +285,12 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>📱 إدارة النماذج المتعددة (توليد وتصحيح باللمس)</h2>
+            <h2>📱 إدارة النماذج (قسم البنين - المعلم والطلاب)</h2>
             <a href="index.html" class="back-btn">⬅ لوحة التحكم الرئيسية</a>
         </div>
 
-        <!-- 1. إعدادات نوع الاختبار، المادة، والصف -->
         <div class="section-box no-print">
-            <h3>📚 أولاً: إعدادات الاختبار والمادة والصف</h3>
+            <h3>📚 أولاً: إعدادات الاختبار والمادة والصف (بنين)</h3>
             <div class="form-grid">
                 <div class="form-group">
                     <label>نوع الاختبار:</label>
@@ -326,9 +325,8 @@
             </div>
         </div>
 
-        <!-- 2. توليد النماذج -->
         <div class="section-box">
-            <h3>⚙️ ثانياً: توليد نماذج الاختبار (يتغير النموذج مع كل ضغطة)</h3>
+            <h3>⚙️ ثانياً: توليد نماذج اختبار البنين (يتغير النموذج مع كل ضغطة)</h3>
             <div class="no-print">
                 <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج اختبار جديد للطباعة (تغيير عشوائي)</button>
             </div>
@@ -352,15 +350,13 @@
             </div>
         </div>
 
-        <!-- 3. لوحة التصحيح باللمس السريع -->
         <div class="section-box no-print">
-            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (مطابقة للنموذج المولد)</h3>
+            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (خاصة بالمعلم والطلاب)</h3>
             <p style="font-size: 12px; color: #555; margin-bottom: 10px;">
                 انقر على خيار الطالب؛ ستتحدث درجة الطالب فوراً وتُرحل النتائج للداشبورد الأساسي تلقائياً:
             </p>
             <button class="action-btn btn-success" onclick="startTouchGradingSession()">🚀 بدء جلسة التصحيح الفوري للفصل</button>
 
-            <!-- بطاقة التصحيح التفاعلية -->
             <div id="touchGradingCard" class="touch-grading-card">
                 <div id="studentHeaderBadge" class="student-title-badge"></div>
                 <div id="touchQuestionsContainer"></div>
@@ -372,15 +368,13 @@
             </div>
         </div>
 
-        <!-- 4. النتيجة النهائية -->
         <div id="resultContainer" class="result-box no-print">
             <h3 style="margin-top:0; color: var(--primary); font-size: 16px;">📊 سجل درجات الفصل المعتمدة (مربوط بالداشبورد)</h3>
             <p id="correctionOutputText" style="font-size: 14px; font-weight: bold; margin: 8px 0;"></p>
         </div>
 
-        <!-- 5. التحليل الشامل للاختبار وتحليلات نافس -->
         <div id="analysisContainer" class="analysis-box printable-area">
-            <h3 style="margin-top:0; color: #b45309; border-bottom: 2px solid #f59e0b; padding-bottom: 8px; font-size: 16px;">📈 تقرير تحليل اختبارات الفصل ومهارات نافس</h3>
+            <h3 style="margin-top:0; color: #b45309; border-bottom: 2px solid #f59e0b; padding-bottom: 8px; font-size: 16px;">📈 تقرير تحليل اختبارات الطلاب ومهارات نافس</h3>
             <div id="analysisContentText" style="font-size: 12.5px; line-height: 1.6; color: #1f2937;"></div>
             <div class="no-print" style="margin-top: 15px;">
                 <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة تقرير التحليل</button>
@@ -398,7 +392,6 @@
             "general": "مادة عامة" 
         };
 
-        // بنك أسئلة رئيسي ضخم يتغير ويتبدل عشوائياً لتشكيل نماذج مختلفة
         const comprehensiveMasterBank = [
             { q: "ما هي الوحدة الأساسية لبناء وتنظيم الكائن الحي؟", options: ["النسيج الحيوي", "العضو الداخلي", "الخلية", "الجهاز العصبي"], correct: "ج" },
             { q: "ما العملية الحيوية التي تصنع بها النباتات الخضراء غذاءها؟", options: ["التنفس الخلوي", "البناء الضوئي", "الهضم والامتصاص", "النتح"], correct: "ب" },
@@ -423,7 +416,7 @@
             studentsList = [];
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
-                if (key && key.includes('students')) {
+                if (key && (key.includes('students') || key.includes('boys'))) {
                     try {
                         let data = JSON.parse(localStorage.getItem(key));
                         if (Array.isArray(data)) studentsList = studentsList.concat(data);
@@ -447,7 +440,6 @@
             const subjectKey = document.getElementById('selectSubject').value;
             const gradeKey = document.getElementById('selectGrade').value;
 
-            // اختيار نموذج عشوائي لتغيير ترتيب الأسئلة أو تنوعها عند كل ضغطة
             const modelsArray = ["نموذج (أ)", "نموذج (ب)", "نموذج (ج)", "نموذج (د)"];
             currentModelName = modelsArray[Math.floor(Math.random() * modelsArray.length)];
 
@@ -455,9 +447,8 @@
             document.getElementById('printGradeTitle').textContent = `الصف: ${gradeKey}`;
             document.getElementById('printModelBadge').textContent = `رقم النموذج: ${currentModelName}`;
 
-            // خلط وتغيير الأسئلة عشوائياً من البنَك الرئيسي لضمان اختلاف الاختبار في كل مرة
             let shuffled = [...comprehensiveMasterBank].sort(() => 0.5 - Math.random());
-            activeQuestions = shuffled.slice(0, 10); // نأخذ 10 أسئلة متغيرة
+            activeQuestions = shuffled.slice(0, 10);
 
             const previewBox = document.getElementById('questionsPreviewBox');
             const listContainer = document.getElementById('generatedQuestionsList');
@@ -598,7 +589,7 @@
             resultBox.style.display = 'block';
 
             let maxScore = activeQuestions.length * 2;
-            let summaryHTML = `✅ تم رصد درجات ${examType} (${currentModelName}) لجميع طلاب الفصل وترحيلها للداشبورد بنجاح!<br><br>`;
+            let summaryHTML = `✅ تم رصد درجات ${examType} (${currentModelName}) لجميع الطلاب وترحيلها للداشبورد بنجاح!<br><br>`;
             let totalScoreSum = 0;
             let count = 0;
             let highestScore = 0;
@@ -636,11 +627,11 @@
                 <table style="width:100%; border-collapse:collapse; margin-top:5px;" border="1">
                     <tr style="background:#fef3c7; text-align:center;"><th style="padding:6px;">مؤشر القياس الإحصائي</th><th style="padding:6px;">القيمة التقديرية</th></tr>
                     <tr><td style="padding:6px;">نوع الاختبار والنموذج</td><td style="text-align:center; color:var(--primary);"><b>${examType} - ${currentModelName}</b></td></tr>
-                    <tr><td style="padding:6px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;"><b>${count}</b> طلاب</td></tr>
+                    <tr><td style="padding:6px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;"><b>${count}</b> طالب</td></tr>
                     <tr><td style="padding:6px;">متوسط أداء الفصل العام</td><td style="text-align:center;"><b>${classAverage} / ${maxScore}</b> (${percentageAvg}%)</td></tr>
                     <tr><td style="padding:6px;">أعلى درجة بالفصل</td><td style="text-align:center; color:var(--success);"><b>${highestScore} / ${maxScore}</b></td></tr>
                     <tr><td style="padding:6px;">أقل درجة بالفصل</td><td style="text-align:center; color:var(--danger);"><b>${lowestScore} / ${maxScore}</b></td></tr>
-                    <tr><td style="padding:6px;">مستوى إتقان مهارات نافس</td><td style="text-align:center; color:var(--primary);"><b>مستوى متقدم (تجاوز المعيار المستهدف)</b></td></tr>
+                    <tr><td style="padding:6px;">مستوى إتقان مهارات نافس</td><td style="text-align:center; color:var(--primary);"><b>مستوى متقدم (تجاوز المعيار المستهدف للطلاب)</b></td></tr>
                 </table>
             `;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });

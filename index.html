@@ -2,8 +2,16 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>المعلم منصور - مدرسة داوود (لوحة تحكم مادة العلوم)</title>
+    
+    <!-- ربط ملف manifest.json والمظهر الخاص بالجوال -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+
     <!-- مكتبة SheetJS لتصدير واستيراد ملفات إكسل Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
@@ -61,46 +69,47 @@
             background-attachment: fixed;
             color: var(--text);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             transition: background 0.3s ease, color 0.3s ease;
             user-select: none;
             min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .top-banner {
             text-align: center;
             background: linear-gradient(135deg, var(--secondary), var(--primary));
             color: white;
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            line-height: 1.8;
+            line-height: 1.6;
         }
 
         .header {
             text-align: center;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 25px;
-            border-radius: 15px;
+            padding: 18px 12px;
+            border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
-        .header h1 { margin: 0 0 10px 0; font-size: 24px; }
-        .header div { font-size: 18px; opacity: 0.9; }
-        .header p { margin: 5px 0 0 0; font-size: 14px; opacity: 0.8; }
+        .header h1 { margin: 0 0 6px 0; font-size: 20px; }
+        .header div { font-size: 16px; opacity: 0.9; }
+        .header p { margin: 5px 0 0 0; font-size: 13px; opacity: 0.8; }
 
         .subscription-badge {
             display: inline-block;
             background: rgba(255, 255, 255, 0.25);
-            padding: 5px 15px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 13px;
-            margin-top: 10px;
+            font-size: 12px;
+            margin-top: 8px;
             border: 1px solid rgba(255, 255, 255, 0.4);
             font-weight: bold;
         }
@@ -108,11 +117,11 @@
         .theme-switcher {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 8px;
+            margin-top: 12px;
             align-items: center;
             background: rgba(255, 255, 255, 0.2);
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 20px;
             width: fit-content;
             margin-left: auto;
@@ -130,75 +139,97 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 13px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        .theme-btn:hover { transform: scale(1.2); }
+        .theme-btn:hover { transform: scale(1.15); }
 
         .container { max-width: 1200px; margin: 0 auto; }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        @media (min-width: 600px) {
+            .stats-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+            body { padding: 20px; }
+            .header h1 { font-size: 24px; }
+            .header { padding: 25px; }
         }
 
         .stat-card {
             background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 10px;
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border-bottom: 4px solid var(--secondary);
+            border-bottom: 3px solid var(--secondary);
         }
 
-        .stat-card h3 { margin: 0; font-size: 13px; opacity: 0.8; }
-        .stat-card p { margin: 10px 0 0 0; font-size: 22px; font-weight: bold; color: var(--secondary); }
+        .stat-card h3 { margin: 0; font-size: 12px; opacity: 0.8; }
+        .stat-card p { margin: 6px 0 0 0; font-size: 18px; font-weight: bold; color: var(--secondary); }
 
         .section-card {
             background: var(--card-bg);
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
         .section-card h3 {
             margin-top: 0;
             color: var(--secondary);
             border-bottom: 2px solid rgba(0,0,0,0.1);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
+            font-size: 16px;
         }
 
         .form-row {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
         }
 
         .form-row input, .form-row select, .form-row textarea {
-            flex: 1;
-            min-width: 160px;
+            flex: 1 1 100%;
+            min-width: 0;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
             background-color: var(--card-bg);
             color: var(--text);
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 480px) {
+            .form-row input, .form-row select, .form-row textarea {
+                flex: 1;
+                min-width: 140px;
+            }
         }
 
         button {
             background: var(--secondary);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
             transition: 0.2s;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            button { width: auto; }
         }
 
         button:hover { opacity: 0.9; }
@@ -208,13 +239,13 @@
         .btn-excel { background: var(--excel); }
         .btn-success { background: var(--success); }
         .btn-print { background: #4b5563; }
-        .btn-action { padding: 4px 8px; font-size: 12px; margin: 0 2px; }
+        .btn-action { padding: 4px 8px; font-size: 12px; margin: 0 2px; width: auto; }
 
         .classes-query-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin: 15px 0;
+            gap: 8px;
+            margin: 12px 0;
             align-items: center;
         }
 
@@ -225,20 +256,21 @@
             overflow: hidden;
             border: 2px solid var(--secondary);
             background: rgba(0, 0, 0, 0.04);
-            flex: 1;
-            min-width: 150px;
+            flex: 1 1 calc(50% - 8px);
+            min-width: 130px;
         }
 
         .class-query-btn {
             background: transparent;
             border: none;
             color: var(--text);
-            padding: 10px 15px;
+            padding: 8px 10px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             flex: 1;
             text-align: right;
+            width: auto;
         }
 
         .class-btn-wrapper.active {
@@ -246,20 +278,19 @@
             border-color: var(--secondary);
         }
 
-        .class-btn-wrapper.active .class-query-btn {
-            color: white;
-        }
+        .class-btn-wrapper.active .class-query-btn { color: white; }
 
         .class-delete-btn {
             background: rgba(239, 68, 68, 0.15);
             border: none;
             color: var(--danger);
-            padding: 0 12px;
+            padding: 0 10px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: auto;
         }
 
         .class-delete-btn:hover {
@@ -270,12 +301,13 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 10px;
+            font-size: 13px;
         }
 
         th, td {
             border: 1px solid rgba(0,0,0,0.1);
-            padding: 10px;
+            padding: 8px 4px;
             text-align: center;
         }
 
@@ -285,59 +317,71 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 15px;
-            padding: 10px;
+            margin-top: 12px;
+            padding: 8px;
             background: rgba(0,0,0,0.03);
             border-radius: 8px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
 
         .pagination-btns {
             display: flex;
             gap: 5px;
             align-items: center;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        @media (min-width: 480px) {
+            .pagination-btns { width: auto; }
         }
 
         .pagination-btns button {
-            padding: 6px 12px;
-            font-size: 13px;
+            padding: 6px 10px;
+            font-size: 12px;
+            width: auto;
         }
 
         .student-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 10px;
-            margin: 15px 0;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin: 12px 0;
             background: rgba(0,0,0,0.03);
-            padding: 15px;
+            padding: 10px;
             border-radius: 8px;
         }
 
+        @media (min-width: 480px) {
+            .student-details { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+        }
+
         .detail-item { text-align: center; }
-        .detail-item span { display: block; font-size: 12px; opacity: 0.8; }
-        .detail-item strong { font-size: 18px; color: var(--secondary); }
+        .detail-item span { display: block; font-size: 11px; opacity: 0.8; }
+        .detail-item strong { font-size: 16px; color: var(--secondary); }
 
         .sub-box {
             background: rgba(0,0,0,0.02);
             border: 1px solid rgba(0,0,0,0.1);
             border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
+            padding: 12px;
+            margin-top: 12px;
         }
 
-        .sub-box h5 { margin-top: 0; color: var(--secondary); font-size: 16px; }
+        .sub-box h5 { margin-top: 0; color: var(--secondary); font-size: 14px; margin-bottom: 8px; }
 
         .preview-msg {
             background: rgba(37, 99, 235, 0.08);
             border-right: 4px solid var(--secondary);
-            padding: 12px;
-            margin: 10px 0;
+            padding: 10px;
+            margin: 8px 0;
             border-radius: 4px;
             white-space: pre-wrap;
-            font-size: 14px;
+            font-size: 13px;
             direction: rtl;
             text-align: right;
+            word-break: break-word;
         }
 
         .whatsapp-btn {
@@ -345,27 +389,34 @@
             background: #25D366;
             color: white;
             text-decoration: none;
-            padding: 10px 15px;
+            padding: 10px 12px;
             border-radius: 6px;
             font-weight: bold;
             margin-top: 5px;
             text-align: center;
+            box-sizing: border-box;
+            width: 100%;
+            font-size: 13px;
         }
 
         .lessons-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
-            max-height: 520px;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 12px;
+            max-height: 400px;
             overflow-y: auto;
-            padding: 5px;
+            padding: 2px;
+        }
+
+        @media (min-width: 600px) {
+            .lessons-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
         }
 
         .lesson-card {
             background: rgba(0,0,0,0.03);
             border: 1px solid rgba(0,0,0,0.08);
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
@@ -383,32 +434,33 @@
         }
 
         .lesson-card span.ch-badge {
-            font-size: 11px;
+            font-size: 10px;
             color: #fff;
             background: var(--primary);
             padding: 2px 6px;
             border-radius: 4px;
             display: inline-block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
-        .lesson-card strong { color: var(--secondary); font-size: 14px; display: block; margin-bottom: 4px; }
-        .lesson-card p { margin: 0 0 10px 0; font-size: 12px; opacity: 0.85; line-height: 1.5; }
+        .lesson-card strong { color: var(--secondary); font-size: 13px; display: block; margin-bottom: 4px; }
+        .lesson-card p { margin: 0 0 8px 0; font-size: 11px; opacity: 0.85; line-height: 1.4; }
 
         .lesson-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .status-toggle-btn {
-            padding: 6px 12px;
-            font-size: 12px;
+            padding: 5px 10px;
+            font-size: 11px;
             border-radius: 20px;
             cursor: pointer;
             border: none;
             font-weight: bold;
+            width: auto;
         }
 
         .status-toggle-btn.done { background-color: var(--secondary); color: white; }
@@ -421,18 +473,22 @@
             transform: translateX(-50%);
             background: var(--secondary);
             color: white;
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 30px;
             display: none;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             z-index: 1000;
+            font-size: 13px;
+            width: max-content;
+            max-width: 90%;
+            text-align: center;
         }
 
         .backup-controls {
             display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            padding-top: 15px;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 1px dashed #ccc;
             flex-wrap: wrap;
         }
@@ -440,19 +496,20 @@
         .class-badge {
             background-color: var(--secondary);
             color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
             font-weight: bold;
         }
 
         .mastery-btn {
-            padding: 4px 10px;
-            font-size: 12px;
+            padding: 4px 8px;
+            font-size: 11px;
             border-radius: 20px;
             cursor: pointer;
             border: none;
             font-weight: bold;
+            width: auto;
         }
         .mastery-btn.mastered { background-color: var(--success); color: white; }
         .mastery-btn.review { background-color: var(--danger); color: white; }
@@ -464,10 +521,10 @@
 
         .searchable-input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            font-size: 15px;
+            font-size: 14px;
             background-color: var(--card-bg);
             color: var(--text);
             box-sizing: border-box;
@@ -478,7 +535,7 @@
             top: 100%;
             left: 0;
             right: 0;
-            max-height: 250px;
+            max-height: 200px;
             overflow-y: auto;
             background: var(--card-bg);
             border: 1px solid var(--secondary);
@@ -489,62 +546,54 @@
         }
 
         .searchable-item {
-            padding: 10px 15px;
+            padding: 10px;
             cursor: pointer;
             border-bottom: 1px solid rgba(0,0,0,0.05);
-            transition: background 0.15s;
-            font-size: 14px;
-        }
-
-        .searchable-item:hover {
-            background: rgba(37, 99, 235, 0.1);
-            color: var(--secondary);
-            font-weight: bold;
+            font-size: 13px;
         }
 
         .footer-note {
             text-align: center;
-            margin-top: 30px;
-            padding: 15px;
-            font-size: 14px;
+            margin-top: 20px;
+            padding: 12px;
+            font-size: 12px;
             opacity: 0.75;
             border-top: 1px solid rgba(0,0,0,0.1);
-            line-height: 1.8;
+            line-height: 1.6;
         }
 
         .floating-action-buttons {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
+            bottom: 15px;
+            right: 15px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             z-index: 999;
         }
 
         .float-btn {
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: var(--secondary);
             color: white;
             border: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             text-decoration: none;
         }
 
         .float-whatsapp { background: #25D366; }
         .float-top { background: var(--primary); display: none; }
+        .float-install { background: #8b5cf6; display: none; }
 
         @media print {
-            body * {
-                visibility: hidden !important;
-            }
+            body * { visibility: hidden !important; }
             .printing-section, .printing-section * {
                 visibility: visible !important;
                 color: #000000 !important;
@@ -603,9 +652,9 @@
     <div class="container">
         <!-- اختيار الصف الدراسي -->
         <div class="section-card no-print" style="background: linear-gradient(135deg, rgba(37,99,235,0.05), rgba(30,58,138,0.1)); border: 2px solid var(--secondary);">
-            <h3 style="margin-bottom: 10px;">📌 اختر الصف الدراسي للمتابعة</h3>
+            <h3 style="margin-bottom: 8px;">📌 اختر الصف الدراسي للمتابعة</h3>
             <div class="form-row" style="margin-bottom: 0;">
-                <select id="globalGradeSelect" onchange="changeGradeLevel(this.value)" style="font-weight: bold; font-size: 16px; color: var(--secondary);">
+                <select id="globalGradeSelect" onchange="changeGradeLevel(this.value)" style="font-weight: bold; font-size: 15px; color: var(--secondary);">
                     <option value="الأول الابتدائي">الصف الأول الابتدائي</option>
                     <option value="الثاني الابتدائي">الصف الثاني الابتدائي</option>
                     <option value="الثالث الابتدائي">الصف الثالث الابتدائي</option>
@@ -616,14 +665,14 @@
             </div>
         </div>
 
-        <!-- إيقونة التصحيح الآلي والاختبارات (مستقلة وجديدة) -->
+        <!-- التصحيح الآلي والاختبارات -->
         <div class="section-card no-print" style="background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(5,150,105,0.12)); border: 2px solid var(--success);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <div>
                     <h3 style="color: var(--success); margin: 0 0 5px 0;">🤖 نظام التصحيح الآلي الذكي والاختبارات</h3>
-                    <p style="margin: 0; font-size: 13px; opacity: 0.85;">يحتوي على 10 نماذج (قبلية/بعدية) و10 نماذج (الفترة 1 و 2) بنسبة خطأ صفر% للاختيارات عبر تصوير نموذج الإجابة.</p>
+                    <p style="margin: 0; font-size: 12px; opacity: 0.85;">يحتوي على 10 نماذج (قبلية/بعدية) و10 نماذج (الفترة 1 و 2) بنسبة خطأ صفر% للاختيارات عبر تصوير نموذج الإجابة.</p>
                 </div>
-                <a href="auto-correction.html" target="_blank" class="whatsapp-btn" style="background: var(--success); text-decoration: none; padding: 12px 25px; font-size: 15px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
+                <a href="auto-correction.html" target="_blank" class="whatsapp-btn" style="background: var(--success); text-decoration: none; padding: 10px 15px; font-size: 14px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
                     🎯 الانتقال لصفحة التصحيح الآلي (GitHub)
                 </a>
             </div>
@@ -667,40 +716,40 @@
 
         <!-- تسجيل الطلاب والصفوف والجدول -->
         <div class="section-card" id="studentsTableSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
                 <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطلاب والصفوف ومتابعتهم</h3>
-                <button class="btn-print no-print" onclick="printSection('studentsTableSection')" title="طباعة جدول الطلاب والصفوف">🖨️ طباعة الجدول</button>
+                <button class="btn-print no-print" onclick="printSection('studentsTableSection')" title="طباعة جدول الطلاب والصفوف" style="width:auto;">🖨️ طباعة</button>
             </div>
             
             <div class="form-row no-print">
                 <input type="text" id="studentName" placeholder="اسم الطالب (Student Name)">
-                <input type="text" id="studentClassCustom" placeholder="اكتب الصف (مثال: رابع ابتدائي أول)">
+                <input type="text" id="studentClassCustom" placeholder="الصف (مثال: رابع ابتدائي أول)">
                 <input type="tel" id="studentPhone" maxlength="10" placeholder="رقم جوال ولي الأمر (10 أرقام)">
                 <button onclick="addStudent()">➕ إضافة طالب</button>
             </div>
 
-            <div style="margin-top: 20px;" class="no-print">
-                <span style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px;">🏫 تصفح الصفوف (اضغط على الصف لعرضه):</span>
+            <div style="margin-top: 15px;" class="no-print">
+                <span style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 6px;">🏫 تصفح الصفوف (اضغط على الصف لعرضه):</span>
                 <div id="classesQueryContainer" class="classes-query-grid"></div>
             </div>
 
-            <div class="form-row no-print" style="align-items: center; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 6px; margin-top: 15px;">
-                <span style="font-weight: bold; font-size: 14px;">🔍 بحث عن طالب محدد بالاسم:</span>
-                <input type="text" id="filterStudentNameInput" placeholder="اكتب اسم الطالب للبحث..." oninput="filterTableByStudentInput()" style="max-width: 320px;">
+            <div class="form-row no-print" style="align-items: center; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 6px; margin-top: 12px;">
+                <span style="font-weight: bold; font-size: 13px; width: 100%;">🔍 بحث عن طالب بالاسم:</span>
+                <input type="text" id="filterStudentNameInput" placeholder="اكتب اسم الطالب للبحث..." oninput="filterTableByStudentInput()">
             </div>
 
-            <div style="overflow-x: auto;">
+            <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
                 <table>
                     <thead>
                         <tr>
                             <th>اسم الطالب</th>
                             <th>🏫 الصف</th>
-                            <th>📱 رقم الجوال</th>
-                            <th>🔴 الغياب</th>
-                            <th>✋ المشاركة</th>
-                            <th>📚 الواجبات</th>
-                            <th>🛠️ التجارب</th>
-                            <th>💬 الرسائل</th>
+                            <th>📱 الجوال</th>
+                            <th>🔴 غياب</th>
+                            <th>✋ مشاركة</th>
+                            <th>📚 واجبات</th>
+                            <th>🛠️ تجارب</th>
+                            <th>💬 رسائل</th>
                             <th class="no-print">حذف</th>
                         </tr>
                     </thead>
@@ -709,68 +758,68 @@
             </div>
 
             <div class="pagination-bar no-print">
-                <div id="paginationInfo" style="font-size: 13px; font-weight: bold;">عرض 0 من 0</div>
+                <div id="paginationInfo" style="font-size: 12px; font-weight: bold; width: 100%; text-align: center;">عرض 0 من 0</div>
                 <div class="pagination-btns">
                     <button id="prevPageBtn" onclick="changePage(-1)" class="btn-info">◀ السابق</button>
-                    <span id="pageIndicator" style="font-size: 14px; font-weight: bold; padding: 0 10px;">1 / 1</span>
+                    <span id="pageIndicator" style="font-size: 13px; font-weight: bold; padding: 0 5px;">1 / 1</span>
                     <button id="nextPageBtn" onclick="changePage(1)" class="btn-info">التالي ▶</button>
                 </div>
             </div>
 
             <div class="backup-controls no-print">
-                <button class="btn-excel" onclick="exportExcel()">📊 تصدير إلى إكسل (Excel)</button>
-                <button class="btn-warning" onclick="document.getElementById('importExcelFile').click()">📂 استيراد من إكسل (Excel)</button>
+                <button class="btn-excel" onclick="exportExcel()">📊 تصدير إكسل</button>
+                <button class="btn-warning" onclick="document.getElementById('importExcelFile').click()">📂 استيراد إكسل</button>
                 <input type="file" id="importExcelFile" accept=".xlsx, .xls" style="display: none;" onchange="importExcel(event)">
 
-                <button class="btn-success" onclick="exportToGoogleSheetsCSV()">☁️ تصدير لـ Google Sheets (CSV)</button>
-                <button class="btn-info" onclick="exportData()" style="margin-right: auto;">💾 تصدير JSON</button>
+                <button class="btn-success" onclick="exportToGoogleSheetsCSV()">☁️ Google Sheets</button>
+                <button class="btn-info" onclick="exportData()">💾 تصدير JSON</button>
                 <button class="btn-warning" onclick="document.getElementById('importFile').click()">📂 استرجاع JSON</button>
                 <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
             </div>
         </div>
 
-        <!-- نظام تتبع إتقان الدروس لكل طالب -->
+        <!-- تتبع إتقان الدروس لكل طالب -->
         <div class="section-card" id="lessonMasterySection">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px;">
-                <h3 style="margin: 0; border: none; padding: 0;">🎯 تتبع إتقان كل درس لكل طالب (متقن / بحاجة مراجعة)</h3>
-                <button class="btn-print" onclick="printSection('lessonMasterySection')">🖨️ طباعة تقرير إتقان الدروس</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
+                <h3 style="margin: 0; border: none; padding: 0;">🎯 تتبع إتقان الدروس (متقن / مراجعة)</h3>
+                <button class="btn-print" onclick="printSection('lessonMasterySection')" style="width:auto;">🖨️ طباعة التقرير</button>
             </div>
 
             <div class="form-row no-print">
                 <select id="masteryLessonSelect" onchange="renderMasteryTable()">
-                    <option value="">-- اختر الدرس لتحديد حالة الإتقان للطلاب --</option>
+                    <option value="">-- اختر الدرس لتحديد حالة الإتقان --</option>
                 </select>
                 <select id="masteryClassSelect" onchange="renderMasteryTable()">
                     <option value="">-- جميع الصفوف --</option>
                 </select>
             </div>
 
-            <div id="masterySummaryBox" class="sub-box" style="display: none; margin-bottom: 15px;">
+            <div id="masterySummaryBox" class="sub-box" style="display: none; margin-bottom: 12px;">
                 <h5>📊 إحصائية إتقان الدرس المحدد</h5>
-                <div class="student-details" style="margin: 10px 0;">
+                <div class="student-details" style="margin: 8px 0;">
                     <div class="detail-item">
-                        <span>عدد الطلاب المتقنين</span>
+                        <span>الطلاب المتقنين</span>
                         <strong id="countMastered" style="color: var(--success);">0</strong>
                     </div>
                     <div class="detail-item">
-                        <span>بحاجة لإعادة شرح / مراجعة</span>
+                        <span>بحاجة لإعادة شرح</span>
                         <strong id="countReview" style="color: var(--danger);">0</strong>
                     </div>
                 </div>
             </div>
 
-            <div style="overflow-x: auto;">
+            <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
                 <table>
                     <thead>
                         <tr>
                             <th>اسم الطالب</th>
                             <th>🏫 الصف</th>
-                            <th>حالة الإتقان للدرس المختصر</th>
-                            <th class="no-print">تبديل الحالة بنقرة واحدة</th>
+                            <th>حالة الإتقان</th>
+                            <th class="no-print">تبديل الحالة</th>
                         </tr>
                     </thead>
                     <tbody id="masteryTbody">
-                        <tr><td colspan="4" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الدرس من القائمة أعلاه لعرض حالات إتقان الطلاب.</td></tr>
+                        <tr><td colspan="4" style="padding: 15px; opacity: 0.7;">الرجاء اختيار الدرس من القائمة أعلاه.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -778,9 +827,9 @@
 
         <!-- رصد اختبارات الفترة الأولى والثانية -->
         <div class="section-card" id="examsSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px;">
-                <h3 style="margin: 0; border: none; padding: 0;">📊 رصد وتحليل اختبارات الفترة الأولى والفترة الثانية (من ٢٠) 📝</h3>
-                <button class="btn-print" onclick="printSection('examsSection')">🖨️ طباعة تقرير رصد وتحليل الاختبارات</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
+                <h3 style="margin: 0; border: none; padding: 0;">📊 رصد اختبارات الفترة الأولى والثانية (من ٢٠) 📝</h3>
+                <button class="btn-print" onclick="printSection('examsSection')" style="width:auto;">🖨️ طباعة التقرير</button>
             </div>
             
             <div class="form-row no-print">
@@ -789,33 +838,33 @@
                 </select>
             </div>
 
-            <div id="examsAnalysisBox" class="sub-box" style="display: none; margin-bottom: 15px;">
-                <h5>📈 مؤشرات التحليل الإحصائي لنتائج الصف المحدد</h5>
-                <div class="student-details" style="margin: 10px 0;">
+            <div id="examsAnalysisBox" class="sub-box" style="display: none; margin-bottom: 12px;">
+                <h5>📈 مؤشرات التحليل الإحصائي لنتائج الصف</h5>
+                <div class="student-details" style="margin: 8px 0;">
                     <div class="detail-item">
-                        <span>متوسط اختبار الفترة 1 (من 20)</span>
+                        <span>متوسط الفترة 1</span>
                         <strong id="avgExam1">0</strong>
                     </div>
                     <div class="detail-item">
-                        <span>متوسط اختبار الفترة 2 (من 20)</span>
+                        <span>متوسط الفترة 2</span>
                         <strong id="avgExam2">0</strong>
                     </div>
                 </div>
             </div>
 
-            <div style="overflow-x: auto;">
+            <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
                 <table>
                     <thead>
                         <tr>
                             <th>اسم الطالب</th>
                             <th>🏫 الصف</th>
-                            <th>📝 اختبار الفترة الأولى (من 20)</th>
-                            <th>📝 اختبار الفترة الثانية (من 20)</th>
-                            <th class="no-print">📤 إرسال النتيجة لولي الأمر</th>
+                            <th>📝 الفترة 1 (20)</th>
+                            <th>📝 الفترة 2 (20)</th>
+                            <th class="no-print">📤 إرسال النتيجة</th>
                         </tr>
                     </thead>
                     <tbody id="examsTbody">
-                        <tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض رصد واختبارات الطلاب.</td></tr>
+                        <tr><td colspan="5" style="padding: 15px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -823,20 +872,20 @@
 
         <!-- استعلام عن طالب -->
         <div class="section-card" id="studentReportSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 8px; margin-bottom: 12px;">
                 <h3 style="margin: 0; border: none; padding: 0;">🔍 استعلام وتتبع طالب محدد</h3>
-                <button class="btn-print no-print" onclick="printSection('studentReportSection')">🖨️ طباعة تقرير الطالب</button>
+                <button class="btn-print no-print" onclick="printSection('studentReportSection')" style="width:auto;">🖨️ طباعة</button>
             </div>
             <div class="form-row no-print">
                 <div class="searchable-dropdown-container">
-                    <input type="text" id="studentSearchInput" class="searchable-input" placeholder="اكتب اسم الطالب للبحث الحر بالكيبورد..." oninput="filterStudentDropdown()" onfocus="showStudentDropdown()" autocomplete="off">
+                    <input type="text" id="studentSearchInput" class="searchable-input" placeholder="اكتب اسم الطالب للبحث..." oninput="filterStudentDropdown()" onfocus="showStudentDropdown()" autocomplete="off">
                     <div id="studentDropdownList" class="searchable-dropdown-list"></div>
                 </div>
             </div>
 
             <div id="studentCard" style="display: none;">
                 <div>
-                    <h4>سجل الطالب: <span id="selectedName"></span> (<span id="selectedClassBadge" class="class-badge"></span>)</h4>
+                    <h4 style="margin: 5px 0 10px 0; font-size: 15px;">سجل الطالب: <span id="selectedName"></span> (<span id="selectedClassBadge" class="class-badge"></span>)</h4>
                     <div class="student-details">
                         <div class="detail-item"><span>المشاركات</span><strong id="sdParticipation">0</strong></div>
                         <div class="detail-item"><span>الواجبات</span><strong id="sdHomework">0</strong></div>
@@ -847,21 +896,21 @@
                     </div>
                 </div>
 
-                <div class="form-row no-print" style="margin-top: 15px;">
-                    <button class="btn-print" onclick="printStudentReport()">🖨️ طباعة تقرير الطالب الرسمي</button>
-                    <button class="whatsapp-btn" onclick="sendFullReportWhatsApp()" style="border: none; cursor: pointer; margin-top: 0; width: 100%;">📤 إرسال التقرير الشامل لولي الأمر عبر واتساب</button>
+                <div class="form-row no-print" style="margin-top: 12px;">
+                    <button class="btn-print" onclick="printStudentReport()">🖨️ طباعة التقرير الرسمي</button>
+                    <button class="whatsapp-btn" onclick="sendFullReportWhatsApp()" style="margin-top: 0;">📤 إرسال التقرير الشامل عبر واتساب</button>
                 </div>
 
                 <div class="sub-box">
-                    <h5>💬 إشعار ولي الأمر بالدرس والمهارة العلمية عبر الواتساب مباشرة</h5>
-                    <div class="no-print">📱 رقم الجوال المحدد: <span id="sdPhone">لا يوجد</span></div>
-                    <div class="form-row no-print" style="margin-top: 10px;">
+                    <h5>💬 إشعار ولي الأمر بالدرس والمهارة العلمية</h5>
+                    <div class="no-print" style="font-size: 12px;">📱 رقم الجوال: <span id="sdPhone">لا يوجد</span></div>
+                    <div class="form-row no-print" style="margin-top: 8px;">
                         <select id="selectLesson" onchange="updateLessonMsg()">
                             <option value="">-- اختر موضوع الدرس والمهارة --</option>
                         </select>
                     </div>
                     <div id="lessonMsgPreview" class="preview-msg">اختر موضوع الدرس والمهارة أعلاه لتوليد نص الرسالة تلقائياً...</div>
-                    <a id="whatsappLessonBtn" href="#" target="_blank" class="whatsapp-btn no-print" onclick="incrementMessageCount()" style="display: block;">📲 إرسال مباشر لولي الأمر</a>
+                    <a id="whatsappLessonBtn" href="#" target="_blank" class="whatsapp-btn no-print" onclick="incrementMessageCount()">📲 إرسال مباشر لولي الأمر</a>
                 </div>
 
                 <div class="sub-box">
@@ -872,19 +921,19 @@
                         </select>
                     </div>
                     
-                    <div class="form-row no-print" style="margin-top: 10px; background: rgba(37, 99, 235, 0.05); padding: 10px; border-radius: 6px;">
-                        <input type="text" id="newMotivationTitle" placeholder="عنوان الرسالة..." style="max-width: 220px;">
-                        <input type="text" id="newMotivationText" placeholder="اكتب نص الرسالة التشجيعية الجديدة هنا...">
-                        <button onclick="addNewMotivation()">➕ إضافة رسالة تشجيعية</button>
+                    <div class="form-row no-print" style="margin-top: 8px; background: rgba(37, 99, 235, 0.05); padding: 8px; border-radius: 6px;">
+                        <input type="text" id="newMotivationTitle" placeholder="عنوان الرسالة...">
+                        <input type="text" id="newMotivationText" placeholder="نص الرسالة التشجيعية الجديد...">
+                        <button onclick="addNewMotivation()">➕ إضافة رسالة</button>
                     </div>
 
                     <div id="motivationMsgPreview" class="preview-msg">اختر الرسالة لعرض نص الشكر والتحفيز...</div>
-                    <a id="whatsappMotivationBtn" href="#" target="_blank" class="whatsapp-btn no-print" onclick="incrementMessageCount()" style="display: block;">🏆 إرسال رسالة التشجيع المختارة لولي الأمر</a>
+                    <a id="whatsappMotivationBtn" href="#" target="_blank" class="whatsapp-btn no-print" onclick="incrementMessageCount()">🏆 إرسال رسالة التشجيع لولي الأمر</a>
                 </div>
             </div>
         </div>
 
-        <!-- إرسال جماعي للواجب فقط لأولياء الأمور -->
+        <!-- إرسال جماعي للواجب -->
         <div class="section-card no-print">
             <h3>📢 إرسال الواجب المدرسي الجماعي لأولياء الأمور</h3>
             <div class="sub-box" style="margin-top: 0;">
@@ -893,54 +942,54 @@
                         <option value="ALL">جميع الصفوف</option>
                     </select>
                     <select id="bulkSelectHomeworkLesson" onchange="updateBulkHomeworkMsgPreview()">
-                        <option value="">-- اختر الدرس لتحديد الواجب المراد إرساله --</option>
+                        <option value="">-- اختر الدرس لتحديد الواجب --</option>
                     </select>
                 </div>
-                <div class="form-row" style="margin-top: 10px;">
-                    <input type="text" id="bulkHomeworkDetails" placeholder="تفاصيل الواجب المطلوب حلّه (مثال: حل التمارين ص 45)..." oninput="updateBulkHomeworkMsgPreview()">
+                <div class="form-row" style="margin-top: 8px;">
+                    <input type="text" id="bulkHomeworkDetails" placeholder="تفاصيل الواجب (مثال: حل ص 45)..." oninput="updateBulkHomeworkMsgPreview()">
                 </div>
-                <div class="form-row" style="margin-top: 10px;">
-                    <input type="text" id="bulkHomeworkExtraNote" placeholder="ملاحظات إضافية للواجب (اختياري)..." oninput="updateBulkHomeworkMsgPreview()">
+                <div class="form-row" style="margin-top: 8px;">
+                    <input type="text" id="bulkHomeworkExtraNote" placeholder="ملاحظات إضافية (اختياري)..." oninput="updateBulkHomeworkMsgPreview()">
                 </div>
-                <div id="bulkHomeworkMsgPreview" class="preview-msg">اختر الصف والدرس وأدخل تفاصيل الواجب لعرض نموذج رسالة الواجب الجماعية...</div>
+                <div id="bulkHomeworkMsgPreview" class="preview-msg">اختر الصف والدرس وأدخل تفاصيل الواجب...</div>
                 
-                <div id="bulkSendPanel" style="display: none; margin-top: 15px; background: rgba(0,0,0,0.04); padding: 15px; border-radius: 8px; border: 1px solid var(--secondary);">
-                    <h5 style="margin-top: 0; color: var(--secondary);">📤 قائمة إرسال الواجب الجماعي (انقر فوق زر كل ولي أمر للإرسال الفردي بأمان):</h5>
-                    <div id="bulkSendListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; margin-top: 10px;"></div>
+                <div id="bulkSendPanel" style="display: none; margin-top: 12px; background: rgba(0,0,0,0.04); padding: 10px; border-radius: 8px; border: 1px solid var(--secondary);">
+                    <h5 style="margin-top: 0; color: var(--secondary); font-size: 13px;">📤 قائمة إرسال الواجب الجماعي (انقر فوق زر كل ولي أمر للإرسال):</h5>
+                    <div id="bulkSendListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto; margin-top: 8px;"></div>
                 </div>
 
-                <button class="whatsapp-btn" onclick="prepareBulkHomeworkBatch()" style="border: none; cursor: pointer; font-size: 15px; width: 100%;">🚀 تجهيز روابط إرسال الواجب الجماعي</button>
+                <button class="whatsapp-btn" onclick="prepareBulkHomeworkBatch()" style="font-size: 14px; width: 100%;">🚀 تجهيز روابط إرسال الواجب الجماعي</button>
             </div>
         </div>
 
         <!-- قائمة وحدات ودروس مادة العلوم -->
         <div class="section-card no-print">
-            <h3 id="curriculumTitle">📚 دليل مقرر العلوم - المرحلة الابتدائية (المنهج السعودي المعتمد للفصلين) وتتبع التنفيذ</h3>
+            <h3 id="curriculumTitle">📚 دليل مقرر العلوم وتتبع التنفيذ</h3>
             
-            <div class="sub-box" style="margin-bottom: 15px; margin-top: 0;">
-                <h5 style="margin-bottom: 10px;">➕ إضافة درس فردي أو مجموعة دروس دفعة واحدة</h5>
+            <div class="sub-box" style="margin-bottom: 12px; margin-top: 0;">
+                <h5 style="margin-bottom: 8px;">➕ إضافة درس جديد</h5>
                 
                 <div class="form-row">
                     <input type="text" id="newLessonTitle" placeholder="عنوان الوحدة والنص والدرس...">
-                    <input type="text" id="newLessonDesc" placeholder="تفاصيل المفاهيم العلمية والتجارب الاستهلالية...">
-                    <button onclick="addNewLesson()">➕ إضافة الدرس الفردي</button>
+                    <input type="text" id="newLessonDesc" placeholder="تفاصيل المفاهيم والتجارب...">
+                    <button onclick="addNewLesson()">➕ إضافة درس</button>
                 </div>
 
-                <div class="form-row" style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
-                    <textarea id="bulkLessonsInput" rows="3" placeholder="أدخل مجموعة دروس دفعة واحدة (كل درس في سطر مستقل)، بحيث يكون التنسيق كالتالي:&#10;اسم الوحدة | عنوان الدرس | الوصف والتفاصيل" style="width:100%;"></textarea>
-                    <button class="btn-info" onclick="addBatchLessons()" style="width:100%;">📥 إضافة مجموعة الدروس دفعة واحدة</button>
+                <div class="form-row" style="margin-top: 12px; border-top: 1px dashed #ccc; padding-top: 12px;">
+                    <textarea id="bulkLessonsInput" rows="3" placeholder="أدخل مجموعة دروس (درس لكل سطر):&#10;اسم الوحدة | عنوان الدرس | الوصف"></textarea>
+                    <button class="btn-info" onclick="addBatchLessons()">📥 إضافة مجموعة دروس</button>
                 </div>
             </div>
 
             <div class="sub-box" style="background: rgba(37,99,235,0.03); border: 1px solid var(--secondary);">
-                <h5 style="color: var(--secondary);">📑 القائمة المنسدلة لدليل مقرر العلوم والوحدات الدراسية</h5>
-                <div class="form-row" style="margin-bottom: 10px;">
-                    <select id="curriculumDropdownSelect" onchange="onCurriculumDropdownChange(this.value)" style="font-weight: bold; font-size: 15px; color: var(--secondary);">
-                        <option value="">-- اختر الدرس أو الوحدة من القائمة المنسدلة للاستعراض --</option>
+                <h5 style="color: var(--secondary);">📑 القائمة المنسدلة لدليل مقرر العلوم</h5>
+                <div class="form-row" style="margin-bottom: 8px;">
+                    <select id="curriculumDropdownSelect" onchange="onCurriculumDropdownChange(this.value)" style="font-weight: bold; font-size: 14px; color: var(--secondary);">
+                        <option value="">-- اختر الدرس أو الوحدة للاستعراض --</option>
                     </select>
                 </div>
                 <div id="selectedLessonDetailsBox" class="preview-msg" style="display: none;">
-                    اختر درساً من القائمة المنسدلة أعلاه لعرض تفاصيله هنا...
+                    اختر درساً من القائمة المنسدلة أعلاه لعرض تفاصيله...
                 </div>
             </div>
 
@@ -954,14 +1003,14 @@
 
     </div>
 
-    <div class="section-card" style="text-align: center; background: #ffffff; margin: 20px auto; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); padding: 20px;">
-        <h4 style="color: var(--secondary, #2563eb); margin: 0 0 15px 0; font-size: 16px;">💾 النسخ الاحتياطي وإدارة البيانات</h4>
-        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-            <button class="btn-info" onclick="backupAllData()" style="background: #e11d48; padding: 10px 20px; font-size: 14px; border-radius: 6px; cursor: pointer; color: white; border: none; width: auto; font-weight: bold;">
+    <div class="section-card" style="text-align: center; background: #ffffff; margin: 15px auto; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); padding: 15px;">
+        <h4 style="color: var(--secondary, #2563eb); margin: 0 0 12px 0; font-size: 15px;">💾 النسخ الاحتياطي وإدارة البيانات</h4>
+        <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+            <button class="btn-info" onclick="backupAllData()" style="background: #e11d48; padding: 10px 15px; font-size: 13px; border-radius: 6px; cursor: pointer; color: white; border: none; font-weight: bold;">
                 💾 حفظ نسخة كاملة
             </button>
             <input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="restoreDashboardData(event)">
-            <button class="btn-warning" onclick="document.getElementById('importBackupFile').click()" style="background: #f59e0b; padding: 10px 20px; font-size: 14px; border-radius: 6px; cursor: pointer; color: white; border: none; width: auto; font-weight: bold;">
+            <button class="btn-warning" onclick="document.getElementById('importBackupFile').click()" style="background: #f59e0b; padding: 10px 15px; font-size: 13px; border-radius: 6px; cursor: pointer; color: white; border: none; font-weight: bold;">
                 📂 استرجاع النسخة
             </button>
         </div>
@@ -969,6 +1018,7 @@
 
     <!-- الأزرار العائمة -->
     <div class="floating-action-buttons no-print">
+        <button id="pwaInstallBtn" class="float-btn float-install" onclick="installPWAApp()" title="تثبيت التطبيق على الشاشة الرئيسية">📲</button>
         <a href="https://wa.me/966581015002" target="_blank" class="float-btn float-whatsapp" title="تواصل الدعم الفني عبر واتساب">💬</a>
         <button id="scrollToTopBtn" class="float-btn float-top" onclick="scrollToTop()" title="العودة إلى أعلى الصفحة">⬆️</button>
     </div>
@@ -1073,7 +1123,7 @@
             const now = Date.now();
             if (!lastBackup || (now - Number(lastBackup) > 7 * 24 * 60 * 60 * 1000)) {
                 setTimeout(() => {
-                    alert('📌 تذكير دوري لحماية بياناتك:\nمرت فترة على آخر نسختك الاحتياطية. يوصى بالنقر على زر (تصدير JSON) أو (تصدير لـ Google Sheets) لحفظ بياناتك وتجنب ضياعها حال تم مسح متصفحك.');
+                    alert('📌 تذكير دوري لحماية بياناتك:\nمرت فترة على آخر نسختك الاحتياطية. يوصى بالنقر على زر (تصدير JSON) لحفظ بياناتك وتجنب ضياعها.');
                     localStorage.setItem('mansour_last_backup_date', now.toString());
                 }, 3000);
             }
@@ -1094,7 +1144,7 @@
             document.getElementById('studentSearchInput').value = '';
             document.getElementById('bulkSendPanel').style.display = 'none';
 
-            document.getElementById('curriculumTitle').textContent = `📚 دليل مقرر العلوم - ${currentGrade} (المنهج السعودي المعتمد) وتتبع التنفيذ`;
+            document.getElementById('curriculumTitle').textContent = `📚 دليل مقرر العلوم - ${currentGrade}`;
 
             renderLessons();
             renderMasteryDropdowns();
@@ -1110,7 +1160,7 @@
             }
             const l = lessons[idx];
             box.style.display = 'block';
-            box.innerHTML = `<strong>${l.chapter}</strong><br><span style="color:var(--primary); font-size:16px;">${l.title}</span><br><br>${l.desc}`;
+            box.innerHTML = `<strong>${l.chapter}</strong><br><span style="color:var(--primary); font-size:15px;">${l.title}</span><br><br>${l.desc}`;
         }
 
         function renderLessons() {
@@ -1121,10 +1171,10 @@
             selectMotivation.innerHTML = '<option value="">-- اختر الرسالة التشجيعية --</option>';
 
             const bulkSelectHomeworkLesson = document.getElementById('bulkSelectHomeworkLesson');
-            bulkSelectHomeworkLesson.innerHTML = '<option value="">-- اختر الدرس لتحديد الواجب المراد إرساله --</option>';
+            bulkSelectHomeworkLesson.innerHTML = '<option value="">-- اختر الدرس لتحديد الواجب --</option>';
 
             const curriculumDropdown = document.getElementById('curriculumDropdownSelect');
-            curriculumDropdown.innerHTML = '<option value="">-- اختر الدرس أو الوحدة من القائمة المنسدلة للاستعراض --</option>';
+            curriculumDropdown.innerHTML = '<option value="">-- اختر الدرس أو الوحدة للاستعراض --</option>';
 
             let lessonsGroup = '';
             let executedCount = 0;
@@ -1173,7 +1223,7 @@
         function renderMasteryDropdowns() {
             const masterySelect = document.getElementById('masteryLessonSelect');
             const currentVal = masterySelect.value;
-            masterySelect.innerHTML = '<option value="">-- اختر الدرس لتحديد حالة الإتقان للطلاب --</option>';
+            masterySelect.innerHTML = '<option value="">-- اختر الدرس لتحديد حالة الإتقان --</option>';
             lessons.forEach((l, idx) => {
                 masterySelect.innerHTML += `<option value="${idx}">[${l.chapter}] ${l.title}</option>`;
             });
@@ -1205,7 +1255,7 @@
 
         function addBatchLessons() {
             const textData = document.getElementById('bulkLessonsInput').value.trim();
-            if(!textData) { alert('الرجاء إدخال بيانات الدروس في الحقل المخصص.'); return; }
+            if(!textData) { alert('الرجاء إدخال بيانات الدروس.'); return; }
 
             const lines = textData.split('\n');
             let addedCount = 0;
@@ -1234,7 +1284,7 @@
                 localStorage.setItem(getStorageKeyForLessons(), JSON.stringify(lessons));
                 document.getElementById('bulkLessonsInput').value = '';
                 renderLessons();
-                showToast(`📥 تمت إضافة (${addedCount}) دروس دفعة واحدة بنجاح!`);
+                showToast(`📥 تمت إضافة (${addedCount}) دروس بنجاح!`);
             } else {
                 alert('لم يتم العثور على صيغة دروس صحيحة.');
             }
@@ -1270,13 +1320,9 @@
 
             let masteryPercentage = totalPossibleMastery > 0 ? Math.round((achievedMastery / totalPossibleMastery) * 100) : 0;
 
-            let sumPart = 0;
-            let sumHw = 0;
-            let sumAbs = 0;
-            let sumProj = 0;
-            let sumMsg = 0;
+            let sumPart = 0, sumHw = 0, sumAbs = 0, sumProj = 0, sumMsg = 0;
 
-            students.forEach((s, sIdx) => {
+            students.forEach((s) => {
                 sumPart += Number(s.participation) || 0;
                 sumHw += Number(s.homework) || 0;
                 sumAbs += Number(s.absence) || 0;
@@ -1347,7 +1393,7 @@
             const pageData = filtered.slice(startIdx, startIdx + rowsPerPage);
 
             if(pageData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" style="padding: 20px; opacity: 0.7;">لا توجد بيانات طلاب مسجلة حالياً.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" style="padding: 15px; opacity: 0.7;">لا توجد بيانات طلاب.</td></tr>`;
                 document.getElementById('paginationInfo').textContent = `عرض 0 من 0`;
                 document.getElementById('pageIndicator').textContent = `1 / 1`;
                 return;
@@ -1359,11 +1405,11 @@
                 tr.innerHTML = `
                     <td><strong>${s.name}</strong></td>
                     <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
-                    <td><input type="text" maxlength="10" value="${s.phone || ''}" style="width:110px; text-align:center;" oninput="updateStudentPhone(${globalIndex}, this.value)" placeholder="05xxxxxxxx"></td>
-                    <td><input type="number" value="${s.absence}" min="0" style="width:50px; text-align:center;" oninput="updateStudentField(${globalIndex}, 'absence', this.value)"></td>
-                    <td><input type="number" value="${s.participation}" min="0" style="width:50px; text-align:center;" oninput="updateStudentField(${globalIndex}, 'participation', this.value)"></td>
-                    <td><input type="number" value="${s.homework}" min="0" style="width:50px; text-align:center;" oninput="updateStudentField(${globalIndex}, 'homework', this.value)"></td>
-                    <td><input type="number" value="${s.projects}" min="0" style="width:50px; text-align:center;" oninput="updateStudentField(${globalIndex}, 'projects', this.value)"></td>
+                    <td><input type="text" maxlength="10" value="${s.phone || ''}" style="width:90px; text-align:center; padding:4px;" oninput="updateStudentPhone(${globalIndex}, this.value)" placeholder="05xxxxxxxx"></td>
+                    <td><input type="number" value="${s.absence}" min="0" style="width:40px; text-align:center; padding:4px;" oninput="updateStudentField(${globalIndex}, 'absence', this.value)"></td>
+                    <td><input type="number" value="${s.participation}" min="0" style="width:40px; text-align:center; padding:4px;" oninput="updateStudentField(${globalIndex}, 'participation', this.value)"></td>
+                    <td><input type="number" value="${s.homework}" min="0" style="width:40px; text-align:center; padding:4px;" oninput="updateStudentField(${globalIndex}, 'homework', this.value)"></td>
+                    <td><input type="number" value="${s.projects}" min="0" style="width:40px; text-align:center; padding:4px;" oninput="updateStudentField(${globalIndex}, 'projects', this.value)"></td>
                     <td>${s.messages || 0}</td>
                     <td class="no-print"><button class="btn-action btn-danger" onclick="deleteStudent(${globalIndex})">حذف</button></td>
                 `;
@@ -1458,7 +1504,7 @@
                 localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                 if(activeQueryClass === cName) activeQueryClass = '';
                 render();
-                showToast('🗑️ تمت إزالة الصف وطلابه بنجاح!');
+                showToast('🗑️ تمت إزالة الصف بنجاح!');
             }
         }
 
@@ -1499,7 +1545,7 @@
             tbody.innerHTML = '';
 
             if(lessonIdx === "") {
-                tbody.innerHTML = `<tr><td colspan="4" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الدرس من القائمة أعلاه لعرض حالات إتقان الطلاب.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="padding: 15px; opacity: 0.7;">الرجاء اختيار الدرس من القائمة أعلاه.</td></tr>`;
                 summaryBox.style.display = 'none';
                 return;
             }
@@ -1510,7 +1556,7 @@
             }
 
             if(filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="padding: 20px; opacity: 0.7;">لا توجد بيانات طلاب مسجلة.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="padding: 15px; opacity: 0.7;">لا توجد بيانات طلاب مسجلة.</td></tr>`;
                 summaryBox.style.display = 'none';
                 return;
             }
@@ -1532,12 +1578,12 @@
                     <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
                     <td>
                         <span style="font-weight:bold; color: ${isMastered ? 'var(--success)' : 'var(--danger)'};">
-                            ${isMastered ? '✅ متقن' : '⚠️ بحاجة مراجعة'}
+                            ${isMastered ? '✅ متقن' : '⚠️ مراجعة'}
                         </span>
                     </td>
                     <td class="no-print">
                         <button class="mastery-btn ${isMastered ? 'mastered' : 'review'}" onclick="toggleStudentMastery(${globalIdx}, ${lessonIdx})">
-                            ${isMastered ? 'تحويل إلى: بحاجة مراجعة' : 'تحويل إلى: متقن'}
+                            ${isMastered ? 'مراجعة' : 'متقن'}
                         </button>
                     </td>
                 `;
@@ -1566,14 +1612,14 @@
             tbody.innerHTML = '';
 
             if(!selectedClass) {
-                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض رصد واختبارات الطلاب.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 15px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه.</td></tr>`;
                 analysisBox.style.display = 'none';
                 return;
             }
 
             const classStudents = students.filter(s => (s.classCustom || currentGrade) === selectedClass);
             if(classStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">لا يوجد طلاب مسجلون في هذا الصف.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 15px; opacity: 0.7;">لا يوجد طلاب مسجلون في هذا الصف.</td></tr>`;
                 analysisBox.style.display = 'none';
                 return;
             }
@@ -1590,10 +1636,10 @@
                 tr.innerHTML = `
                     <td><strong>${s.name}</strong></td>
                     <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
-                    <td><input type="text" inputmode="numeric" pattern="[0-9]*" value="${s.exam1 !== undefined ? s.exam1 : 0}" style="width:70px; text-align:center;" oninput="updateExamScore(${globalIndex}, 'exam1', this.value)"></td>
-                    <td><input type="text" inputmode="numeric" pattern="[0-9]*" value="${s.exam2 !== undefined ? s.exam2 : 0}" style="width:70px; text-align:center;" oninput="updateExamScore(${globalIndex}, 'exam2', this.value)"></td>
+                    <td><input type="text" inputmode="numeric" pattern="[0-9]*" value="${s.exam1 !== undefined ? s.exam1 : 0}" style="width:50px; text-align:center; padding:4px;" oninput="updateExamScore(${globalIndex}, 'exam1', this.value)"></td>
+                    <td><input type="text" inputmode="numeric" pattern="[0-9]*" value="${s.exam2 !== undefined ? s.exam2 : 0}" style="width:50px; text-align:center; padding:4px;" oninput="updateExamScore(${globalIndex}, 'exam2', this.value)"></td>
                     <td class="no-print">
-                        <a href="https://wa.me/966${s.phone ? s.phone.replace(/^0+/, '') : ''}?text=${encodeURIComponent('عزيزي ولي أمر الطالب ' + s.name + '، نود إفادتكم بدرجات اختبارات مادة العلوم:\n- اختبار الفترة الأولى: ' + (s.exam1 || 0) + '/20\n- اختبار الفترة الثانية: ' + (s.exam2 || 0) + '/20\nمع تمنياتنا له بدوام التوفيق والنجاح.')}" target="_blank" class="whatsapp-btn" style="padding:4px 10px; font-size:12px;" onclick="incrementMessageCount(${globalIndex})">📤 إرسال عبر واتساب</a>
+                        <a href="https://wa.me/966${s.phone ? s.phone.replace(/^0+/, '') : ''}?text=${encodeURIComponent('عزيزي ولي أمر الطالب ' + s.name + '، نود إفادتكم بدرجات اختبارات مادة العلوم:\n- اختبار الفترة الأولى: ' + (s.exam1 || 0) + '/20\n- اختبار الفترة الثانية: ' + (s.exam2 || 0) + '/20\nمع تمنياتنا له بدوام التوفيق والنجاح.')}" target="_blank" class="whatsapp-btn" style="padding:4px 8px; font-size:11px; margin-top:0;" onclick="incrementMessageCount(${globalIndex})">📤 إرسال</a>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1672,7 +1718,7 @@
             document.body.appendChild(a);
             a.click();
             a.remove();
-            showToast('☁️ تم تصدير ملف متوافق مع Google Sheets بنجاح!');
+            showToast('☁️ تم التصدير بنجاح!');
         }
 
         function importExcel(event) {
@@ -1718,7 +1764,7 @@
 
                     localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                     render();
-                    showToast(`📂 تمت استعادة واستيراد (${count}) طالب بنجاح من ملف الإكسل!`);
+                    showToast(`📂 تمت استعادة (${count}) طالب بنجاح!`);
                 } catch(err) {
                     console.error(err);
                     alert('حدث خطأ أثناء قراءة ملف الإكسل.');
@@ -1740,12 +1786,12 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupPackage));
             const dlAnchor = document.createElement('a');
             dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `سجل_العلوم_${currentGrade}_full_backup.json`);
+            dlAnchor.setAttribute("download", `سجل_العلوم_${currentGrade}_backup.json`);
             document.body.appendChild(dlAnchor);
             dlAnchor.click();
             dlAnchor.remove();
             localStorage.setItem('mansour_last_backup_date', Date.now().toString());
-            showToast('💾 تم تصدير النسخة الاحتياطية الشاملة بنجاح!');
+            showToast('💾 تم تصدير النسخة الاحتياطية بنجاح!');
         }
 
         function importData(event) {
@@ -1842,7 +1888,7 @@
             document.getElementById('sdSkills').textContent = studentMasteredCount;
             document.getElementById('sdProjects').textContent = s.projects || 0;
             document.getElementById('sdMessages').textContent = s.messages || 0;
-            document.getElementById('sdPhone').textContent = s.phone || 'لا يوجد رقم جوال مسجل';
+            document.getElementById('sdPhone').textContent = s.phone || 'لا يوجد';
             
             updateLessonMsg();
             updateMotivationMsg();
@@ -1856,7 +1902,7 @@
             const btn = document.getElementById('whatsappLessonBtn');
 
             if(lessonIdx === "") {
-                preview.textContent = "اختر موضوع الدرس والمهارة أعلاه لتوليد نص الرسالة تلقائياً...";
+                preview.textContent = "اختر موضوع الدرس والمهارة أعلاه...";
                 btn.href = "#";
                 return;
             }
@@ -1903,7 +1949,7 @@
                 if (lessonMastery[selectedStudentIndex] && lessonMastery[selectedStudentIndex][lIdx]) studentMasteredCount++;
             });
 
-            const msg = `عزيزي ولي أمر الطالب / ${s.name} (${s.classCustom || currentGrade})\nنحيطكم علماً بمستوى ابنكم وتقييمه في مادة العلوم حتى تاريخه:\n\n- المشاركات: ${s.participation || 0}\n- الواجبات: ${s.homework || 0}\n- أيام الغياب: ${s.absence || 0}\n- الدروس المتقنة: ${studentMasteredCount} من ${lessons.length}\n- التجارب: ${s.projects || 0}\n- اختبار الفترة الأولى: ${s.exam1 || 0}/20\n- اختبار الفترة الثانية: ${s.exam2 || 0}/20\n\nنشكر تعاونكم المستمر ودعمكم الدائم.\nمع تقديـرنا، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
+            const msg = `عزيزي ولي أمر الطالب / ${s.name} (${s.classCustom || currentGrade})\nنحيطكم علماً بمستوى ابنكم وتقييمه في مادة العلوم حتى تاريخه:\n\n- المشاركات: ${s.participation || 0}\n- الواجبات: ${s.homework || 0}\n- أيام الغياب: ${s.absence || 0}\n- الدروس المتقنة: ${studentMasteredCount} من ${lessons.length}\n- التجارب: ${s.projects || 0}\n- اختبار الفترة الأولى: ${s.exam1 || 0}/20\n- اختبار الفترة الثانية: ${s.exam2 || 0}/20\n\nنشكر تعاونكم المستمر.\nمع تقديـرنا، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
             
             incrementMessageCount(selectedStudentIndex);
             const formattedPhone = s.phone ? `966${s.phone.replace(/^0+/, '')}` : '';
@@ -1941,7 +1987,7 @@
             const preview = document.getElementById('bulkHomeworkMsgPreview');
 
             if(!val) {
-                preview.textContent = "اختر الصف والدرس وأدخل تفاصيل الواجب لعرض نموذج رسالة الواجب الجماعية...";
+                preview.textContent = "اختر الصف والدرس وأدخل تفاصيل الواجب...";
                 return;
             }
 
@@ -1981,7 +2027,7 @@
 
             targetStudents = targetStudents.filter(s => s.phone && s.phone.trim() !== '');
             if(targetStudents.length === 0) { 
-                alert('لا توجد أرقام جوالات مسجلة للطلاب المستهدفين في هذا الصف'); 
+                alert('لا توجد أرقام جوالات مسجلة للطلاب المستهدفين'); 
                 return; 
             }
 
@@ -2001,19 +2047,19 @@
                 itemDiv.style.justifyContent = 'space-between';
                 itemDiv.style.alignItems = 'center';
                 itemDiv.style.background = 'var(--card-bg)';
-                itemDiv.style.padding = '8px 12px';
+                itemDiv.style.padding = '6px 10px';
                 itemDiv.style.borderRadius = '6px';
                 itemDiv.style.border = '1px solid rgba(0,0,0,0.1)';
 
                 itemDiv.innerHTML = `
-                    <div><strong>${s.name}</strong> <span class="class-badge" style="font-size:10px;">${s.classCustom || currentGrade}</span></div>
-                    <a href="${link}" target="_blank" class="whatsapp-btn" style="margin-top:0; padding:6px 12px; font-size:12px;" onclick="markMessageSentFromBulk(${globalIdx}, this)">📤 إرسال لولي الأمر</a>
+                    <div style="font-size:12px;"><strong>${s.name}</strong> <span class="class-badge" style="font-size:10px;">${s.classCustom || currentGrade}</span></div>
+                    <a href="${link}" target="_blank" class="whatsapp-btn" style="margin-top:0; padding:5px 10px; font-size:11px; width:auto;" onclick="markMessageSentFromBulk(${globalIdx}, this)">📤 إرسال</a>
                 `;
                 listContainer.appendChild(itemDiv);
             });
 
             panel.style.display = 'block';
-            showToast(`🚀 تم تجهيز قائمة إرسال لعدد (${targetStudents.length}) ولي أمر بنجاح!`);
+            showToast(`🚀 تم تجهيز قائمة إرسال لعدد (${targetStudents.length}) ولي أمر!`);
         }
 
         function markMessageSentFromBulk(globalIdx, btnElement) {
@@ -2022,7 +2068,7 @@
                 localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                 render();
                 btnElement.style.background = '#6b7280';
-                btnElement.textContent = '✅ تم الإرسال';
+                btnElement.textContent = '✅ تم';
             }
         }
 
@@ -2031,13 +2077,63 @@
             localStorage.setItem('mansour_science_theme_v5', themeName);
         }
 
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onscroll = function() {
+            const topBtn = document.getElementById('scrollToTopBtn');
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                topBtn.style.display = 'flex';
+            } else {
+                topBtn.style.display = 'none';
+            }
+        };
+
         const savedTheme = localStorage.getItem('mansour_science_theme_v5');
         if(savedTheme) document.body.className = savedTheme;
+
+        // ==========================================
+        // إدارة تثبيت التطبيق PWA للجوال
+        // ==========================================
+        let deferredPrompt;
+        const installBtn = document.getElementById('pwaInstallBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (installBtn) {
+                installBtn.style.display = 'flex';
+            }
+        });
+
+        function installPWAApp() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    showToast('🎉 تم تثبيت اللوحة على شاشة جهازك بنجاح!');
+                }
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            });
+        }
+
+        window.addEventListener('appinstalled', () => {
+            if (installBtn) installBtn.style.display = 'none';
+            deferredPrompt = null;
+        });
 
         window.onload = function() {
             renderLessons();
             render();
             checkBackupReminder();
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch((err) => {
+                    console.log('Service Worker registration skipped or failed: ', err);
+                });
+            }
         };
 
         function backupAllData() {
@@ -2055,11 +2151,7 @@
             dlAnchor.click();
             dlAnchor.remove();
             
-            if (typeof showToast === 'function') {
-                showToast('💾 تم حفظ النسخة الاحتياطية على جهازك بنجاح!');
-            } else {
-                alert('تم حفظ النسخة الاحتياطية على جهازك بنجاح.');
-            }
+            showToast('💾 تم حفظ النسخة الاحتياطية على جهازك بنجاح!');
         }
 
         function restoreDashboardData(event) {

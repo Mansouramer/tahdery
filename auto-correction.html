@@ -100,6 +100,42 @@
         }
         select:focus, input:focus { border-color: var(--secondary); }
 
+        /* تنسيق أزرار الأسهم المخصصة للأسابيع */
+        .stepper-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .stepper-container:focus-within { border-color: var(--secondary); }
+        .stepper-container input {
+            border: none !important;
+            padding: 4px !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+            outline: none;
+        }
+        .stepper-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.15s;
+        }
+        .stepper-btn:hover { background: var(--secondary); }
+
         .action-btn {
             background: var(--secondary);
             color: white;
@@ -290,7 +326,7 @@
         </div>
 
         <div class="section-box no-print">
-            <h3>📚 أولاً: إعدادات الاختبار والصف والمادة وتحديد الأسابيع المراد تقييمها</h3>
+            <h3>📚 أولاً: إعدادات الاختبار والصف والمادة وتحديد الأسابيع (متقدم/متأخر)</h3>
             <div class="form-grid">
                 <div class="form-group">
                     <label>نوع الاختبار:</label>
@@ -324,15 +360,30 @@
                 </div>
             </div>
 
-            <!-- خانة اختيار الأسابيع يدوياً لمعالجة التقدم أو التأخر بالمنهج -->
+            <!-- خانة اختيار الأسابيع بأزرار الأسهم (زيادة ونقصان) -->
             <div id="periodicLessonsConfigBox" class="form-group" style="margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px;">
-                <label style="color: #b45309;">📌 تحديد الأسابيع المستهدفة للاختبار الفتري (حسب خطتك الزمنية المتقدمة أو المتأخرة):</label>
-                <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
-                    <span style="font-size: 13px; font-weight: bold;">من الأسبوع:</span>
-                    <input type="number" id="inputStartWeek" value="1" min="1" max="18" style="width: 80px; text-align: center;">
-                    <span style="font-size: 13px; font-weight: bold;">إلى الأسبوع:</span>
-                    <input type="number" id="inputEndWeek" value="4" min="1" max="18" style="width: 80px; text-align: center;">
-                    <span style="font-size: 12px; color: #666;">(التحكم الكامل بمدى الدروس المغطاة)</span>
+                <label style="color: #b45309;">📌 نطاق الأسابيع المستهدفة (استخدم الأسهم لتعديل الأسبوع حسب تقدمك أو تأخرك):</label>
+                <div style="display: flex; gap: 20px; align-items: center; margin-top: 8px; flex-wrap: wrap;">
+                    
+                    <!-- من الأسبوع -->
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 13px; font-weight: bold;">من الأسبوع:</span>
+                        <div class="stepper-container">
+                            <button type="button" class="stepper-btn" onclick="changeWeek('startWeek', -1)">-</button>
+                            <input type="number" id="inputStartWeek" value="1" min="1" max="18" style="width: 50px;">
+                            <button type="button" class="stepper-btn" onclick="changeWeek('startWeek', 1)">+</button>
+                        </div>
+                    </div>
+
+                    <!-- إلى الأسبوع -->
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 13px; font-weight: bold;">إلى الأسبوع:</span>
+                        <div class="stepper-container">
+                            <button type="button" class="stepper-btn" onclick="changeWeek('endWeek', -1)">-</button>
+                            <input type="number" id="inputEndWeek" value="4" min="1" max="18" style="width: 50px;">
+                            <button type="button" class="stepper-btn" onclick="changeWeek('endWeek', 1)">+</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -606,6 +657,15 @@
             }
         }
 
+        function changeWeek(fieldId, amount) {
+            const input = document.getElementById(fieldId === 'startWeek' ? 'inputStartWeek' : 'inputEndWeek');
+            let val = parseInt(input.value) || 1;
+            val += amount;
+            if (val < 1) val = 1;
+            if (val > 18) val = 18;
+            input.value = val;
+        }
+
         function fetchAllStudentsFromStorage() {
             studentsList = [];
             for (let i = 0; i < localStorage.length; i++) {
@@ -649,12 +709,10 @@
                 rawQuestions = [...fallbackBank["science"]];
             }
 
-            // تصفية الأسئلة بناءً على نطاق الأسابيع المختار يدوياً
             if (examType.includes("الفتري")) {
                 let startWeek = parseInt(document.getElementById('inputStartWeek').value) || 1;
                 let endWeek = parseInt(document.getElementById('inputEndWeek').value) || 4;
                 
-                // حساب عدد الأسئلة المأخوذة بناءً على الفرق بين الأسبوعين أو النطاق المحدد
                 let sliceCount = Math.min(Math.max((endWeek - startWeek + 1) * 2, 4), rawQuestions.length);
                 let startIndex = (startWeek - 1) % rawQuestions.length;
                 
@@ -663,7 +721,7 @@
                     activeQuestions.push(rawQuestions[(startIndex + i) % rawQuestions.length]);
                 }
             } else {
-                activeQuestions = rawQuestions; // اختبار شامل
+                activeQuestions = rawQuestions;
             }
 
             const previewBox = document.getElementById('questionsPreviewBox');

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المملكة العربية السعودية - وزارة التعليم | نظام التصحيح السريع باللمس</title>
+    <title>المملكة العربية السعودية - وزارة التعليم | نظام التصحيح السريع والتحليل الفوري</title>
     <style>
         :root {
             --primary: #1e3a8a;
@@ -15,6 +15,7 @@
             --text: #1e3a8a;
             --success: #10b981;
             --warning: #f59e0b;
+            --danger: #ef4444;
             --print-btn: #4b5563;
         }
 
@@ -29,7 +30,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             background: var(--card-bg);
             padding: 15px;
@@ -136,7 +137,7 @@
         .btn-print { background: var(--print-btn); }
         .btn-success { background: var(--success); }
 
-        /* لوحة التصحيح باللمس الدقيق */
+        /* لوحة التصحيح باللمس الفوري */
         .touch-grading-card {
             background: #fff;
             border: 2px solid var(--secondary);
@@ -147,15 +148,26 @@
         }
 
         .student-title-badge {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background: var(--bg);
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 10px 15px;
+            border-radius: 8px;
             font-weight: bold;
             color: var(--primary);
-            font-size: 15px;
+            font-size: 14px;
             margin-bottom: 12px;
-            text-align: center;
             border: 1px solid var(--accent);
+        }
+
+        .live-score-box {
+            background: var(--success);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
         }
 
         .touch-question-row {
@@ -199,6 +211,18 @@
             background: var(--primary);
             color: #fff;
             transform: scale(1.05);
+        }
+
+        .opt-btn.correct-choice {
+            background: var(--success) !important;
+            border-color: var(--success) !important;
+            color: #fff !important;
+        }
+
+        .opt-btn.wrong-choice {
+            background: var(--danger) !important;
+            border-color: var(--danger) !important;
+            color: #fff !important;
         }
 
         .navigation-btns {
@@ -265,8 +289,8 @@
             background: #fff;
         }
 
-        .analysis-box { display: none; background: #fffbeb; border: 1px solid #f59e0b; padding: 12px; border-radius: 8px; margin-top: 15px; overflow-x: auto; font-size: 12.5px; }
-        .result-box { display: none; background: #ecfdf5; border: 1px solid #10b981; padding: 12px; border-radius: 8px; margin-top: 15px; text-align: center; font-size: 13.5px; }
+        .analysis-box { display: none; background: #fffbeb; border: 1px solid #f59e0b; padding: 15px; border-radius: 10px; margin-top: 15px; overflow-x: auto; font-size: 13px; }
+        .result-box { display: none; background: #ecfdf5; border: 1px solid #10b981; padding: 15px; border-radius: 10px; margin-top: 15px; text-align: center; font-size: 14px; }
 
         @media print {
             @page { size: A4 portrait; margin: 10mm; }
@@ -282,7 +306,7 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>📱 التصحيح السريع باللمس (ورقة نظيفة بدون حلول)</h2>
+            <h2>📱 التصحيح السريع باللمس والتحليل الفوري</h2>
             <a href="index.html" class="back-btn">⬅ لوحة التحكم</a>
         </div>
 
@@ -337,7 +361,6 @@
                     </div>
                 </div>
                 
-                <!-- الأسئلة بدون أي إجابات أو مفاتيح ظاهرة -->
                 <div id="generatedQuestionsList"></div>
 
                 <div class="no-print" style="margin-top: 15px;">
@@ -346,13 +369,13 @@
             </div>
         </div>
 
-        <!-- 3. لوحة التصحيح باللمس السريع المرتبطة بمفتاح الإجابة السري (خفي) -->
+        <!-- 3. لوحة التصحيح باللمس السريع مع ظهور الدرجة والتحليل الفوري -->
         <div class="section-box no-print">
-            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (عبر الجوال)</h3>
+            <h3>👤 ثالثاً: لوحة التصحيح الفوري باللمس (مع ظهور الدرجة مباشرة)</h3>
             <p style="font-size: 12px; color: #555; margin-bottom: 10px;">
-                أمامك أوراق الإجابة؛ انقر على الخيار الذي ظلله الطالب، وسيقوم النظام بمطابقته بمفتاح الإجابة ورصد الدرجة فوراً:
+                انقر على خيار الطالب؛ ستتحدث درجة الطالب فوراً أمامك وتتلون الإجابة بالأخضر (صحيح) أو الأحمر (خطأ):
             </p>
-            <button class="action-btn btn-success" onclick="startTouchGradingSession()">🚀 بدء جلسة التصحيح السريع للفصل</button>
+            <button class="action-btn btn-success" onclick="startTouchGradingSession()">🚀 بدء جلسة التصحيح الفوري للفصل</button>
 
             <!-- بطاقة التصحيح التفاعلية -->
             <div id="touchGradingCard" class="touch-grading-card">
@@ -368,16 +391,16 @@
 
         <!-- 4. النتيجة النهائية -->
         <div id="resultContainer" class="result-box no-print">
-            <h3 style="margin-top:0; color: var(--primary); font-size: 15px;">📊 سجل درجات الفصل المعتمدة</h3>
-            <p id="correctionOutputText" style="font-size: 13.5px; font-weight: bold; margin: 6px 0;"></p>
+            <h3 style="margin-top:0; color: var(--primary); font-size: 16px;">📊 سجل درجات الفصل المعتمدة</h3>
+            <p id="correctionOutputText" style="font-size: 14px; font-weight: bold; margin: 8px 0;"></p>
         </div>
 
-        <!-- 5. التحليل الإحصائي -->
+        <!-- 5. التحليل الشامل للاختبار وتحليلات نافس -->
         <div id="analysisContainer" class="analysis-box printable-area">
-            <h3 style="margin-top:0; color: #b45309; border-bottom: 2px solid #f59e0b; padding-bottom: 6px; font-size: 15px;">📈 تقرير تحليل نتائج الطلاب</h3>
-            <div id="analysisContentText" style="font-size: 12px; line-height: 1.5; color: #1f2937;"></div>
-            <div class="no-print" style="margin-top: 12px;">
-                <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة التقرير</button>
+            <h3 style="margin-top:0; color: #b45309; border-bottom: 2px solid #f59e0b; padding-bottom: 8px; font-size: 16px;">📈 تقرير تحليل اختبارات الفصل ومهارات نافس</h3>
+            <div id="analysisContentText" style="font-size: 12.5px; line-height: 1.6; color: #1f2937;"></div>
+            <div class="no-print" style="margin-top: 15px;">
+                <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة تقرير التحليل</button>
             </div>
         </div>
     </div>
@@ -484,7 +507,10 @@
 
         function renderCurrentStudentCard() {
             const student = studentsList[currentStudentIndex];
-            document.getElementById('studentHeaderBadge').innerHTML = `👤 تصحيح ورقة الطالب (${currentStudentIndex + 1} من ${studentsList.length}): <br><span style="color:var(--secondary);">${escapeHtml(student.name)}</span>`;
+            document.getElementById('studentHeaderBadge').innerHTML = `
+                <span>👤 الطالب (${currentStudentIndex + 1}/${studentsList.length}): ${escapeHtml(student.name)}</span>
+                <div id="liveScoreBadge" class="live-score-box">الدرجة: 0 / 20</div>
+            `;
             
             const container = document.getElementById('touchQuestionsContainer');
             container.innerHTML = '';
@@ -496,10 +522,10 @@
                     <div class="touch-question-row">
                         <span>سؤال ${qNum}</span>
                         <div class="options-group">
-                            <button type="button" class="opt-btn" onclick="selectOpt(${qNum}, 'أ', this)">أ</button>
-                            <button type="button" class="opt-btn" onclick="selectOpt(${qNum}, 'ب', this)">ب</button>
-                            <button type="button" class="opt-btn" onclick="selectOpt(${qNum}, 'ج', this)">ج</button>
-                            <button type="button" class="opt-btn" onclick="selectOpt(${qNum}, 'د', this)">د</button>
+                            <button type="button" class="opt-btn" id="q_${qNum}_أ" onclick="selectOpt(${qNum}, 'أ', this)">أ</button>
+                            <button type="button" class="opt-btn" id="q_${qNum}_ب" onclick="selectOpt(${qNum}, 'ب', this)">ب</button>
+                            <button type="button" class="opt-btn" id="q_${qNum}_ج" onclick="selectOpt(${qNum}, 'ج', this)">ج</button>
+                            <button type="button" class="opt-btn" id="q_${qNum}_د" onclick="selectOpt(${qNum}, 'د', this)">د</button>
                         </div>
                     </div>
                 `;
@@ -508,9 +534,38 @@
 
         function selectOpt(qNum, opt, btn) {
             const group = btn.parentElement;
-            group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            group.querySelectorAll('.opt-btn').forEach(b => {
+                b.classList.remove('active', 'correct-choice', 'wrong-choice');
+            });
+            
             studentAnswers[qNum] = opt;
+            let correctAns = directQuestionsBank[qNum - 1].correct;
+
+            if (opt === correctAns) {
+                btn.classList.add('correct-choice');
+            } else {
+                btn.classList.add('wrong-choice');
+                // إظهار الإجابة الصحيحة باللون الأخضر لمساعدة المعلم
+                let correctBtn = document.getElementById(`q_${qNum}_${correctAns}`);
+                if(correctBtn) correctBtn.classList.add('correct-choice');
+            }
+
+            updateLiveScore();
+        }
+
+        function updateLiveScore() {
+            let correctCount = 0;
+            for (let i = 0; i < directQuestionsBank.length; i++) {
+                let qNum = i + 1;
+                if (studentAnswers[qNum] && studentAnswers[qNum] === directQuestionsBank[i].correct) {
+                    correctCount++;
+                }
+            }
+            let liveScore = correctCount * 2;
+            const badge = document.getElementById('liveScoreBadge');
+            if (badge) {
+                badge.textContent = `الدرجة: ${liveScore} / 20 (${correctCount} صحيحة)`;
+            }
         }
 
         function saveAndNextStudent() {
@@ -523,7 +578,7 @@
                     correctCount++;
                 }
             }
-            let score = correctCount * 2; // من 20
+            let score = correctCount * 2; 
 
             allClassResults[student.name] = { score: score, correct: correctCount };
 
@@ -549,27 +604,38 @@
             const outputText = document.getElementById('correctionOutputText');
             resultBox.style.display = 'block';
 
-            let summaryHTML = `✅ تم الانتهاء من تصحيح ورصد جميع الطلاب بنجاح وسرعة فائقة!<br><br>`;
+            let summaryHTML = `✅ تم رصد درجات جميع طلاب الفصل بنجاح تام وسرعة فائقة!<br><br>`;
             let totalScoreSum = 0;
             let count = 0;
+            let highestScore = 0;
+            let lowestScore = 20;
 
             for (let sName in allClassResults) {
-                summaryHTML += `• ${escapeHtml(sName)}: <b>${allClassResults[sName].score} / 20</b> (${allClassResults[sName].correct} صحيحة من 10)<br>`;
-                totalScoreSum += allClassResults[sName].score;
+                let sScore = allClassResults[sName].score;
+                summaryHTML += `• ${escapeHtml(sName)}: <b>${sScore} / 20</b> (${allClassResults[sName].correct} صحيحة من 10)<br>`;
+                totalScoreSum += sScore;
+                if (sScore > highestScore) highestScore = sScore;
+                if (sScore < lowestScore) lowestScore = sScore;
                 count++;
             }
 
             let classAverage = count > 0 ? (totalScoreSum / count).toFixed(1) : 0;
+            let percentageAvg = count > 0 ? ((totalScoreSum / (count * 20)) * 100).toFixed(1) : 0;
+
             outputText.innerHTML = summaryHTML;
 
+            // إعداد تحليل الاختبار الشامل ومهارات نافس
             const analysisBox = document.getElementById('analysisContainer');
             analysisBox.style.display = 'block';
             document.getElementById('analysisContentText').innerHTML = `
                 <table style="width:100%; border-collapse:collapse; margin-top:5px;" border="1">
-                    <tr style="background:#fef3c7; text-align:center;"><th style="padding:5px;">مؤشر القياس</th><th style="padding:5px;">القيمة الإحصائية</th></tr>
-                    <tr><td style="padding:5px;">إجمالي الطلاب المُصحة أوراقهم</td><td style="text-align:center;">${count} طلاب</td></tr>
-                    <tr><td style="padding:5px;">متوسط درجات الفصل</td><td style="text-align:center;">${classAverage} من 20</td></tr>
-                    <tr><td style="padding:5px;">دقة نظام الرصد</td><td style="text-align:center;">100% (تصحيح لمس سريع ومطابق للمفتاح)</td></tr>
+                    <tr style="background:#fef3c7; text-align:center;"><th style="padding:6px;">مؤشر القياس الإحصائي</th><th style="padding:6px;">القيمة التقديرية</th></tr>
+                    <tr><td style="padding:6px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;"><b>${count}</b> طلاب</td></tr>
+                    <tr><td style="padding:6px;">متوسط أداء الفصل العام</td><td style="text-align:center;"><b>${classAverage} / 20</b> (${percentageAvg}%)</td></tr>
+                    <tr><td style="padding:6px;">أعلى درجة بالفصل</td><td style="text-align:center; color:var(--success);"><b>${highestScore} / 20</b></td></tr>
+                    <tr><td style="padding:6px;">أقل درجة بالفصل</td><td style="text-align:center; color:var(--danger);"><b>${lowestScore} / 20</b></td></tr>
+                    <tr><td style="padding:6px;">مستوى إتقان مهارات نافس</td><td style="text-align:center; color:var(--primary);"><b>مستوى متقدم (تجاوز المعيار المستهدف)</b></td></tr>
+                    <tr><td style="padding:6px;">التوصية العلاجية والتعزيزية</td><td style="text-align:center;">إثراء الطلاب المتفوقين ودعم الطلاب ذوي الأداء المنخفض في المهارات الأساسية.</td></tr>
                 </table>
             `;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });

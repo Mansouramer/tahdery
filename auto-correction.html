@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المملكة العربية السعودية - وزارة التعليم | نظام التصحيح السريع باللمس</title>
+    <title>المملكة العربية السعودية - وزارة التعليم | نظام التصحيح السريع بمفتاح الإجابة</title>
     <style>
         :root {
             --primary: #1e3a8a;
@@ -136,7 +136,7 @@
         .btn-print { background: var(--print-btn); }
         .btn-success { background: var(--success); }
 
-        /* لوحة التصحيح باللمس للجوال */
+        /* لوحة التصحيح باللمس الدقيق */
         .touch-grading-card {
             background: #fff;
             border: 2px solid var(--secondary);
@@ -282,7 +282,7 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>📱 التصحيح السريع باللمس (مخصص للجوال)</h2>
+            <h2>📱 التصحيح السريع باللمس بمفتاح الإجابة المعياري</h2>
             <a href="index.html" class="back-btn">⬅ لوحة التحكم</a>
         </div>
 
@@ -320,9 +320,9 @@
             </div>
         </div>
 
-        <!-- 2. توليد الاختبار للطباعة -->
+        <!-- 2. توليد الاختبار ومفتاح الإجابة -->
         <div class="section-box">
-            <h3>⚙️ ثانياً: نموذج الاختبار (A4)</h3>
+            <h3>⚙️ ثانياً: نموذج الاختبار ومفتاح الإجابة المعياري (A4)</h3>
             <div class="no-print">
                 <button class="action-btn" onclick="generateTestModel()">⚡ توليد الاختبار للطباعة</button>
             </div>
@@ -345,11 +345,11 @@
             </div>
         </div>
 
-        <!-- 3. لوحة التصحيح باللمس السريع -->
+        <!-- 3. لوحة التصحيح باللمس السريع المرتبطة بمفتاح الإجابة -->
         <div class="section-box no-print">
-            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (لكل طالب)</h3>
+            <h3>👤 ثالثاً: لوحة التصحيح السريع باللمس (مطابقة فورية بمفتاح الإجابة)</h3>
             <p style="font-size: 12px; color: #555; margin-bottom: 10px;">
-                اضغط على الزر لبدء تصحيح أوراق الطلاب عبر الجوال مباشرة بنقرات خفيفة:
+                عند تفعيل الجلسة، سيظهر لك مفتاح الإجابة الصحيح لكل سؤال، وكل ما عليك هو النقر على خيار الطالب المطابق لترصد الدرجة بدقة تامة:
             </p>
             <button class="action-btn btn-success" onclick="startTouchGradingSession()">🚀 بدء جلسة التصحيح السريع للفصل</button>
 
@@ -408,7 +408,7 @@
 
         let studentsList = [];
         let currentStudentIndex = 0;
-        let studentAnswers = {}; // تخزين إجابات الطالب الحالي {qNum: 'أ'}
+        let studentAnswers = {}; 
         let allClassResults = {};
 
         function loadLessonsBySelection() {
@@ -432,7 +432,6 @@
                     } catch(e) {}
                 }
             }
-            // إذا لم يتم تسجيل طلاب مسبقاً، نضع طلاب افتراضيين للتجربة السريعة
             if (studentsList.length === 0) {
                 studentsList = [
                     { name: "أحمد محمد العتيبي", classCustom: "الصف الأساسي" },
@@ -466,6 +465,7 @@
                             <div class="bubble-item"><span class="bubble-circle">ج</span> ج) ${escapeHtml(qObj.options[2])}</div>
                             <div class="bubble-item"><span class="bubble-circle">د</span> د) ${escapeHtml(qObj.options[3])}</div>
                         </div>
+                        <div style="margin-top:4px; font-size:11px; color:#0d9488; font-weight:bold;">(الإجابة الصحيحة المعيارية: ${qObj.correct})</div>
                     </div>
                 `;
             }
@@ -492,9 +492,13 @@
 
             for (let i = 0; i < directQuestionsBank.length; i++) {
                 let qNum = i + 1;
+                let correctAns = directQuestionsBank[i].correct;
                 container.innerHTML += `
                     <div class="touch-question-row">
-                        <span>سؤال ${qNum}</span>
+                        <div>
+                            <span>سؤال ${qNum}</span>
+                            <div style="font-size:10.5px; color:#0d9488;">(المفتاح: ${correctAns})</div>
+                        </div>
                         <div class="options-group">
                             <button type="button" class="opt-btn" onclick="selectOpt(${qNum}, 'أ', this)">أ</button>
                             <button type="button" class="opt-btn" onclick="selectOpt(${qNum}, 'ب', this)">ب</button>
@@ -516,7 +520,7 @@
         function saveAndNextStudent() {
             const student = studentsList[currentStudentIndex];
             
-            // حساب الدرجة تلقائياً بناءً على اختيار المعلم ومفتاح الإجابة
+            // المطابقة الصحيحة 100% مع مفتاح الإجابة المعياري
             let correctCount = 0;
             for (let i = 0; i < directQuestionsBank.length; i++) {
                 let qNum = i + 1;
@@ -550,12 +554,12 @@
             const outputText = document.getElementById('correctionOutputText');
             resultBox.style.display = 'block';
 
-            let summaryHTML = `✅ تم الانتهاء من تصحيح ورصد جميع الطلاب بنجاح تام وسرعة فائقة!<br><br>`;
+            let summaryHTML = `✅ تم الانتهاء من تصحيح ورصد جميع الطلاب بناءً على مفتاح الإجابة بدقة تامة!<br><br>`;
             let totalScoreSum = 0;
             let count = 0;
 
             for (let sName in allClassResults) {
-                summaryHTML += `• ${escapeHtml(sName)}: <b>${allClassResults[sName].score} / 20</b> (${allClassResults[sName].correct} صحيحة)<br>`;
+                summaryHTML += `• ${escapeHtml(sName)}: <b>${allClassResults[sName].score} / 20</b> (${allClassResults[sName].correct} صحيحة من 10)<br>`;
                 totalScoreSum += allClassResults[sName].score;
                 count++;
             }
@@ -563,15 +567,14 @@
             let classAverage = count > 0 ? (totalScoreSum / count).toFixed(1) : 0;
             outputText.innerHTML = summaryHTML;
 
-            // إظهار التحليل الإحصائي
             const analysisBox = document.getElementById('analysisContainer');
             analysisBox.style.display = 'block';
             document.getElementById('analysisContentText').innerHTML = `
                 <table style="width:100%; border-collapse:collapse; margin-top:5px;" border="1">
                     <tr style="background:#fef3c7; text-align:center;"><th style="padding:5px;">مؤشر القياس</th><th style="padding:5px;">القيمة الإحصائية</th></tr>
-                    <tr><td style="padding:5px;">إجمالي الطلاب المُنتهى تصحيحهم</td><td style="text-align:center;">${count} طلاب</td></tr>
+                    <tr><td style="padding:5px;">إجمالي الطلاب المُصحة أوراقهم</td><td style="text-align:center;">${count} طلاب</td></tr>
                     <tr><td style="padding:5px;">متوسط درجات الفصل</td><td style="text-align:center;">${classAverage} من 20</td></tr>
-                    <tr><td style="padding:5px;">حالة النظام والدقة</td><td style="text-align:center;">100% (تصحيح مباشر وسريع بدون كاميرا)</td></tr>
+                    <tr><td style="padding:5px;">دقة مطابقة مفتاح الإجابة</td><td style="text-align:center;">100% (مطابقة معيارية صحيحة)</td></tr>
                 </table>
             `;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });

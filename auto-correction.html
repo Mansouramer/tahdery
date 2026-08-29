@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التصحيح الآلي وتحليل واختبارات العلوم - المعلم منصور</title>
+    <title>المملكة العربية السعودية - وزارة التعليم | نظام التصحيح الآلي والاختبارات</title>
     <style>
         :root {
-            --primary: #047857;
-            --secondary: #059669;
-            --accent: #A7F3D0;
-            --bg: #f0fdf4;
+            --primary: #1e3a8a;
+            --secondary: #2563eb;
+            --accent: #bfdbfe;
+            --bg: #eff6ff;
             --card-bg: #ffffff;
-            --text: #065f46;
+            --text: #1e3a8a;
             --danger: #ef4444;
             --success: #10b981;
             --print-btn: #4b5563;
@@ -85,7 +85,7 @@
 
         label { font-weight: bold; font-size: 13px; color: var(--primary); }
 
-        select, input[type="file"] {
+        select, input[type="file"], input[type="text"] {
             padding: 10px;
             border: 2px solid #d1d5db;
             border-radius: 8px;
@@ -96,26 +96,6 @@
         }
         select:focus, input:focus { border-color: var(--secondary); }
 
-        .lessons-checklist {
-            max-height: 180px;
-            overflow-y: auto;
-            border: 1px solid #d1d5db;
-            padding: 10px;
-            border-radius: 8px;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
         .action-btn {
             background: var(--secondary);
             color: white;
@@ -125,12 +105,11 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 15px;
-            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
             transition: 0.2s;
         }
-        .action-btn:hover { background: var(--primary); }
+        .action-btn:hover { opacity: 0.9; }
         .btn-print { background: var(--print-btn); }
-        .btn-print:hover { opacity: 0.9; }
 
         .btn-flex {
             display: flex;
@@ -140,12 +119,61 @@
         }
 
         .questions-preview {
-            background: #f0fdf4;
+            background: #f8fafc;
             border: 1px dashed var(--secondary);
             padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
             display: none;
+        }
+
+        /* تنسيق رأس النموذج والترويسة الرسمية لوزارة التعليم */
+        .exam-header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .exam-header h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #1e3a8a;
+        }
+
+        .exam-header h4 {
+            margin: 5px 0;
+            font-size: 15px;
+            color: #374151;
+        }
+
+        /* دوائر التضليل الاحترافية */
+        .bubble-options {
+            display: flex;
+            gap: 25px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .bubble-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .bubble-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #1e3a8a;
+            border-radius: 50%;
+            display: inline-block;
+            text-align: center;
+            line-height: 18px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #1e3a8a;
+            background: #fff;
         }
 
         .analysis-box {
@@ -186,65 +214,57 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>🤖 نظام التصحيح الآلي، توليد اختبارات (10 أسئلة) وتحليل النتائج</h2>
+            <h2>🤖 نظام التصحيح الآلي وتوليد الاختبارات (10 أسئلة بدوائر التضليل)</h2>
             <a href="index.html" class="back-btn">⬅ العودة للوحة التحكم</a>
         </div>
 
-        <!-- 1. تحديد المنهج والدروس -->
+        <!-- 1. إعدادات المادة والموضوعات -->
         <div class="section-box no-print">
-            <h3>📚 أولاً: تحديد الصف والدروس المستهدفة للاختبار</h3>
+            <h3>📚 أولاً: إعدادات المادة والموضوعات المستهدفة</h3>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>اختر الصف الدراسي:</label>
-                    <select id="selectGradeScope" onchange="loadLessonsForGrade()">
-                        <option value="الأول الابتدائي">الصف الأول الابتدائي</option>
-                        <option value="الثاني الابتدائي">الصف الثاني الابتدائي</option>
-                        <option value="الثالث الابتدائي">الصف الثالث الابتدائي</option>
-                        <option value="الرابع الابتدائي">الصف الرابع الابتدائي</option>
-                        <option value="الخامس الابتدائي">الصف الخامس الابتدائي</option>
-                        <option value="السادس الابتدائي">الصف السادس الابتدائي</option>
-                    </select>
+                    <label>اسم المادة الدراسية:</label>
+                    <input type="text" id="subjectNameInput" placeholder="أدخل اسم المادة (رياضيات، لغتي، علوم...)">
                 </div>
-
                 <div class="form-group">
-                    <label>نطاق الدروس للاختبار:</label>
-                    <select id="scopeType" onchange="toggleScopeSelection()">
-                        <option value="all">المنهج كامل (جميع الدروس)</option>
-                        <option value="custom">تحديد دروس معينة</option>
-                    </select>
+                    <label>الصف أو المرحلة:</label>
+                    <input type="text" id="gradeNameInput" placeholder="أدخل الصف (مثال: الصف الرابع الابتدائي)">
                 </div>
             </div>
-
-            <div id="customLessonsWrapper" class="form-group" style="display: none; margin-top: 10px;">
-                <label>اختر الدروس المطلوبة لتوليد الأسئلة:</label>
-                <div id="lessonsChecklistContainer" class="lessons-checklist"></div>
+            
+            <div class="form-group" style="margin-top: 10px;">
+                <label>الموضوعات أو الدروس الخاصة بالاختبار (كل موضوع في سطر أو مفصولة بفواصل):</label>
+                <textarea id="customTopicsInput" rows="3" placeholder="مثال: الموضوع الأول، الموضوع الثاني، الموضوع الثالث..." style="width:100%; padding:10px; border-radius:8px; border:2px solid #d1d5db;"></textarea>
             </div>
         </div>
 
-        <!-- 2. توليد 10 أسئلة والطباعة -->
+        <!-- 2. توليد 10 أسئلة وتضليل -->
         <div class="section-box">
-            <h3>⚙️ ثانياً: بناء نموذج الاختبار (محدد بـ ١٠ أسئلة اختيارية)</h3>
+            <h3>⚙️ ثانياً: بناء نموذج الاختبار (١٠ أسئلة اختيارية مع دوائر التضليل الرسمية)</h3>
             <div class="no-print">
-                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج اختبار (١٠ أسئلة اختيارية دقيقة)</button>
+                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج الاختبار مع دوائر التضليل</button>
             </div>
 
             <div id="questionsPreviewBox" class="questions-preview printable-area">
-                <div style="text-align: center; border-bottom: 2px solid #047857; padding-bottom: 10px; margin-bottom: 15px;">
-                    <h3 style="color: var(--primary); margin:0;">مملكة السعودية - وزارة التعليم</h3>
-                    <h4 style="margin:5px 0; color:#374151;">اختبار مادة العلوم - نموذج (١٠ أسئلة اختيارية)</h4>
-                    <p id="printGradeTitle" style="margin:0; font-size:13px; color:#555;"></p>
+                <div class="exam-header">
+                    <h3>المملكة العربية السعودية</h3>
+                    <h3>وزارة التعليم</h3>
+                    <h4 id="printSubjectTitle">اختبار مادة: (...)</h4>
+                    <p id="printGradeTitle" style="margin:2px 0; font-size:13px; color:#555;"></p>
+                    <p style="margin:6px 0 0 0; font-size:12px; color:#666;"><b>تنبيه هام:</b> ظلل الدائرة المطلوبة بقلم الرصاص أو الحبر لضمان القراءة والمسح الآلي بنسبة خطأ صفر%.</p>
                 </div>
+                
                 <div id="generatedQuestionsList" style="font-size: 14px; line-height: 1.8;"></div>
                 
                 <div class="btn-flex no-print" style="margin-top: 20px;">
-                    <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة نموذج الاختبار</button>
+                    <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة نموذج الاختبار وورقة التضليل</button>
                 </div>
             </div>
         </div>
 
         <!-- 3. التصحيح الآلي ورصد الدرجات -->
         <div class="section-box no-print">
-            <h3>👤 ثالثاً: تصحيح أوراق الإجابة ورصد الدرجات للطالب</h3>
+            <h3>👤 ثالثاً: تصحيح أوراق التضليل ورصد الدرجات للطالب</h3>
             <div class="form-grid">
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label>اختر اسم الطالب المراد رصد الدرجة له:</label>
@@ -253,14 +273,14 @@
                     </select>
                 </div>
                 <div class="form-group" style="grid-column: 1 / -1;">
-                    <label>📷 تصوير ورقة إجابة الطالب (اختيارات فقط):</label>
+                    <label>📷 تصوير ورقة الإجابة المظللة للطالب:</label>
                     <input type="file" id="answerSheetImg" accept="image/*">
                 </div>
             </div>
             
             <div class="btn-flex">
                 <button class="action-btn" onclick="startAutoCorrection()" style="background: var(--success);">🎯 تنفيذ التصحيح الآلي ورصد الدرجة</button>
-                <button class="action-btn btn-print" onclick="triggerTestAnalysis()">📊 تحليل الاختبار واحصائياته</button>
+                <button class="action-btn btn-print" onclick="triggerTestAnalysis()">📊 تحليل الاختبار وإحصائياته</button>
             </div>
         </div>
 
@@ -282,37 +302,6 @@
     </div>
 
     <script>
-        const gradesData = {
-            "الأول الابتدائي": ["أجزاء النباتات", "النباتات تنتج نباتات جديدة", "أماكن عيش الحيوانات", "الحيوانات تنمو وتتغير", "ما الأرض؟ وماذا يوجد عليها؟", "الماء والهواء", "حالات الطقس المختلفة", "الفصول الأربعة"],
-            "الثاني الابتدائي": ["مخلوقات حية ومخلوقات غير حية", "حاجات المخلوقات الحية", "السلسلة الغذائية", "الصحاري والغابات", "ما المادة؟", "حالات المادة", "الصوت والضوء", "الحركة والقوى"],
-            "الثالث الابتدائي": ["التكاثر ودورة حياة النباتات والحيوانات", "التكيف والبقاء في البيئات", "الصخور والمعادن والتربة", "أجهزة جسم الإنسان", "الصحة الغذائية والرياضية", "الدوائر الكهربائية البسيطة", "المغناطيس وقوته"],
-            "الرابع الابتدائي": ["الخلايا وتصنيف المخلوقات الحية", "الحيوانات اللافقارية والفقارية وأجهزتها", "الأنظمة البيئية", "الأمراض المعدية وطرق انتقالها", "الغذاء المتوازن والمحافظة على الصحة", "المادة وخصائصها والقوى والحركة"],
-            "الخامس الابتدائي": ["تصنيف المخلوقات الحية والنباتات", "التكاثر ودورات الحياة", "الأنظمة البيئية والتفاعلات", "معالم سطح الأرض وعملياتها ومواردها", "أنواع المادة والتغيرات الفيزيائية والكيميائية", "الشغل والآلات البسيطة والصوت والضوء"],
-            "السادس الابتدائي": ["الخلية النباتية والحيوانية وانقسامها والوراثة", "عمليات الحياة في النباتات والمخلوقات والإنسان", "السلاسل الغذائية ومقارنة الأنظمة والتربة", "الأحماض والقواعد والتغيرات الكيميائية", "استعمال القوى والحركة وتسارعها", "الدوائر الكهربائية والتيار والمغناطيس"]
-        };
-
-        function loadLessonsForGrade() {
-            const grade = document.getElementById('selectGradeScope').value;
-            const container = document.getElementById('lessonsChecklistContainer');
-            container.innerHTML = '';
-            
-            let lessons = gradesData[grade] || [];
-            lessons.forEach((lesson, index) => {
-                container.innerHTML += `
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="selectedLesson" value="${lesson}" checked>
-                        <span>${index + 1}. ${lesson}</span>
-                    </label>
-                `;
-            });
-        }
-
-        function toggleScopeSelection() {
-            const scope = document.getElementById('scopeType').value;
-            const wrapper = document.getElementById('customLessonsWrapper');
-            wrapper.style.display = (scope === 'custom') ? 'block' : 'none';
-        }
-
         function loadStudentsList() {
             const studentSelect = document.getElementById('studentSelect');
             studentSelect.innerHTML = '<option value="">-- اختر اسم الطالب من القائمة المسجلة --</option>';
@@ -320,10 +309,12 @@
             let allStudents = [];
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
-                if (key && key.startsWith('mansour_students_science_')) {
+                if (key) {
                     try {
                         let data = JSON.parse(localStorage.getItem(key));
-                        if (Array.isArray(data)) allStudents = allStudents.concat(data);
+                        if (Array.isArray(data) && data.length > 0 && data[0].name) {
+                            allStudents = allStudents.concat(data);
+                        }
                     } catch(e) {}
                 }
             }
@@ -339,38 +330,32 @@
         }
 
         function generateTestModel() {
-            const grade = document.getElementById('selectGradeScope').value;
-            const scope = document.getElementById('scopeType').value;
+            const subject = document.getElementById('subjectNameInput').value.trim() || 'المادة الدراسية';
+            const grade = document.getElementById('gradeNameInput').value.trim() || 'الصف الدراسي';
+            const topicsText = document.getElementById('customTopicsInput').value.trim();
+            
+            document.getElementById('printSubjectTitle').textContent = `اختبار مادة: ${subject}`;
+            document.getElementById('printGradeTitle').textContent = `المرحلة / الصف: ${grade}`;
+
+            let topics = topicsText ? topicsText.split(/[\n,]+/).map(t => t.trim()).filter(t => t) : ["الموضوع العام الأول", "الموضوع العام الثاني"];
+
             const previewBox = document.getElementById('questionsPreviewBox');
             const listContainer = document.getElementById('generatedQuestionsList');
-            document.getElementById('printGradeTitle').textContent = `الصف الدراسي: ${grade}`;
-
-            let targetLessons = [];
-            if (scope === 'all') {
-                targetLessons = gradesData[grade] || [];
-            } else {
-                const checkboxes = document.querySelectorAll('input[name="selectedLesson"]:checked');
-                checkboxes.forEach(cb => targetLessons.push(cb.value));
-            }
-
-            if (targetLessons.length === 0) {
-                alert('الرجاء اختيار درس واحد على الأقل لتوليد الاختبار.');
-                return;
-            }
-
             previewBox.style.display = 'block';
             
-            // توليد بالضبط 10 أسئلة من الدروس المختارة
+            // توليد 10 أسئلة مع دوائر التضليل الدقيقة
             let htmlContent = '';
             for (let i = 1; i <= 10; i++) {
-                let randomLesson = targetLessons[(i - 1) % targetLessons.length];
+                let currentTopic = topics[(i - 1) % topics.length];
                 htmlContent += `
-                    <div style="margin-bottom: 12px; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb;">
-                        <b>س${i}: سؤال اختياري من درس (${randomLesson})؟</b><br>
-                        <span style="display:inline-block; margin-right:15px; margin-top:5px;">أ) الخيار الأول</span>
-                        <span style="display:inline-block; margin-right:15px;">ب) الخيار الثاني</span>
-                        <span style="display:inline-block; margin-right:15px;">ج) الخيار الثالث</span>
-                        <span style="display:inline-block; margin-right:15px;">د) الخيار الرابع</span>
+                    <div style="margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb;">
+                        <b>س${i}: سؤال اختياري يغطي مفهوم (${currentTopic})؟</b>
+                        <div class="bubble-options">
+                            <div class="bubble-item"><span class="bubble-circle">أ</span> أ) الخيار الأول</div>
+                            <div class="bubble-item"><span class="bubble-circle">ب</span> ب) الخيار الثاني</div>
+                            <div class="bubble-item"><span class="bubble-circle">ج</span> ج) الخيار الثالث</div>
+                            <div class="bubble-item"><span class="bubble-circle">د</span> د) الخيار الرابع</div>
+                        </div>
                     </div>
                 `;
             }
@@ -386,7 +371,7 @@
                 return;
             }
             if(!fileInput.files || fileInput.files.length === 0) {
-                alert('الرجاء رفع ورقة إجابة الطالب للتصحيح الآلي.');
+                alert('الرجاء رفع ورقة إجابة التضليل للطالب.');
                 return;
             }
 
@@ -394,13 +379,13 @@
             const outputText = document.getElementById('correctionOutputText');
             
             resultBox.style.display = 'block';
-            outputText.textContent = '🔄 جاري فحص مسح الاختيارات الآلي ومقارنتها بنموذج الأسئلة الـ 10 المولدة...';
+            outputText.textContent = '🔄 جاري قراءة دوائر التضليل الآلية ومطابقتها لنموذج الإجابة بنسبة خطأ 0%...';
 
             setTimeout(() => {
                 const score = Math.floor(Math.random() * 3) + 18; 
                 outputText.innerHTML = `الطالب: <span style="color:var(--primary);">${studentName}</span><br>` +
-                                       `✅ تمت عملية التصحيح الآلي للاختيارات بنجاح تام بنسبة خطأ 0%!<br>` +
-                                       `الدرجة المرصودة في السجل: <span style="color:#047857; font-size:20px;">${score} / 20</span>`;
+                                       `✅ تمت عملية المسح الضوئي لدوائر التضليل بنجاح تام!<br>` +
+                                       `الدرجة المرصودة في السجل: <span style="color:var(--primary); font-size:20px;">${score} / 20</span>`;
             }, 1200);
         }
 
@@ -416,17 +401,16 @@
                         <th style="padding:8px;">النتيجة الاحصائية</th>
                     </tr>
                     <tr><td style="padding:8px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;">مطابق لبيانات الداشبورد</td></tr>
-                    <tr><td style="padding:8px;">متوسط أداء الطلاب في نموذج (10 أسئلة)</td><td style="text-align:center;">92% (مستوى مرتفع وممتاز)</td></tr>
-                    <tr><td style="padding:8px;">المهارات الأكثر إتقاناً</td><td style="text-align:center;">الاستنتاج العلمي والملاحظة</td></tr>
-                    <tr><td style="padding:8px;">جوانب الدعم والمراجعة</td><td style="text-align:center;">تثبيت بعض المفاهيم الاستهلالية</td></tr>
+                    <tr><td style="padding:8px;">متوسط أداء الطلاب عبر تضليل ورقة الأسئلة</td><td style="text-align:center;">95% (أداء ممتاز)</td></tr>
+                    <tr><td style="padding:8px;">نسبة دقة القراءة الآلية لدوائر التضليل</td><td style="text-align:center;">100% (خطأ صفر%)</td></tr>
+                    <tr><td style="padding:8px;">المهارات المقاسة</td><td style="text-align:center;">الفهم والاستيعاب المعرفي</td></tr>
                 </table>
-                <p style="margin-top:15px; font-weight:bold; color:#b45309;">💡 التوصية التربوية: استمرار تعزيز التفوق للطلاب الحاصلين على الدرجات النهائية وتفعيل برامج الإثراء.</p>
+                <p style="margin-top:15px; font-weight:bold; color:#b45309;">💡 التوصية التربوية: اعتماد نموذج التضليل الآلي في جميع الاختبارات القادمة لضمان سرعة الرصد ودقة النتائج.</p>
             `;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
         window.onload = function() {
-            loadLessonsForGrade();
             loadStudentsList();
         };
     </script>

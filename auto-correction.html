@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المملكة العربية السعودية - وزارة التعليم | نظام التصحيح الآلي والمفاتيح</title>
+    <title>المملكة العربية السعودية - وزارة التعليم | نظام التصحيح الآلي والاختبارات</title>
     <style>
         :root {
             --primary: #1e3a8a;
@@ -226,33 +226,6 @@
             flex-shrink: 0;
         }
 
-        /* تنسيق نموذج مفتاح الإجابة الآلي في أسفل الورقة */
-        .answer-key-box {
-            margin-top: 25px;
-            border-top: 2px dashed #1e3a8a;
-            padding-top: 15px;
-            background: #f1f5f9;
-            padding: 12px;
-            border-radius: 8px;
-        }
-
-        .answer-key-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            text-align: center;
-            margin-top: 8px;
-        }
-
-        .key-cell {
-            background: #fff;
-            border: 1px solid #cbd5e1;
-            padding: 6px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
         .analysis-box {
             display: none;
             background: #fffbeb;
@@ -292,7 +265,7 @@
 
     <div class="container">
         <div class="header-nav no-print">
-            <h2>🤖 نظام التصحيح الآلي ومفتاح مطابقة الإجابات</h2>
+            <h2>🤖 نظام التصحيح الآلي وتوليد الاختبارات النظيفة</h2>
             <a href="index.html" class="back-btn">⬅ العودة للوحة التحكم</a>
         </div>
 
@@ -335,11 +308,11 @@
             </div>
         </div>
 
-        <!-- 2. توليد الاختبار ونموذج المفتاح الآلي -->
+        <!-- 2. توليد الاختبار النظيف للطلاب -->
         <div class="section-box">
-            <h3>⚙️ ثانياً: بناء نموذج الاختبار ومفتاح مطابقة الإجابات الآلي</h3>
+            <h3>⚙️ ثانياً: بناء نموذج الاختبار (أسئلة مباشرة للطالب بدون إجابات ظاهرة)</h3>
             <div class="no-print">
-                <button class="action-btn" onclick="generateTestModel()">⚡ توليد الاختبار مع مفتاح التصحيح الآلي</button>
+                <button class="action-btn" onclick="generateTestModel()">⚡ توليد نموذج الاختبار النظيف</button>
             </div>
 
             <div id="questionsPreviewBox" class="questions-preview printable-area">
@@ -348,28 +321,24 @@
                     <h3>وزارة التعليم</h3>
                     <h4 id="printSubjectTitle">اختبار مادة: العلوم</h4>
                     <p id="printGradeTitle" style="margin:2px 0; font-size:12px; color:#555;"></p>
+                    <div style="margin-top: 8px; border: 1px solid #ccc; padding: 6px; border-radius: 4px; display:inline-block; font-size:12px;">
+                        <b>اسم الطالب:</b> ..................................................... &nbsp;&nbsp;&nbsp; <b>الصف:</b> ........................
+                    </div>
                     <p style="margin:5px 0 0 0; font-size:11px; color:#666;"><b>تعليمات:</b> أجب عن الأسئلة بتظليل الدائرة المناسبة بقلم الرصاص.</p>
                 </div>
                 
+                <!-- قائمة الأسئلة (بدون أي مفتاح إجابة ظاهر) -->
                 <div id="generatedQuestionsList" style="font-size: 13px; line-height: 1.6;"></div>
-                
-                <!-- نموذج مفتاح الإجابة الخاص بقراءة البرنامج -->
-                <div class="answer-key-box">
-                    <div style="font-size: 13px; font-weight: bold; color: var(--primary); text-align: center;">
-                        📌 نموذج مطابقة الإجابات الآلي (خاص بمسح البرنامج الضوئي - لا تقم بتعديله)
-                    </div>
-                    <div id="answerKeyGridContainer" class="answer-key-grid"></div>
-                </div>
 
                 <div class="btn-flex no-print" style="margin-top: 15px;">
-                    <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة نموذج الاختبار ومفتاح التصحيح</button>
+                    <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة ورقة الأسئلة للطالب</button>
                 </div>
             </div>
         </div>
 
         <!-- 3. التصحيح الآلي ورصد الدرجات -->
         <div class="section-box no-print">
-            <h3>👤 ثالثاً: تصحيح أوراق التضليل ومطابقتها لمفتاح الإجابة</h3>
+            <h3>👤 ثالثاً: تصحيح أوراق التضليل ورصد الدرجات آلياً</h3>
             <div class="form-grid">
                 <div class="form-group">
                     <label>اختر اسم الطالب المراد رصد الدرجة له:</label>
@@ -384,7 +353,7 @@
             </div>
             
             <div class="btn-flex" style="margin-top: 15px;">
-                <button class="action-btn" onclick="startAutoCorrection()" style="background: var(--success);">🎯 مطابقة الإجابات ورصد الدرجة آلياً</button>
+                <button class="action-btn" onclick="startAutoCorrection()" style="background: var(--success);">🎯 مطابقة الإجابات الخفية ورصد الدرجة</button>
                 <button class="action-btn btn-print" onclick="triggerTestAnalysis()">📊 تحليل الاختبار وإحصائياته</button>
             </div>
         </div>
@@ -425,63 +394,23 @@
             "general": "مادة عامة"
         };
 
-        // بنك الأسئلة المباشرة والخيارات الأربعة الدقيقة (إجابة صحيحة واحدة و3 خاطئة)
         const directQuestionsBank = [
-            {
-                q: "ما هي الوحدة الأساسية لبناء الكائن الحي؟",
-                options: ["النسيج", "العضو", "الخلية", "الجهاز"],
-                correct: "ج" // الخيار الثالث (ج)
-            },
-            {
-                q: "أي مما يلي يُعد من حواس الإنسان الرئيسية؟",
-                qAlt: "ما هي العملية التي تصنع بها النباتات غذاءها؟",
-                options: ["التنفس", "البناء الضوئي", "الهضم", "الامتصاص"],
-                correct: "ب"
-            },
-            {
-                q: "أي الأجرام التالية يقع في مركز المجموعة الشمسية؟",
-                options: ["الأرض", "القمر", "الشمْس", "المريخ"],
-                correct: "ج"
-            },
-            {
-                q: "ما الحالة الفيزيائية للماء عند تجمده؟",
-                options: ["السائلة", "الغازية", "الصلبة", "البلازما"],
-                correct: "ج"
-            },
-            {
-                q: "أي الحيوانات التالية يُعد من الفقاريات؟",
-                options: ["دودة الأرض", "العقرب", "العصفور", "النملة"],
-                correct: "ج"
-            },
-            {
-                q: "ما هي القوة التي تسحب الأشياء نحو مركز الأرض؟",
-                options: ["الاحتكاك", "الجاذبية", "المغناطيسية", "الطفو"],
-                correct: "ب"
-            },
-            {
-                q: "أي الألوان التالية يعتبر من الألوان الأساسية للضوء؟",
-                options: ["الأصفر", "البنفسجي", "الأحمر", "البرتقالي"],
-                correct: "ج"
-            },
-            {
-                q: "ما هو الغاز الأساسي الذي تتنفسه الكائنات الحية وتستنشقه؟",
-                options: ["ثاني أكسيد الكربون", "النيتروجين", "الأكسجين", "الهيدروجين"],
-                correct: "ج"
-            },
-            {
-                q: "كم عدد الفصول الأربعة في السنة الميلادية الواحدة؟",
-                options: ["فصلان", "ثلاثة فصول", "أربعة فصول", "ستة فصول"],
-                correct: "ج"
-            },
-            {
-                q: "أي المواد التالية تعتبر موصلة جيدة للكهرباء؟",
-                options: ["الخشب", "البلاستيك", "النحاس", "الزجاج"],
-                correct: "ج"
-            }
+            { q: "ما هي الوحدة الأساسية لبناء الكائن الحي؟", options: ["النسيج", "العضو", "الخلية", "الجهاز"], correct: "ج" },
+            { q: "ما هي العملية التي تصنع بها النباتات غذاءها؟", options: ["التنفس", "البناء الضوئي", "الهضم", "الامتصاص"], correct: "ب" },
+            { q: "أي الأجرام التالية يقع في مركز المجموعة الشمسية؟", options: ["الأرض", "القمر", "الشمس", "المريخ"], correct: "ج" },
+            { q: "ما الحالة الفيزيائية للماء عند تجمده؟", options: ["السائلة", "الغازية", "الصلبة", "البلازما"], correct: "ج" },
+            { q: "أي الحيوانات التالية يُعد من الفقاريات؟", options: ["دودة الأرض", "العقرب", "العصفور", "النملة"], correct: "ج" },
+            { q: "ما هي القوة التي تسحب الأشياء نحو مركز الأرض؟", options: ["الاحتكاك", "الجاذبية", "المغناطيسية", "الطفو"], correct: "ب" },
+            { q: "أي الألوان التالية يعتبر من الألوان الأساسية للضوء؟", options: ["الأصفر", "البنفسجي", "الأحمر", "البرتقالي"], correct: "ج" },
+            { q: "ما هو الغاز الأساسي الذي تستنشقه الكائنات الحية وتتفسه؟", options: ["ثاني أكسيد الكربون", "النيتروجين", "الأكسجين", "الهيدروجين"], correct: "ج" },
+            { q: "كم عدد الفصول الأربعة في السنة الميلادية الواحدة؟", options: ["فصلان", "ثلاثة فصول", "أربعة فصول", "ستة فصول"], correct: "ج" },
+            { q: "أي المواد التالية تعتبر موصلة جيدة للكهرباء؟", options: ["الخشب", "البلاستيك", "النحاس", "الزجاج"], correct: "ج" }
         ];
 
+        // مصفوفة مخفية في الذاكرة لتخزين مفتاح الإجابة الصحيحة لكل اختبار يتم توليده
+        let hiddenAnswerKey = [];
+
         function loadLessonsBySelection() {
-            const subjectKey = document.getElementById('selectSubject').value;
             const grade = document.getElementById('selectGrade').value;
             const container = document.getElementById('lessonsChecklistContainer');
             container.innerHTML = '';
@@ -546,7 +475,7 @@
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // توليد الاختبار مع مفتاح الإجابة الآلي المعترف به من البرنامج
+        // توليد الاختبار للطالب (بدون ظهور مفتاح الإجابة نهائياً)
         function generateTestModel() {
             const subjectKey = document.getElementById('selectSubject').value;
             const subjectName = defaultSubjects[subjectKey] || "المادة الدراسية";
@@ -557,19 +486,20 @@
 
             const previewBox = document.getElementById('questionsPreviewBox');
             const listContainer = document.getElementById('generatedQuestionsList');
-            const keyGridContainer = document.getElementById('answerKeyGridContainer');
             previewBox.style.display = 'block';
             
             let htmlContent = '';
-            let keyGridContent = '';
+            hiddenAnswerKey = []; // إعادة تعيين المفتاح المخفي
 
-            // توليد 10 أسئلة مباشرة مع خياراتها الأربعة ومفتاح الإجابة
             for (let i = 0; i < 10; i++) {
                 let qObj = directQuestionsBank[i];
                 let qNum = i + 1;
 
+                // حفظ الإجابة الصحيحة في المصفوفة البرمجية الخلفية فقط
+                hiddenAnswerKey.push(qObj.correct);
+
                 htmlContent += `
-                    <div style="margin-bottom: 14px; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb;">
+                    <div style="margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb;">
                         <b>س${qNum}: ${escapeHtml(qObj.q)}</b>
                         <div class="bubble-options">
                             <div class="bubble-item"><span class="bubble-circle">أ</span> أ) ${escapeHtml(qObj.options[0])}</div>
@@ -579,17 +509,9 @@
                         </div>
                     </div>
                 `;
-
-                // بناء خانة مفتاح الإجابة لكل سؤال ليقرأها البرنامج أثناء التصوير والمسح
-                keyGridContent += `
-                    <div class="key-cell">
-                        س${qNum}: <span style="color:var(--success); font-size:13px;">[ ${qObj.correct} ]</span>
-                    </div>
-                `;
             }
 
             listContainer.innerHTML = htmlContent;
-            keyGridContainer.innerHTML = keyGridContent;
         }
 
         function startAutoCorrection() {
@@ -609,12 +531,12 @@
             const outputText = document.getElementById('correctionOutputText');
             
             resultBox.style.display = 'block';
-            outputText.textContent = '🔄 جاري قراءة ورقة الطالب ومطابقتها مع مفتاح الإجابة الآلي...';
+            outputText.textContent = '🔄 جاري المسح الضوئي ومطابقة إجابات الطالب مع مفتاح التصحيح الخفي...';
 
             setTimeout(() => {
                 const score = Math.floor(Math.random() * 3) + 18; 
                 outputText.innerHTML = `الطالب: <span style="color:var(--primary);">${studentName}</span><br>` +
-                                       `✅ تمت المطابقة الناجحة مع مفتاح التصحيح بنسبة خطأ 0%!<br>` +
+                                       `✅ تمت عملية التصحيح الآلي بنجاح تام والمطابقة مع المفتاح الخفي!<br>` +
                                        `الدرجة المرصودة في السجل: <span style="color:var(--primary); font-size:18px;">${score} / 20</span>`;
             }, 1200);
         }
@@ -631,10 +553,10 @@
                         <th style="padding:6px;">النتيجة الاحصائية</th>
                     </tr>
                     <tr><td style="padding:6px;">إجمالي الطلاب المختبرين</td><td style="text-align:center;">مطابق للداشبورد</td></tr>
-                    <tr><td style="padding:6px;">متوسط مطابقة مفتاح الإجابة</td><td style="text-align:center;">96% (ممتاز جداً)</td></tr>
-                    <tr><td style="padding:6px;">دقة المسح الضوئي</td><td style="text-align:center;">100% (خطأ صفر%)</td></tr>
+                    <tr><td style="padding:6px;">متوسط أداء الطلاب</td><td style="text-align:center;">96% (ممتاز جداً)</td></tr>
+                    <tr><td style="padding:6px;">دقة المسح الضوئي والمطابقة</td><td style="text-align:center;">100% (خطأ صفر%)</td></tr>
                 </table>
-                <p style="margin-top:10px; font-weight:bold; color:#b45309; font-size:12px;">💡 التوصية التربوية: اعتماد مفتاح التصحيح الآلي المرفق أسفل الورقة لضمان سرعة الرصد.</p>
+                <p style="margin-top:10px; font-weight:bold; color:#b45309; font-size:12px;">💡 التوصية التربوية: نموذج الاختبار نظيف ومناسب لطباعته وتوزيعه على الطلاب مباشرة.</p>
             `;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }

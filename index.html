@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>النظام الشامل لإدارة السجلات وخطة الاستعداد - الابتدائية الأولى بنات</title>
+    <title>بوابة القيادة الرقمية</title>
     <!-- استدعاء مكتبة التصميم السريع Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -284,7 +284,7 @@
     <header class="mb-4 bg-white/60 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border-r-4 border-blue-600 flex flex-col lg:flex-row justify-between items-center gap-4 border border-white/40 no-print">
         <div class="text-right w-full lg:w-auto">
             <div id="schoolHeaderLabel" class="text-[11px] sm:text-xs text-blue-700 font-bold mb-1">المملكة العربية السعودية |وزارة التعليم| الابتدائية الأولى بنات</div>
-            <h1 class="text-lg sm:text-2xl font-bold text-gray-900">النظام الشامل لإدارة المدرسة والسجلات</h1>
+            <h1 class="text-lg sm:text-2xl font-bold text-gray-900">بوابة القيادة الرقمية</h1>
             <p id="principalHeaderLabel" class="text-xs sm:text-sm text-indigo-800 mt-1 font-bold">مديرة المدرسة / فلانة</p>
         </div>
 
@@ -3157,7 +3157,44 @@ function fillSchoolInfo() {
 const IS_FEM = (cfg.gender === 'female');
 const W = '(?![\\u0621-\\u064A])';
 const R = (p, r) => [new RegExp(p, 'g'), r];
-const MALE_RULES = [ R('\\/(?:ة|ات|ي)' + W, '') ];
+const MALE_RULES = [
+    R('\\/(?:ة|ات|ي)' + W, ''),
+
+    // عبارات خاصة أولًا (حتى لا تتأثر "الشؤون التعليمية" و"الأنشطة الطلابية")
+    R('معلمةة', 'معلم'),
+    R('الوكيلة التعليمية' , 'الوكيل التعليمي'),
+    R('المرشدة الطلابية', 'المرشد الطلابي'),
+    R('الموجهة الطلابية', 'الموجه الطلابي'),
+    R('المعلمة المختارة', 'المعلم المختار'),
+    R('المعلمة الحالية', 'المعلم الحالي'),
+    R('المسؤولة الفعلية', 'المسؤول الفعلي'),
+    R('معلمتنا' + W, 'معلمنا'),
+    R('الفاضلة' + W, 'الفاضل'),
+
+    // الجمع
+    R('(متعلم|منسوب|متفوق|موهوب|متعثر|مستفيد|مستجد|متأخر)ات' + W, '$1ين'),
+    R('معلمات' + W, 'معلمين'),
+    R('طالبات' + W, 'طلاب'),
+
+    // المفرد
+    R('معلمة' + W, 'معلم'),
+    R('طالبة' + W, 'طالب'),
+    R('مديرة' + W, 'مدير'),
+    R('وكيلة' + W, 'وكيل'),
+    R('أخصائية' + W, 'أخصائي'),
+    R('موجهة' + W, 'موجه'),
+    R('مرشدة' + W, 'مرشد'),
+    R('منسقة' + W, 'منسق'),
+    R('رائدة' + W, 'رائد'),
+    R('مشرفة' + W, 'مشرف'),
+    R('مسؤولة' + W, 'مسؤول'),
+    R('رئيسة' + W, 'رئيس'),
+
+    // اسم المدرسة والرموز
+    R('بنات' + W, 'بنين'),
+    R('Girls', 'Boys'),
+    R('👩‍🏫', '👨‍🏫')
+];
 const FEM_RULES = [
     R('الطلاب\\/ات', 'الطالبات'), R('المعلمين\\/ات', 'المعلمات'),
     R('\\/ة', 'ة'), R('\\/ات', 'ات'),
